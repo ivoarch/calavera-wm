@@ -1,0 +1,134 @@
+.TH DWM 1 dwm\-VERSION
+.SH NAME
+dwm \- Stacking window manager, with prefix key.
+.SH SYNOPSIS
+.B dwm
+.RB [ \-v ]
+.SH DESCRIPTION  
+This is a modified version of DWM. It has been extensively patched to resemble  
+the needs of the author. 
+.SH OPTIONS
+.TP
+.B \-v
+prints version information to standard output, then exits.
+.SH USAGE
+.SS Status bar
+.TP
+.B X root window name
+is read and displayed in the status text area. It can be set with the
+.BR xsetroot (1)
+command.
+.SS Keyboard commands
+.TP
+.B C\-t c
+Start
+.BR urxvt (1). 
+.TP 
+.B C\-t d 
+Start 
+.BR dmenu (1).   
+.TP
+.B C\-t e 
+Start
+.BR emacs (1). 
+.TP
+.B C\-t w 
+Start  
+.BR conkeror (1).
+.TP
+.B C\-t ,
+Focus previous screen, if any.
+.TP
+.B C\-t .
+Focus next screen, if any.
+.TP
+.B C\-t Shift\-,
+Send focused window to previous screen, if any.
+.TP
+.B C\-t Shift\-.
+Send focused window to next screen, if any.
+.TP 
+.B C\-t b 
+Banish 
+.TP
+.B C\-t Shift\-b
+Toggles bar on and off.
+.TP
+.B C\-t n
+Focus next window.
+.TP
+.B C\-t p
+Focus previous window.
+.TP
+.B C\-t k
+Close focused window.
+.TP
+.B C\-t Shift\-space
+Toggle focused window between monocle and floating state.
+.TP
+.B C\-t Tab
+Toggles to the previously selected tags.
+.TP
+.B C\-t Shift\-[F1..n]
+Apply nth tag to focused window.
+.TP
+.B C\-t Shift\-0
+Apply all tags to focused window.
+.TP
+.B C\-t Control\-Shift\-[F1..n]
+Add/remove nth tag to/from focused window.
+.TP
+.B C\-t F1\fP|\fBF2\fP|\fBF3\fP|\fBF4\fP|\fBF5\fP|\fBF6\fP|\fBF7\fP|\fBF8\fP|\fBF9
+Switch to tag number 1|2|... 
+.TP
+.B C\-t 0
+View all windows with any tag.
+.TP
+.B C\-t Control\-[F1..n]
+Add/remove all windows with nth tag to/from the view.
+.TP
+.B C\-t 1\fP|\fB2\fP|\fB3\fP|\fB4\fP|\fB5\fP|\fB6\fP|\fB7\fP|\fB8\fP|\fB9
+Switch to windows number 1|2|...
+.TP
+.B C\-t Shift\-q
+Quit dwm.
+.TP 
+.B C\-t q 
+Reloads dwm without killing the X server. 
+.SS Mouse commands
+.TP
+.B ControlMask\-Button1
+Move focused window while dragging. Monocle windows will be toggled to the floating state.
+.TP
+.B ControlMask\-Button2
+Toggles focused window between floating and monocle state.
+.TP
+.B ControlMask\-Button3
+Resize focused window while dragging. Monocle windows will be toggled to the floating state.
+.SH CUSTOMIZATION
+dwm is customized by creating a custom config.h and (re)compiling the source
+code. This keeps it fast, secure and simple.
+.SH SEE ALSO
+.BR dmenu (1)
+.SH BUGS
+Java applications which use the XToolkit/XAWT backend may draw grey windows
+only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early
+JDK 1.6 versions, because it assumes a reparenting window manager. Possible workarounds
+are using JDK 1.4 (which doesn't contain the XToolkit/XAWT backend) or setting the
+environment variable
+.BR AWT_TOOLKIT=MToolkit
+(to use the older Motif backend instead) or running
+.B xprop -root -f _NET_WM_NAME 32a -set _NET_WM_NAME LG3D
+or
+.B wmname LG3D
+(to pretend that a non-reparenting window manager is running that the
+XToolkit/XAWT backend can recognize) or when using OpenJDK setting the environment variable
+.BR _JAVA_AWT_WM_NONREPARENTING=1 .
+.P
+GTK 2.10.9+ versions contain a broken
+.BR Save\-As
+file dialog implementation,
+which requests to reconfigure its window size in an endless loop. However, its
+window is still respondable during this state, so you can simply ignore the flicker
+until a new GTK version appears, which will fix this bug, approximately
+GTK 2.10.12+ versions.
