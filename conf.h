@@ -10,7 +10,7 @@ static const char colors[NUMCOLORS][ColLast][8] = {
     { "#eee8d5", "#eeeeee", "#202420" }, /* x01 - normal */
     { "#222222", "#eeeeee", "#386596" }, /* x02 - selected */
     { "#676767", "#dfaf8f", "#000000" }, /* x03 - urgent */
-    { "#383838", "#eeeeee", "#000000" }, /* x04 - DATE TIME, Systray  */
+    { "#383838", "#eeeeee", "#000000" }, /* x04 - DATE TIME, Systray */
     { "#383838", "#dc322f", "#000000" }, /* x05 - red */
     { "#383838", "#859900", "#000000" }, /* x06 - green */
     { "#383838", "#b58900", "#000000" }, /* x07 - yellow */
@@ -34,11 +34,11 @@ static const Bool showsystray  = True; /* False means no systray */
 
 /* autostart script path */
 #define HOME "/home/ivo"
-static const char autostartscript[] = HOME"/dwm/autostart.sh";
+static const char autostartscript[] = HOME"/swm/autostart.sh";
 
 /* tagging */
 #define NTAGS 4
-#define Start_On_Tag 2 /* Start dwm on a different tag selection */
+#define Start_On_Tag 1 /* Start swm on a different tag selection */
 
 /* rules */
 #define TAG(t) (1 << (t - 1))
@@ -54,14 +54,9 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
         { "Gimp",      NULL,       NULL,      TAG(FOUR),    True,        -1 },
-        { "Skype",     NULL,       NULL,      TAG(FOUR),    True,        -1 },
 	{ "Conkeror",  NULL,       NULL,      TAG(TWO),     False,       -1 },
-	{ "Firefox",   NULL,       NULL,      TAG(TWO),     False,       -1 },
-      { "Thunderbird", NULL,       NULL,      TAG(TWO),     False,       -1 },
- { "Transmission-gtk", NULL,       NULL,      TAG(TWO),     False,       -1 },
         { "Emacs",     NULL,       NULL,      TAG(THREE),   False,       -1 },
         { "Xmessage",  NULL,       NULL,       0,           True,        -1 },
-        { "Zenity",    NULL,       NULL,       0,           True,        -1 },
 };
 
 static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
@@ -81,7 +76,7 @@ static const Bool resizehints = False; /* True means respect size hints in tiled
 
 /* commands */
 #define MENU "dmenu_run"
-#define PROMPT "Изпълни команда: "
+#define PROMPT "Run Command: "
 static const char *dmenucmd[] =
 {
   MENU,
@@ -94,34 +89,21 @@ static const char *dmenucmd[] =
   NULL
 };
 
-static const char *termcmd[]  = { "gnome-terminal", NULL };
+static const char *termcmd[]  = { "urxvt", NULL };
 static const char *conkeror[] = { "conkeror", NULL };
 static const char *emacscmd[] = { "emacsclient", "-c", NULL };
-
-/* Audio/Volume  keys */
-static const char *voldown[] =   { "amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL };
-static const char *volup[] =     { "amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL };
-static const char *volmute[] =   { "amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
 	/* modifier                   key        function        argument */
 	{ None,                       XK_d,      spawn,          {.v = dmenucmd } },
-        { None,                       XK_z,      spawn,          SHCMD("$HOME/.scripts/win_switcher.sh") },
 	{ None,                       XK_c,      spawn,          {.v = termcmd } },
         { None,                       XK_e,      spawn,          {.v = emacscmd } },
 	{ None,                       XK_w,      spawn,          {.v = conkeror } },
-        { ShiftMask,                  XK_w,      spawn,          SHCMD("$HOME/.scripts/dmenu-wallpaper") },
-        { None,               XK_BackSpace,      spawn,          SHCMD("$HOME/.scripts/touchpad_toggle") },
-        { None,                       XK_m,      spawn,          SHCMD("$HOME/.scripts/gmail.sh") },
-        { ShiftMask,                  XK_m,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
 	{ ShiftMask,                  XK_b,      togglebar,      {0} },
 	{ None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
-	{ 0,       XF86XK_AudioLowerVolume,      spawn,          {.v = voldown } },
-	{ 0,       XF86XK_AudioRaiseVolume,      spawn,          {.v = volup } },
-	{ 0,       XF86XK_AudioMute,             spawn,          {.v = volmute } },
 	{ None,                       XK_Tab,    view,           {0} },
 	{ None,                       XK_k,      killclient,     {0} },
 	{ None,                       XK_f,      togglefloating, {0} },
@@ -135,6 +117,11 @@ static Key keys[] = {
 	{ None,                       XK_2,      focusvisible,   {.i = 1 } },
 	{ None,                       XK_3,      focusvisible,   {.i = 2 } },
 	{ None,                       XK_4,      focusvisible,   {.i = 3 } },
+        { None,                       XK_5,      focusvisible,   {.i = 4 } },
+        { None,                       XK_6,      focusvisible,   {.i = 5 } },
+        { None,                       XK_7,      focusvisible,   {.i = 6 } },
+        { None,                       XK_8,      focusvisible,   {.i = 7 } },
+        { None,                       XK_9,      focusvisible,   {.i = 8 } },
 	TAGKEYS(                        XK_F1,                      0)
 	TAGKEYS(                        XK_F2,                      1)
 	TAGKEYS(                        XK_F3,                      2)
@@ -151,5 +138,5 @@ static Button buttons[] = {
 	{ ClkClientWin,         ControlMask,    Button2,        togglefloating, {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
         { ClkTagBar,            0,              Button1,        view,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+        { ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 };

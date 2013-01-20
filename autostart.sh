@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Wallpaper
-bgs -s ~/Fotos/Wallpapers/Gnome3.jpg
-#xsetroot -solid '#2e2e2e'
+xsetroot -solid '#2e2e2e'
 
 # Hide cursor
 #unclutter -idle 3 -jitter 2 -root &
@@ -15,6 +14,9 @@ ejectsy &
 
 # battery tray
 cbatticon -i symbolic -c 5 -u 5 &
+
+# Volume control for system tray
+volumeicon &
 
 # Start Dropbox
 dropboxd &

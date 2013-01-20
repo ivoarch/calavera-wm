@@ -1,7 +1,8 @@
-dwm - dynamic window manager
-============================
-dwm is an extremely fast, small, and dynamic window manager for X.
+# SWM
 
+swm is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm. 
+
+This project is a fork of dwm, which was created by see LICENSE file.
 
 Requirements
 ------------
@@ -10,10 +11,10 @@ In order to build dwm you need the Xlib header files.
 
 Installation
 ------------
-Edit config.mk to match your local setup (dwm is installed into
+Edit config.mk to match your local setup (swm is installed into
 the /usr/local namespace by default).
 
-Afterwards enter the following command to build and install dwm (if
+Afterwards enter the following command to build and install swm (if
 necessary as root):
 
     make clean install
@@ -22,18 +23,18 @@ If you are going to use the default bluegray color scheme it is highly
 recommended to also install the bluegray files shipped in the dextra package.
 
 
-Running dwm
+Running swm
 -----------
 Add the following line to your .xinitrc to start dwm using startx:
 
-    exec dwm
+    exec swm
 
 In order to connect dwm to a specific display, make sure that
 the DISPLAY environment variable is set correctly, e.g.:
 
-    DISPLAY=foo.bar:1 exec dwm
+    DISPLAY=foo.bar:1 exec swm
 
-(This will start dwm on display :1 of the host foo.bar.)
+(This will start swm on display :1 of the host foo.bar.)
 
 In order to display status info in the bar, you can do something
 like this in your .xinitrc:
@@ -42,10 +43,10 @@ like this in your .xinitrc:
     do
     	sleep 1
     done &
-    exec dwm
+    exec swm
 
 
 Configuration
 -------------
-The configuration of dwm is done by creating a custom config.h
+The configuration of swm is done by creating a custom config.h
 and (re)compiling the source code.

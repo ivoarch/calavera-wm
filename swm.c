@@ -125,7 +125,7 @@ typedef union {
     unsigned int ui;
     float f;
     const void *v;
-} Arg; /* argument structure by config.h */
+} Arg; /* argument structure by conf.h */
 
 typedef struct {
     unsigned int click;
@@ -352,7 +352,7 @@ static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 
 /* configuration, allows nested code to access above variables */
-#include "config.h"
+#include "conf.h"
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[NTAGS > 31 ? -1 : 1]; };
@@ -1735,7 +1735,7 @@ restart(const Arg *arg) {
     if (arg->v) {
 	execvp(((char **)arg->v)[0], (char **)arg->v);
     } else {
-	execlp("dwm", "dwm", NULL);
+	execlp("swm", "swm", NULL);
     }
 }
 
@@ -1986,7 +1986,7 @@ spawn(const Arg *arg) {
 	    close(ConnectionNumber(dpy));
 	setsid();
 	execvp(((char **)arg->v)[0], (char **)arg->v);
-	fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
+	fprintf(stderr, "swm: execvp %s", ((char **)arg->v)[0]);
 	perror(" failed");
 	exit(EXIT_SUCCESS);
     }
@@ -2444,7 +2444,7 @@ updatesystray(void) {
 	    XSync(dpy, False);
 	}
 	else {
-	    fprintf(stderr, "dwm: unable to obtain system tray.\n");
+	    fprintf(stderr, "swm: unable to obtain system tray.\n");
 	    free(systray);
 	    systray = NULL;
 	    return;
@@ -2564,7 +2564,7 @@ xerror(Display *dpy, XErrorEvent *ee) {
        || (ee->request_code == X_GrabKey && ee->error_code == BadAccess)
        || (ee->request_code == X_CopyArea && ee->error_code == BadDrawable))
 	return 0;
-    fprintf(stderr, "dwm: fatal error: request code=%d, error code=%d\n",
+    fprintf(stderr, "swm: fatal error: request code=%d, error code=%d\n",
 	    ee->request_code, ee->error_code);
     return xerrorxlib(dpy, ee); /* may call exit */
 }
@@ -2578,20 +2578,20 @@ xerrordummy(Display *dpy, XErrorEvent *ee) {
  * is already running. */
 int
 xerrorstart(Display *dpy, XErrorEvent *ee) {
-    die("dwm: another window manager is already running\n");
+    die("swm: another window manager is already running\n");
     return -1;
 }
 
 int
 main(int argc, char *argv[]) {
     if(argc == 2 && !strcmp("-v", argv[1]))
-	die("dwm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\nCustomized and patched by Ivaylo Kuzev.\n");
+	die("swm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\nCustomized and patched by Ivaylo Kuzev.\n");
     else if(argc != 1)
-	die("usage: dwm [-v]\n");
+	die("usage: swm [-v]\n");
     if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 	fputs("warning: no locale support\n", stderr);
     if(!(dpy = XOpenDisplay(NULL)))
-	die("dwm: cannot open display\n");
+	die("swm: cannot open display\n");
     checkotherwm();
     setup();
     scan();
