@@ -7,10 +7,10 @@ static const char font[] = "cantarell:size=11:bold:antialias=true:hinting=true";
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][8] = {
     /* border       fg         bg */
-    { "#eee8d5", "#eeeeee", "#000000" }, /* x01 - normal */
-    { "#222222", "#eeeeee", "#005577" }, /* x02 - selected */
+    { "#eee8d5", "#eeeeee", "#202420" }, /* x01 - normal */
+    { "#222222", "#eeeeee", "#386596" }, /* x02 - selected */
     { "#676767", "#dfaf8f", "#000000" }, /* x03 - urgent */
-    { "#383838", "#eeeeee", "#000000" }, /* x04 - DATE TIME  */
+    { "#383838", "#eeeeee", "#000000" }, /* x04 - DATE TIME, Systray  */
     { "#383838", "#dc322f", "#000000" }, /* x05 - red */
     { "#383838", "#859900", "#000000" }, /* x06 - green */
     { "#383838", "#b58900", "#000000" }, /* x07 - yellow */

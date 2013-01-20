@@ -2430,7 +2430,7 @@ updatesystray(void) {
 	wa.event_mask = ButtonPressMask | ExposureMask;
 	wa.override_redirect = True;
         wa.background_pixmap = ParentRelative;
-        wa.background_pixel = dc.colors[0][ColBG].pixel;
+        wa.background_pixel = dc.colors[3][ColBG].pixel;
 	XSelectInput(dpy, systray->win, SubstructureNotifyMask);
 	XChangeProperty(dpy, systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32,
 			PropModeReplace, (unsigned char *)&systrayorientation, 1);
