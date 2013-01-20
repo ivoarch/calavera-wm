@@ -48,5 +48,5 @@ like this in your .xinitrc:
 
 Configuration
 -------------
-The configuration of swm is done by creating a custom config.h
+The configuration of swm is done by creating a custom conf.h
 and (re)compiling the source code.
