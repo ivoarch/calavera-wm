@@ -881,6 +881,8 @@ drawbar(Monitor *m) {
 	col = dc.colors[ (m->tagset[m->seltags] & 1 << i ? 1:(urg & 1 << i ? 2:0))];
 	drawtext(buf, col , True);
 	dc.x += dc.w;
+        XSetForeground(dpy, dc.gc, dc.colors[3][ColBorder].pixel);
+        XDrawRectangle(dpy, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
     if(m == selmon) { /* status is only drawn on selected monitor */
