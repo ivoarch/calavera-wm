@@ -1,0 +1,13 @@
+#!/bin/sh
+# http://urukrama.wordpress.com/2012/08/16/use-dmenu-to-raise-running-applications/
+
+CMD=$(dmenu_path | dmenu -b -fn '-*-nu-*-*-*-*-*-*-*-*-*-*-*-*' -nb '#545043' -nf '#D2C7A7' -sb '#D2C7A7' -sf '#545043')
+
+# if no instance of the app has been started, launch one now
+if [ -z "`wmctrl -lx | grep -i $CMD`" ]; then
+    $CMD &
+else
+# search for existing app on any desktop and move it to the current desktop
+app_on_any_desk=`wmctrl -lx | grep -i $CMD | cut -d ' ' -f 1`
+wmctrl -i -a $app_on_any_desk
+fi;

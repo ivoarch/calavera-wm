@@ -1,0 +1,4 @@
+#!/bin/bash
+# http://vickychijwani.github.com/2012/04/15/blazing-fast-application-switching-in-linux/
+
+wmctrl -x -a "$1" || $2
