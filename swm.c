@@ -272,7 +272,6 @@ static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
 static void resizerequest(XEvent *e);
 static void run(void);
-static void restart(const Arg *arg);
 static void scan(void);
 static Bool sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void sendmon(Client *c, Monitor *m);
@@ -1728,15 +1727,6 @@ run(void) {
     while(running && !XNextEvent(dpy, &ev))
 	if(handler[ev.type])
 	    handler[ev.type](&ev); /* call handler */
-}
-
-void
-restart(const Arg *arg) {
-    if (arg->v) {
-	execvp(((char **)arg->v)[0], (char **)arg->v);
-    } else {
-	execlp("swm", "swm", NULL);
-    }
 }
 
 void

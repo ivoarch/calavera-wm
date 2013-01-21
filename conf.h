@@ -127,7 +127,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_F3,                      2)
 	TAGKEYS(                        XK_F4,                      3)
 	{ ShiftMask,                  XK_q,      quit,           {0} },
-	{ None,                       XK_q,      restart,        {0} },
 };
 
 /* button definitions */
