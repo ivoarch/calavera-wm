@@ -113,15 +113,6 @@ static Key keys[] = {
 	{ None,                       XK_period, focusmon,       {.i = +1 } },
 	{ ShiftMask,                  XK_comma,  tagmon,         {.i = -1 } },
 	{ ShiftMask,                  XK_period, tagmon,         {.i = +1 } },
-	{ None,                       XK_1,      focusvisible,   {.i = 0 } },
-	{ None,                       XK_2,      focusvisible,   {.i = 1 } },
-	{ None,                       XK_3,      focusvisible,   {.i = 2 } },
-	{ None,                       XK_4,      focusvisible,   {.i = 3 } },
-        { None,                       XK_5,      focusvisible,   {.i = 4 } },
-        { None,                       XK_6,      focusvisible,   {.i = 5 } },
-        { None,                       XK_7,      focusvisible,   {.i = 6 } },
-        { None,                       XK_8,      focusvisible,   {.i = 7 } },
-        { None,                       XK_9,      focusvisible,   {.i = 8 } },
 	TAGKEYS(                        XK_F1,                      0)
 	TAGKEYS(                        XK_F2,                      1)
 	TAGKEYS(                        XK_F3,                      2)

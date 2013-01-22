@@ -240,7 +240,6 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
-static void focusvisible(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static XftColor getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y);
@@ -1078,24 +1077,6 @@ focusstack(const Arg *arg) {
 		if(ISVISIBLE(i))
 		    c = i;
     }
-    if(c) {
-	focus(c);
-	restack(selmon);
-    }
-}
-
-void
-focusvisible(const Arg *arg) {
-    Client *c = NULL;
-    int s;
-    if(!selmon->sel || arg->i < 0)
-	return;
-    //skip the invisible clients
-    for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-    //skip arg->i visible clients
-    for(s = 0; c && s < arg->i; s += (ISVISIBLE(c))?1:0, c = c->next);
-    //skip the invisible clients
-    for(; c && !ISVISIBLE(c); c = c->next);
     if(c) {
 	focus(c);
 	restack(selmon);
