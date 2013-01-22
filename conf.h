@@ -3,20 +3,14 @@
 
 /* appearance */
 static const char font[] = "cantarell:size=11:bold:antialias=true:hinting=true";
-
-#define NUMCOLORS 8
-static const char colors[NUMCOLORS][ColLast][8] = {
-    /* border       fg         bg */
-    { "#eee8d5", "#eeeeee", "#202420" }, /* x01 - normal */
-    { "#222222", "#eeeeee", "#386596" }, /* x02 - selected */
-    { "#676767", "#dfaf8f", "#000000" }, /* x03 - urgent */
-    { "#383838", "#eeeeee", "#000000" }, /* x04 - DATE TIME, Systray */
-    { "#383838", "#dc322f", "#000000" }, /* x05 - red */
-    { "#383838", "#859900", "#000000" }, /* x06 - green */
-    { "#383838", "#b58900", "#000000" }, /* x07 - yellow */
-    { "#383838", "#268bd2", "#000000" }, /* x08 - blue */
-};
-
+static const char normbordercolor[] = "#eee8d5";
+static const char normbgcolor[] = "#000000";
+static const char normfgcolor[] = "#eeeeee";
+static const char selbordercolor[] = "#383838";
+static const char selbgcolor[] = "#386596";
+static const char selfgcolor[] = "#eeeeee";
+static const char tags_bgcolor[] = "#202420";
+static const char tags_fgcolor[] = "#eeeeee";
 static const unsigned int snap  = 32;   /* snap pixel */
 static const unsigned int borderpx  = 1;/* border pixel of floating windows */
 static const Bool showbar       = True; /* False means no bar */
@@ -81,10 +75,10 @@ static const char *dmenucmd[] =
 {
   MENU,
   "-fn", font,
-  "-nb", colors[0][ColBG],
-  "-nf", colors[0][ColFG],
-  "-sb", colors[1][ColBG],
-  "-sf", colors[1][ColFG],
+  "-nb", normbgcolor,
+  "-nf", normfgcolor,
+  "-sb", selbgcolor,
+  "-sf", selfgcolor,
   "-p",  PROMPT,
   NULL
 };
