@@ -1816,7 +1816,7 @@ setup(void) {
     initfont(font); /* init font */
     sw = DisplayWidth(dpy, screen);
     sh = DisplayHeight(dpy, screen);
-    bh = dc.h = dc.font.height + 2;
+    bh = dc.h = dc.font.height;
     updategeom();
     /* init atoms */
     wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
