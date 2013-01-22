@@ -11,8 +11,8 @@ static const char selbgcolor[] = "#386596";
 static const char selfgcolor[] = "#eeeeee";
 static const char tags_bgcolor[] = "#202420";
 static const char tags_fgcolor[] = "#eeeeee";
-static const unsigned int snap  = 32;   /* snap pixel */
-static const unsigned int borderpx  = 1;/* border pixel of floating windows */
+static const unsigned int snap  = 16;   /* snap pixel */
+static const unsigned int borderpx  = 2;/* border pixel of floating windows */
 static const Bool showbar       = True; /* False means no bar */
 static const Bool topbar        = True; /* False means bottom bar */
 static const char clock_fmt[] = "%a %I:%M %p"; /* Clock format on the bar */
@@ -26,34 +26,14 @@ static const Bool clicktofocus = 0; /* 1 Change focus only on click */
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool showsystray  = True; /* False means no systray */
 
+static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 /* autostart script path */
 #define HOME "/home/ivo"
-static const char autostartscript[] = HOME"/swm/autostart.sh";
-
+static const char autostartscript[] = HOME"/dwm/autostart.sh";
 /* tagging */
 #define NTAGS 4
 #define Start_On_Tag 1 /* Start swm on a different tag selection */
-
-/* rules */
-#define TAG(t) (1 << (t - 1))
-#define ONE   1
-#define TWO   2
-#define THREE 3
-#define FOUR  4
-
-static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-        { "Gimp",      NULL,       NULL,      TAG(FOUR),    True,        -1 },
-	{ "Conkeror",  NULL,       NULL,      TAG(TWO),     False,       -1 },
-        { "Emacs",     NULL,       NULL,      TAG(THREE),   False,       -1 },
-        { "Xmessage",  NULL,       NULL,       0,           True,        -1 },
-};
-
-static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
+#define FLOATING_AS_DEFAULT 0; /* 1 floating layout as default */
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
@@ -122,5 +102,5 @@ static Button buttons[] = {
 	{ ClkClientWin,         ControlMask,    Button2,        togglefloating, {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
         { ClkTagBar,            0,              Button1,        view,           {0} },
-        { ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 };
