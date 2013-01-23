@@ -26,10 +26,10 @@ static const Bool clicktofocus = 0; /* 1 Change focus only on click */
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool showsystray  = True; /* False means no systray */
 
-static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 /* autostart script path */
 #define HOME "/home/ivo"
 static const char autostartscript[] = HOME"/dwm/autostart.sh";
+
 /* tagging */
 #define NTAGS 4
 #define Start_On_Tag 1 /* Start swm on a different tag selection */
