@@ -1,5 +1,5 @@
 # swm version
-VERSION = 0.1
+VERSION = 1.1
 
 # Customize below to fit your system
 
