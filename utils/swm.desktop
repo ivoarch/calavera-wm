@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=swm
+GenericName=Window Manager
+Comment=Staking window manager for X
+Exec=swm
+Terminal=false
+TryExec=swm
+
+[Window Manager]
+SessionManaged=true

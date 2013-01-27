@@ -2,7 +2,7 @@
 #include <X11/XF86keysym.h>
 
 /* appearance */
-static const char font[] = "cantarell:size=11:bold:antialias=true:hinting=true";
+static const char font[] = "Sans:size=11:bold:antialias=true:hinting=true";
 static const char normbordercolor[] = "#eee8d5";
 static const char normbgcolor[] = "#000000";
 static const char normfgcolor[] = "#eeeeee";
@@ -28,7 +28,7 @@ static const Bool showsystray  = True; /* False means no systray */
 
 /* autostart script path */
 #define HOME "/home/ivo"
-static const char autostartscript[] = HOME"/dwm/autostart.sh";
+static const char autostartscript[] = HOME"/swm/autostart.sh";
 
 /* tagging */
 #define NTAGS 4
