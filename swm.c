@@ -140,6 +140,7 @@ struct Client {
     char name[256];
     float mina, maxa;
     int x, y, w, h;
+    int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
     int oldx, oldy, oldw, oldh;
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
@@ -279,6 +280,7 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, Bool fullscreen);
 static void setnumbdesktops(void);
 static void setup(void);
+static void savefloat(Client *c);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
@@ -1287,6 +1289,9 @@ manage(Window w, XWindowAttributes *wa) {
     c->h = c->oldh = wa->height;
     c->oldbw = wa->border_width;
 
+    c->x = c->mon->ox;
+    c->y = c->mon->oy;
+
     if(c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
 	c->x = c->mon->mx + c->mon->mw - WIDTH(c);
     if(c->y + HEIGHT(c) > c->mon->my + c->mon->mh)
@@ -1295,6 +1300,8 @@ manage(Window w, XWindowAttributes *wa) {
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->mon->by == c->mon->my) && (c->x + (c->w / 2) >= c->mon->wx)
 		      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
+    c->mon->ox = (c->x + 64) % (c->mon->ww - WIDTH(c));
+    c->mon->oy = (c->y + 40) % (c->mon->wh - HEIGHT(c));
     c->bw = borderpx;
 
     wc.border_width = c->bw;
@@ -1304,6 +1311,7 @@ manage(Window w, XWindowAttributes *wa) {
     updatewindowtype(c);
     updatesizehints(c);
     updatewmhints(c);
+    savefloat(c);
     XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
     grabbuttons(c, False);
     if(!c->isfloating)
@@ -1816,7 +1824,7 @@ setup(void) {
     initfont(font); /* init font */
     sw = DisplayWidth(dpy, screen);
     sh = DisplayHeight(dpy, screen);
-    bh = dc.h = dc.font.height;
+    bh = dc.h = dc.font.height + 2;
     updategeom();
     /* init atoms */
     wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
@@ -1974,8 +1982,11 @@ togglefloating(const Arg *arg) {
 	return;
     selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
     if(selmon->sel->isfloating)
-	resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-	       selmon->sel->w, selmon->sel->h, False);
+	/*restore last known float dimensions*/
+	resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
+	       selmon->sel->sfw, selmon->sel->sfh, False);
+    else
+    savefloat(selmon->sel);
     arrange(selmon);
 }
 
@@ -2496,6 +2507,14 @@ int
 xerrorstart(Display *dpy, XErrorEvent *ee) {
     die("swm: another window manager is already running\n");
     return -1;
+}
+
+void
+savefloat(Client *c) {
+c->sfx = c->x;
+ c->sfy = c->y;
+ c->sfw = c->w;
+ c->sfh = c->h;
 }
 
 int
