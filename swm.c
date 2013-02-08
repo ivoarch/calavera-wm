@@ -189,7 +189,6 @@ struct Monitor {
     Client *sel;
     Client *stack;
     Monitor *next;
-    int ox, oy;
     Window barwin;
 };
 
@@ -1295,9 +1294,6 @@ manage(Window w, XWindowAttributes *wa) {
     c->h = c->oldh = wa->height;
     c->oldbw = wa->border_width;
 
-    c->x = c->mon->ox;
-    c->y = c->mon->oy;
-
     if(c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
 	c->x = c->mon->mx + c->mon->mw - WIDTH(c);
     if(c->y + HEIGHT(c) > c->mon->my + c->mon->mh)
@@ -1306,8 +1302,6 @@ manage(Window w, XWindowAttributes *wa) {
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->mon->by == c->mon->my) && (c->x + (c->w / 2) >= c->mon->wx)
 		      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
-    c->mon->ox = (c->x + 64) % (c->mon->ww - WIDTH(c));
-    c->mon->oy = (c->y + 40) % (c->mon->wh - HEIGHT(c));
     c->bw = borderpx;
 
     wc.border_width = c->bw;
