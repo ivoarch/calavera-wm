@@ -95,6 +95,7 @@ enum {
     NetActiveWindow,
     NetWMWindowType,
     NetWMWindowTypeDialog,
+    NetWMWindowTypeDesktop,
     NetClientList,
     NetClientListStacking,
     NetNumberOfDesktops,
@@ -284,6 +285,7 @@ static void savefloat(Client *c);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
+static Bool typedesktop(Window *w);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
@@ -1270,6 +1272,10 @@ manage(Window w, XWindowAttributes *wa) {
     Window trans = None;
     XWindowChanges wc;
 
+    if (typedesktop(&w)) {
+	return;
+    }
+
     if(!(c = calloc(1, sizeof(Client))))
 	die("fatal: could not malloc() %u bytes\n", sizeof(Client));
     c->win = w;
@@ -1841,6 +1847,7 @@ setup(void) {
     netatom[NetWMFullscreen] = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
     netatom[NetWMWindowTypeDialog] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+    netatom[NetWMWindowTypeDesktop] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
     netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
     netatom[NetClientListStacking] = XInternAtom(dpy, "_NET_CLIENT_LIST_STACKING", False);
     netatom[NetNumberOfDesktops] = XInternAtom(dpy, "_NET_NUMBER_OF_DESKTOPS", False);
@@ -1929,6 +1936,27 @@ spawn(const Arg *arg) {
 	perror(" failed");
 	exit(EXIT_SUCCESS);
     }
+}
+
+Bool
+typedesktop(Window *w) {
+    int f;
+    unsigned char *data = NULL;
+    unsigned long n, extra, i;
+    Atom real, result = None;
+
+    if(XGetWindowProperty(dpy, *w, netatom[NetWMWindowType], 0L, 0x7FFFFFFF, False, AnyPropertyType,
+			  &real, &f, &n, &extra, &data) == Success) {
+
+	for(i = 0; i < n; ++i)
+	result = * (Atom *) data;
+
+	XMapWindow(dpy, *w);
+	XMapSubwindows(dpy, *w);
+    }
+
+    XFree(data);
+    return result == netatom[NetWMWindowTypeDesktop] ? True : False;
 }
 
 void

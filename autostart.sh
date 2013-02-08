@@ -27,5 +27,8 @@ nm-applet &
 # Wicd
 #wicd-client --tray &
 
+# File Manager
+nautilus &
+
 # Browser
 conkeror &
