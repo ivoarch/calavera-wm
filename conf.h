@@ -45,9 +45,6 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 	{ ShiftMask,                  KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ ControlMask | ShiftMask,    KEY,      toggletag,      {.ui = 1 << TAG} },
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
 /* commands */
 #define MENU "dmenu_run"
 #define PROMPT "Run Command: "
