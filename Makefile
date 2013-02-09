@@ -1,5 +1,5 @@
 
-include config.mk
+include conf.mk
 
 SRC = swm.c
 OBJ = ${SRC:.c=.o}
@@ -16,7 +16,7 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: conf.h config.mk
+${OBJ}: conf.h conf.mk
 
 swm: ${OBJ}
 	@echo CC -o $@
