@@ -1368,14 +1368,15 @@ maprequest(XEvent *e) {
 
 void
 monocle(Monitor *m) {
-    unsigned int n = 0;
     Client *c;
 
-    for(c = m->clients; c; c = c->next)
-	if(ISVISIBLE(c))
-            n++;
-    for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
+    for(c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+	/* Don't draw borders. */
+	c->bw = 0;
 	resize(c, m->wx, m->wy, m->ww, m->wh, False);
+	/* Restore borders. */
+	c->bw = borderpx;
+    }
 }
 
 void
@@ -1565,7 +1566,7 @@ resizeclient(Client *c, int x, int y, int w, int h) {
     c->oldy = c->y; c->y = wc.y = y;
     c->oldw = c->w; c->w = wc.width = w;
     c->oldh = c->h; c->h = wc.height = h;
-    wc.border_width = !c->isfloating ? 0 : c->bw;
+    wc.border_width = c->bw;
     XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
     configure(c);
     XSync(dpy, False);
