@@ -1637,24 +1637,14 @@ resizemouse(const Arg *arg) {
 
 void
 restack(Monitor *m) {
-    Client *c;
     XEvent ev;
-    XWindowChanges wc;
 
     drawbar(m);
     if(!m->sel)
 	return;
-    if(m->sel->isfloating)
-	XRaiseWindow(dpy, m->sel->win);
-	wc.stack_mode = Below;
-	wc.sibling = m->barwin;
-	for(c = m->stack; c; c = c->snext)
-	    if(!c->isfloating && ISVISIBLE(c)) {
-		XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
-		wc.sibling = c->win;
-	    }
-	XSync(dpy, False);
-	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
+    XRaiseWindow(dpy, m->sel->win);
+    XSync(dpy, False);
+    while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 }
 
 void
