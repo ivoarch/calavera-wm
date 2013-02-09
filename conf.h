@@ -33,7 +33,7 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 /* tagging */
 #define NTAGS 4
 #define Start_On_Tag 1 /* Start swm on a different tag selection */
-#define FLOATING_AS_DEFAULT 0; /* 1 floating layout as default */
+#define FLOATING_AS_DEFAULT 1; /* 1 floating layout as default */
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
