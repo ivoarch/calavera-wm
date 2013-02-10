@@ -947,8 +947,6 @@ drawtext(const char *text, XftColor col[ColLast], Bool invert) {
 
 void
 enternotify(XEvent *e) {
-    if(clicktofocus) return;
-
     Client *c;
     Monitor *m;
     XCrossingEvent *ev = &e->xcrossing;
@@ -964,6 +962,7 @@ enternotify(XEvent *e) {
     else if(!c || c == selmon->sel)
 	return;
     focus(c);
+    XRaiseWindow(display, m->sel->win);
 }
 
 void
@@ -1387,8 +1386,6 @@ monocle(Monitor *m) {
 
 void
 motionnotify(XEvent *e) {
-    if(clicktofocus) return;
-
     static Monitor *mon = NULL;
     Monitor *m;
     XMotionEvent *ev = &e->xmotion;

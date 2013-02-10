@@ -20,7 +20,6 @@ static const char clock_fmt[] = "%a %I:%M %p"; /* Clock format on the bar */
 			        * see http://tronche.com/gui/x/xlib/appendix/b/ */
 static const Bool waitkey    = 1; /* 1 the cursor should change into a square when waiting for a key. */
 static const Bool banishhook    = 0; /* 1 the banish command will be executed, when the prefix key is pressed */
-static const Bool clicktofocus = 0; /* 1 Change focus only on click */
 
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool showsystray  = True; /* False means no systray */
