@@ -4,7 +4,7 @@ swm is a minimalist stacking window manager, using prefix key style, à la ratpo
 
 ![Screenshot](https://raw.github.com/ivoarch/swm/master/screenshot.png "screenshot")
 
-This project is a fork of dwm, which was created by see [LICENSE](https://raw.github.com/ivoarch/swm/master/LICENSE) file.
+This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/swm/master/LICENSE) file.
 
 Download
 --------
@@ -15,7 +15,7 @@ clone with Git by doing:
 
 Requirements
 ------------
-In order to build swm you need:
+In order to build swm you need the header files.
 
 - Libx11
 - Libxft

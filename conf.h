@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include <X11/XF86keysym.h>
 
 /* appearance */
 static const char font[] = "Sans:size=11:bold:antialias=true:hinting=true";
@@ -31,9 +30,9 @@ static const Bool showsystray  = True; /* False means no systray */
 static const char autostartscript[] = HOME"/swm/autostart.sh";
 
 /* tagging */
-#define NTAGS 4
-#define Start_On_Tag 1 /* Start swm on a different tag selection */
-#define FLOATING_AS_DEFAULT 1; /* 1 floating layout as default */
+#define NTAGS 4 /* Number of tags */
+#define STARTONTAG 1 /* Start swm on a different tag selection */
+#define FLOATING_AS_DEFAULT 1; /* 0 Monocle as default */
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
@@ -91,8 +90,7 @@ static Key keys[] = {
 	{ ShiftMask,                  XK_q,      quit,           {0} },
 };
 
-/* button definitions */
-/* click can be ClkStatusText, ClkClientWin, or ClkRootWin */
+/* BUTTONS*/
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
