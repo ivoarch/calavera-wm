@@ -78,10 +78,6 @@ static Key keys[] = {
 	{ None,                       XK_f,      togglefloating, {0} },
 	{ None,                       XK_0,      view,           {.ui = ~0 } },
 	{ ShiftMask,                  XK_0,      tag,            {.ui = ~0 } },
-	{ None,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ None,                       XK_period, focusmon,       {.i = +1 } },
-	{ ShiftMask,                  XK_comma,  tagmon,         {.i = -1 } },
-	{ ShiftMask,                  XK_period, tagmon,         {.i = +1 } },
 	TAGKEYS(                        XK_F1,                      0)
 	TAGKEYS(                        XK_F2,                      1)
 	TAGKEYS(                        XK_F3,                      2)

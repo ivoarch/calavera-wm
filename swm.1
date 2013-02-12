@@ -4,8 +4,8 @@ swm \- Stacking window manager.
 .SH SYNOPSIS
 .B swm
 .RB [ \-v ]
-.SH DESCRIPTION  
-swm is a minimalist stacking window manager, using prefix key style, 
+.SH DESCRIPTION
+swm is a minimalist stacking window manager, using prefix key style,
 à la ratpoison and stumpwm.
 .SH OPTIONS
 .TP
@@ -22,34 +22,22 @@ command.
 .TP
 .B C\-t c
 Start
-.BR urxvt (1). 
-.TP 
-.B C\-t d 
-Start 
-.BR dmenu (1).   
+.BR urxvt (1).
 .TP
-.B C\-t e 
+.B C\-t d
 Start
-.BR emacs (1). 
+.BR dmenu (1).
 .TP
-.B C\-t w 
-Start  
+.B C\-t e
+Start
+.BR emacs (1).
+.TP
+.B C\-t w
+Start
 .BR conkeror (1).
 .TP
-.B C\-t ,
-Focus previous screen, if any.
-.TP
-.B C\-t .
-Focus next screen, if any.
-.TP
-.B C\-t Shift\-,
-Send focused window to previous screen, if any.
-.TP
-.B C\-t Shift\-.
-Send focused window to next screen, if any.
-.TP 
-.B C\-t b 
-Banish 
+.B C\-t b
+Banish
 .TP
 .B C\-t Shift\-b
 Toggles bar on and off.
@@ -63,7 +51,7 @@ Focus previous window.
 .B C\-t k
 Close focused window.
 .TP
-.B C\-t Shift\-space
+.B C\-t f
 Toggle focused window between monocle and floating state.
 .TP
 .B C\-t Tab
@@ -79,7 +67,7 @@ Apply all tags to focused window.
 Add/remove nth tag to/from focused window.
 .TP
 .B C\-t F1\fP|\fBF2\fP|\fBF3\fP|\fBF4\fP|\fBF5\fP|\fBF6\fP|\fBF7\fP|\fBF8\fP|\fBF9
-Switch to tag number 1|2|... 
+Switch to tag number 1|2|...
 .TP
 .B C\-t 0
 View all windows with any tag.

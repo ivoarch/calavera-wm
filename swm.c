@@ -237,7 +237,6 @@ static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
 static void die(const char *errstr, ...);
-static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
@@ -245,7 +244,6 @@ static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
-static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static XftColor getcolor(const char *colstr);
@@ -292,7 +290,6 @@ static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static Bool typedesktop(Window *w);
 static void tag(const Arg *arg);
-static void tagmon(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -826,21 +823,6 @@ die(const char *errstr, ...) {
     exit(EXIT_FAILURE);
 }
 
-Monitor *
-dirtomon(int dir) {
-    Monitor *m = NULL;
-
-    if(dir > 0) {
-	if(!(m = selmon->next))
-	    m = mons;
-    }
-    else if(selmon == mons)
-	for(m = mons; m->next; m = m->next);
-    else
-	for(m = mons; m->next != selmon; m = m->next);
-    return m;
-}
-
 void
 drawbar(Monitor *m) {
     int x;
@@ -1006,20 +988,6 @@ focusin(XEvent *e) { /* there are some broken focus acquiring clients */
 
     if(selmon->sel && ev->window != selmon->sel->win)
 	setfocus(selmon->sel);
-}
-
-void
-focusmon(const Arg *arg) {
-    Monitor *m;
-
-    if(!mons->next)
-	return;
-    if((m = dirtomon(arg->i)) == selmon)
-	return;
-    unfocus(selmon->sel, False); /* s/True/False/ fixes input focus issues
-				    in gedit and anjuta */
-    selmon = m;
-    focus(NULL);
 }
 
 void
@@ -1965,13 +1933,6 @@ tag(const Arg *arg) {
 	focus(NULL);
 	arrange(selmon);
     }
-}
-
-void
-tagmon(const Arg *arg) {
-    if(!selmon->sel || !mons->next)
-	return;
-    sendmon(selmon->sel, dirtomon(arg->i));
 }
 
 int
