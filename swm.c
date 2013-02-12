@@ -882,6 +882,7 @@ drawbar(Monitor *m) {
 	len = TEXTW(buf);
 
 	dc.x = x;
+	drawtext(NULL, dc.norm, False);
 	dc.w = MIN(dc.w, len);
 	dc.x = MAX(dc.x, (m->mw / 2) - (len / 2));
 	drawtext(buf, dc.norm, False);
