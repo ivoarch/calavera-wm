@@ -2314,8 +2314,11 @@ updatetitle(Client *c) {
 
 void
 updatestatus(void) {
+    char *username;
+    username = getlogin();
+
     if(!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-	strcpy(stext, "");
+        strcpy(stext, username);
     drawbar(selmon);
 }
 
