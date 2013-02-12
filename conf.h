@@ -1,15 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
+#include "themes/default.c"
 static const char font[] = "Sans:size=11:bold:antialias=true:hinting=true";
-static const char normbordercolor[] = "#eee8d5";
-static const char normbgcolor[] = "#000000";
-static const char normfgcolor[] = "#eeeeee";
-static const char selbordercolor[] = "#383838";
-static const char selbgcolor[] = "#386596";
-static const char selfgcolor[] = "#eeeeee";
-static const char tags_bgcolor[] = "#202420";
-static const char tags_fgcolor[] = "#eeeeee";
 static const unsigned int snap  = 16;   /* snap pixel */
 static const unsigned int borderpx  = 2;/* border pixel of floating windows */
 static const Bool showbar       = True; /* False means no bar */
