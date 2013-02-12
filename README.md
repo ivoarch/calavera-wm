@@ -8,8 +8,7 @@ This project is a fork of [dwm](http://dwm.suckless.org/), which was created by 
 
 Download
 --------
-You can download it here: <https://github.com/ivoarch/swm/tags> or
-clone with Git by doing:
+Clone with Git by doing:
 
     git clone https://github.com/ivoarch/swm.git
 

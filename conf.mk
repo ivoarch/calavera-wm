@@ -1,5 +1,5 @@
 # swm version
-VERSION = 1.2
+VERSION = `git rev-parse HEAD`
 
 # Customize below to fit your system
 
