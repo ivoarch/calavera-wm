@@ -71,34 +71,9 @@ Quit swm.
 Move focused window while dragging. Monocle windows will be toggled to the floating state.
 .TP
 .B ControlMask\-Button2
-Toggles focused window between floating and monocle state.
-.TP
-.B ControlMask\-Button3
 Resize focused window while dragging. Monocle windows will be toggled to the floating state.
 .SH CUSTOMIZATION
-swm is customized by creating a custom config.h and (re)compiling the source
-code. This keeps it fast, secure and simple.
+swm is customized by creating a custom conf.h and (re)compiling the source
+code.
 .SH SEE ALSO
 .BR dmenu (1)
-.SH BUGS
-Java applications which use the XToolkit/XAWT backend may draw grey windows
-only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early
-JDK 1.6 versions, because it assumes a reparenting window manager. Possible workarounds
-are using JDK 1.4 (which doesn't contain the XToolkit/XAWT backend) or setting the
-environment variable
-.BR AWT_TOOLKIT=MToolkit
-(to use the older Motif backend instead) or running
-.B xprop -root -f _NET_WM_NAME 32a -set _NET_WM_NAME LG3D
-or
-.B wmname LG3D
-(to pretend that a non-reparenting window manager is running that the
-XToolkit/XAWT backend can recognize) or when using OpenJDK setting the environment variable
-.BR _JAVA_AWT_WM_NONREPARENTING=1 .
-.P
-GTK 2.10.9+ versions contain a broken
-.BR Save\-As
-file dialog implementation,
-which requests to reconfigure its window size in an endless loop. However, its
-window is still respondable during this state, so you can simply ignore the flicker
-until a new GTK version appears, which will fix this bug, approximately
-GTK 2.10.12+ versions.

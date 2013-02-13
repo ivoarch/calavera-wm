@@ -83,10 +83,10 @@
 #define XEMBED_EMBEDDED_VERSION (VERSION_MAJOR << 16) | VERSION_MINOR
 
 /* enums */
-enum { PrefixKey, CmdKey };                                  /* prefix key */
-enum { CurNormal, CurResize, CurMove, CurCmd, CurLast };     /* cursor */
-enum { ColBorder, ColFG, ColBG, ColLast };                   /* color */
-enum { ClkTagBar, ClkStatusText, ClkClientWin, ClkRootWin, ClkLast };  /* clicks */
+enum { PrefixKey, CmdKey };                              /* prefix key */
+enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
+enum { ColBorder, ColFG, ColBG, ColLast };               /* color */
+enum { ClkTagBar, ClkClientWin, ClkRootWin, ClkLast };   /* clicks */
 
 /* EWMH atoms */
 enum {
@@ -527,17 +527,15 @@ buttonpress(XEvent *e) {
                     click = ClkTagBar;
                     arg.ui = 1 << i;
                 }
-                else if(ev->x > selmon->ww - TEXTW(stext))
-                    click = ClkStatusText;
-                }
-		else if((c = wintoclient(ev->window))) {
-		    focus(c);
-		    click = ClkClientWin;
-		}
-		for(i = 0; i < LENGTH(buttons); i++)
-		    if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
-		       && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+    }
+    if((c = wintoclient(ev->window))) {
+	focus(c);
+	click = ClkClientWin;
+    }
+    for(i = 0; i < LENGTH(buttons); i++)
+	if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
+	   && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
+	    buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
 }
 
 void

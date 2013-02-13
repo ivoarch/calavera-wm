@@ -77,8 +77,6 @@ static Key keys[] = {
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
-	{ ClkClientWin,         ControlMask,    Button2,        togglefloating, {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
         { ClkTagBar,            0,              Button1,        usetag,         {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 };
