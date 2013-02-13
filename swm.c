@@ -263,6 +263,7 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
+static void movetag(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -289,12 +290,9 @@ static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static Bool typedesktop(Window *w);
-static void tag(const Arg *arg);
 static int textnw(const char *text, unsigned int len);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
-static void toggletag(const Arg *arg);
-static void toggleview(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -312,7 +310,7 @@ static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
 static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
-static void view(const Arg *arg);
+static void usetag(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
@@ -557,7 +555,7 @@ cleanup(void) {
     Arg a = {.ui = ~0};
     Monitor *m;
 
-    view(&a);
+    movetag(&a);
     for(m = mons; m; m = m->next)
 	while(m->stack)
 	    unmanage(m->stack, False);
@@ -1928,7 +1926,7 @@ typedesktop(Window *w) {
 }
 
 void
-tag(const Arg *arg) {
+movetag(const Arg *arg) {
     if(selmon->sel && arg->ui & TAGMASK) {
 	selmon->sel->tags = arg->ui & TAGMASK;
 	focus(NULL);
@@ -1977,32 +1975,6 @@ togglefloating(const Arg *arg) {
     else
     savefloat(selmon->sel);
     arrange(selmon);
-}
-
-void
-toggletag(const Arg *arg) {
-    unsigned int newtags;
-
-    if(!selmon->sel)
-	return;
-    newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
-    if(newtags) {
-	selmon->sel->tags = newtags;
-	focus(NULL);
-	arrange(selmon);
-    }
-}
-
-void
-toggleview(const Arg *arg) {
-    unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
-
-    if(newtagset) {
-	selmon->tagset[selmon->seltags] = newtagset;
-	focus(NULL);
-	arrange(selmon);
-    }
-    updatecurrenddesktop();
 }
 
 void
@@ -2428,7 +2400,7 @@ updatewmhints(Client *c) {
 }
 
 void
-view(const Arg *arg) {
+usetag(const Arg *arg) {
 
     if((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
 	return;

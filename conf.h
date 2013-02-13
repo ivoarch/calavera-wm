@@ -30,11 +30,9 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
 #define PREFIX_KEYSYM XK_t  /* prefix key */
 
-#define TAGKEYS(KEY,TAG) \
-	{ None,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ ControlMask,                KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ ShiftMask,                  KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ ControlMask | ShiftMask,    KEY,      toggletag,      {.ui = 1 << TAG} },
+#define TK(KEY,TAG) \
+	{ None,                       KEY,      usetag,           {.ui = 1 << TAG} }, \
+	{ ShiftMask,                  KEY,      movetag,          {.ui = 1 << TAG} },
 
 /* commands */
 #define MENU "dmenu_run"
@@ -66,15 +64,12 @@ static Key keys[] = {
 	{ None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
-	{ None,                       XK_Tab,    view,           {0} },
 	{ None,                       XK_k,      killclient,     {0} },
 	{ None,                       XK_f,      togglefloating, {0} },
-	{ None,                       XK_0,      view,           {.ui = ~0 } },
-	{ ShiftMask,                  XK_0,      tag,            {.ui = ~0 } },
-	TAGKEYS(                        XK_F1,                      0)
-	TAGKEYS(                        XK_F2,                      1)
-	TAGKEYS(                        XK_F3,                      2)
-	TAGKEYS(                        XK_F4,                      3)
+	TK(                        XK_F1,                      0)
+	TK(                        XK_F2,                      1)
+	TK(                        XK_F3,                      2)
+	TK(                        XK_F4,                      3)
 	{ ShiftMask,                  XK_q,      quit,           {0} },
 };
 
@@ -84,6 +79,6 @@ static Button buttons[] = {
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
 	{ ClkClientWin,         ControlMask,    Button2,        togglefloating, {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
-        { ClkTagBar,            0,              Button1,        view,           {0} },
+        { ClkTagBar,            0,              Button1,        usetag,         {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 };
