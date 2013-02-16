@@ -2,8 +2,6 @@
 
 swm is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
-![Screenshot](https://raw.github.com/ivoarch/swm/master/screenshot.png "screenshot")
-
 This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/swm/master/LICENSE) file.
 
 Download
