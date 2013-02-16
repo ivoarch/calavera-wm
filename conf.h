@@ -17,13 +17,10 @@ static const Bool banishhook    = 0; /* 1 the banish command will be executed, w
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool showsystray  = True; /* False means no systray */
 
-/* autostart script path */
-#define HOME "/home/ivo"
+#define HOME "/home/ivo"  /* autostart script path */
 static const char autostartscript[] = HOME"/swm/autostart.sh";
 
-/* tagging */
-#define NTAGS 4 /* Number of tags */
-#define STARTONTAG 1 /* Start swm on a different tag selection */
+#define N_WORKSPACES 4         /* Number of Workspaces */
 #define FLOATING_AS_DEFAULT 1; /* 0 Monocle as default */
 
 /* key definitions */

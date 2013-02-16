@@ -61,7 +61,7 @@
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define TAGMASK                 ((1 << NTAGS) - 1)
+#define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 
 /* systray  */
@@ -357,7 +357,7 @@ static Window root;
 #include "conf.h"
 
 /* compile-time check if all tags fit into an unsigned int bit array. */
-struct NumTags { char limitexceeded[NTAGS > 31 ? -1 : 1]; };
+struct NumTags { char limitexceeded[N_WORKSPACES > 31 ? -1 : 1]; };
 
 /* function implementations */
 void
@@ -522,8 +522,8 @@ buttonpress(XEvent *e) {
         i = x = 0;
                 do
                     x += TEXTW(buf);
-                while(ev->x >= x && ++i < (NTAGS));
-                if(i < (NTAGS)) {
+                while(ev->x >= x && ++i < (N_WORKSPACES));
+                if(i < (N_WORKSPACES)) {
                     click = ClkTagBar;
                     arg.ui = 1 << i;
                 }
@@ -767,7 +767,7 @@ createmon(void) {
     if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
 	die("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
 
-    m->tagset[0] = m->tagset[1] = STARTONTAG;
+    m->tagset[0] = m->tagset[1] = 1;
     m->showbar = showbar;
     m->topbar = topbar;
 
@@ -834,8 +834,8 @@ drawbar(Monitor *m) {
     }
     dc.x = 0;
 
-    /* init count tags */
-    for(i = 0; i < NTAGS; i++) {
+    /* init count workspaces */
+    for(i = 0; i < N_WORKSPACES; i++) {
 	char buf[5];
 	int n = 0;
 	for(c = m->clients; c; c = c->next) {
@@ -1822,8 +1822,8 @@ setup(void) {
     dc.sel[ColBorder] = getcolor(selbordercolor);
     dc.sel[ColBG] = getcolor(selbgcolor);
     dc.sel[ColFG] = getcolor(selfgcolor);
-    dc.tags[ColBG] = getcolor(tags_bgcolor);
-    dc.tags[ColFG] = getcolor(tags_fgcolor);
+    dc.tags[ColBG] = getcolor(workspaces_bgcolor);
+    dc.tags[ColFG] = getcolor(workspaces_fgcolor);
     dc.drawable = XCreatePixmap(display, root, DisplayWidth(display, screen), bh, DefaultDepth(display, screen));
     dc.gc = XCreateGC(display, root, 0, NULL);
     /* set line drawing attributes */
