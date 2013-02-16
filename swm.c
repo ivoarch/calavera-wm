@@ -263,7 +263,7 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
-static void movetag(const Arg *arg);
+static void moveto_workspace(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -310,7 +310,7 @@ static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
 static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
-static void usetag(const Arg *arg);
+static void change_workspace(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
@@ -553,7 +553,7 @@ cleanup(void) {
     Arg a = {.ui = ~0};
     Monitor *m;
 
-    movetag(&a);
+    moveto_workspace(&a);
     for(m = mons; m; m = m->next)
 	while(m->stack)
 	    unmanage(m->stack, False);
@@ -1924,7 +1924,7 @@ typedesktop(Window *w) {
 }
 
 void
-movetag(const Arg *arg) {
+moveto_workspace(const Arg *arg) {
     if(selmon->sel && arg->ui & TAGMASK) {
 	selmon->sel->tags = arg->ui & TAGMASK;
 	focus(NULL);
@@ -2398,7 +2398,7 @@ updatewmhints(Client *c) {
 }
 
 void
-usetag(const Arg *arg) {
+change_workspace(const Arg *arg) {
 
     if((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
 	return;

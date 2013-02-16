@@ -27,14 +27,14 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
 #define PREFIX_KEYSYM XK_t  /* prefix key */
 
-#define TK(KEY,TAG) \
-	{ None,                       KEY,      usetag,           {.ui = 1 << TAG} }, \
-	{ ShiftMask,                  KEY,      movetag,          {.ui = 1 << TAG} },
+#define WS_KEY(KEY,WS) \
+	{ None,                       KEY,      change_workspace,  {.ui = 1 << WS} }, \
+	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* commands */
 #define MENU "dmenu_run"
 #define PROMPT "Run Command: "
-static const char *dmenucmd[] =
+static const char *CMD_LAUNCHER[] =
 {
   MENU,
   "-fn", font,
@@ -46,27 +46,27 @@ static const char *dmenucmd[] =
   NULL
 };
 
-static const char *termcmd[]  = { "urxvt", NULL };
-static const char *conkeror[] = { "conkeror", NULL };
-static const char *emacscmd[] = { "emacsclient", "-c", NULL };
+static const char *CMD_TERM[]  = { "urxvt", NULL };
+static const char *CMD_BROWSER[] = { "conkeror", NULL };
+static const char *CMD_EDITOR[] = { "emacsclient", "-c", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
 	/* modifier                   key        function        argument */
-	{ None,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ None,                       XK_c,      spawn,          {.v = termcmd } },
-        { None,                       XK_e,      spawn,          {.v = emacscmd } },
-	{ None,                       XK_w,      spawn,          {.v = conkeror } },
+	{ None,                       XK_d,      spawn,          {.v = CMD_LAUNCHER } },
+	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
+        { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
+	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
 	{ ShiftMask,                  XK_b,      togglebar,      {0} },
 	{ None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
 	{ None,                       XK_k,      killclient,     {0} },
 	{ None,                       XK_f,      togglefloating, {0} },
-	TK(                        XK_F1,                      0)
-	TK(                        XK_F2,                      1)
-	TK(                        XK_F3,                      2)
-	TK(                        XK_F4,                      3)
+	WS_KEY(                        XK_F1,                      0)
+	WS_KEY(                        XK_F2,                      1)
+	WS_KEY(                        XK_F3,                      2)
+	WS_KEY(                        XK_F4,                      3)
 	{ ShiftMask,                  XK_q,      quit,           {0} },
 };
 
@@ -75,5 +75,5 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
-        { ClkTagBar,            0,              Button1,        usetag,         {0} },
+        { ClkTagBar,            0,              Button1,     change_workspace,  {0} },
 };
