@@ -31,4 +31,4 @@ nm-applet &
 pcmanfm --desktop &
 
 # Browser
-conkeror &
+#conkeror &

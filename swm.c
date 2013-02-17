@@ -823,6 +823,7 @@ void
 drawbar(Monitor *m) {
     int x;
     unsigned int i, occ = 0, urg = 0;
+    unsigned int w, tw;
     XftColor *col;
     Client *c;
 
@@ -872,16 +873,29 @@ drawbar(Monitor *m) {
 	struct tm *tm;
 	int len;
 
+	dc.x = x;
 	time(&t);
 	tm = localtime(&t);
 	strftime(buf, 20, clock_fmt, tm);
 	len = TEXTW(buf);
-
-	dc.x = x;
-	drawtext(NULL, dc.norm, False);
-	dc.w = MIN(dc.w, len);
+        drawtext(NULL, dc.norm, False);
+       	dc.w = MIN(dc.w, len);
 	dc.x = MAX(dc.x, (m->mw / 2) - (len / 2));
 	drawtext(buf, dc.norm, False);
+
+	dc.x = x;
+	if(m->sel) {
+	    tw = MIN((w = dc.w), MIN(500, TEXTW(m->sel->name)));
+            dc.w = tw;
+	drawtext(m->sel->name, dc.norm, False);
+        if(w > tw) {
+	    dc.x += tw;
+	    dc.w = w - tw;
+	    drawtext(NULL, dc.norm, False);
+	}
+	}
+	else
+	    drawtext(NULL, dc.norm, False);
     }
     XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
     XSync(display, False);
