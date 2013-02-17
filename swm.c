@@ -885,7 +885,7 @@ drawbar(Monitor *m) {
 
 	dc.x = x;
 	if(m->sel) {
-	    tw = MIN((w = dc.w), MIN(500, TEXTW(m->sel->name)));
+	    tw = MIN((w = dc.w), MIN(180, TEXTW(m->sel->name)));
             dc.w = tw;
 	drawtext(m->sel->name, dc.norm, False);
         if(w > tw) {
