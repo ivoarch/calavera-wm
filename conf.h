@@ -69,6 +69,13 @@ static Key keys[] = {
 	WS_KEY(                        XK_F3,                      2)
 	WS_KEY(                        XK_F4,                      3)
 	{ ShiftMask,                  XK_r,      reload,         {0} },
+
+	{0, XF86XK_AudioLowerVolume,
+            spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
+        {0, XF86XK_AudioRaiseVolume,
+	    spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL}}},
+        {0, XF86XK_AudioMute,
+	    spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
 /* BUTTONS*/
