@@ -267,7 +267,7 @@ static void moveto_workspace(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
+static void reload(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void removesystrayicon(Client *i);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
@@ -322,6 +322,7 @@ static int xerrorstart(Display *display, XErrorEvent *ee);
 static Systray *systray = NULL;
 static unsigned long systrayorientation = _NET_SYSTEM_TRAY_ORIENTATION_HORZ;
 static const char broken[] = "broken";
+static char **cargv;
 static char stext[256];
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
 static int bh;      /* bar geometry */
@@ -1497,8 +1498,13 @@ propertynotify(XEvent *e) {
 }
 
 void
-quit(const Arg *arg) {
+reload(const Arg *arg) {
     running = False;
+    if (arg) {
+	cleanup();
+	execvp(cargv[0], cargv);
+	die("Can't exec: %s\n", strerror(errno));
+    }
 }
 
 Monitor *
@@ -2497,6 +2503,7 @@ main(int argc, char *argv[]) {
 	fputs("warning: no locale support\n", stderr);
     if(!(display = XOpenDisplay(NULL)))
 	die("swm: cannot open display\n");
+    cargv = argv;
     checkotherwm();
     setup();
     scan();
