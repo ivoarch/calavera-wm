@@ -236,7 +236,7 @@ static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
-static void die(const char *errstr, ...);
+static void eprint(const char *errstr, ...);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
@@ -614,7 +614,7 @@ clientmessage(XEvent *e) {
 	/* add systray icons */
 	if(cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
 	    if(!(c = (Client *)calloc(1, sizeof(Client))))
-                die("fatal: could not malloc() %u bytes\n", sizeof(Client));
+                eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
 	    c->win = cme->data.l[2];
 	    c->mon = selmon;
 	    c->next = systray->icons;
@@ -766,7 +766,7 @@ createmon(void) {
     Monitor *m;
 
     if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
-	die("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
+	eprint("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
 
     m->tagset[0] = m->tagset[1] = 1;
     m->showbar = showbar;
@@ -811,7 +811,7 @@ detachstack(Client *c) {
 }
 
 void
-die(const char *errstr, ...) {
+eprint(const char *errstr, ...) {
     va_list ap;
 
     va_start(ap, errstr);
@@ -1055,7 +1055,7 @@ getcolor(const char *colstr) {
     XftColor color;
 
     if(!XftColorAllocName(display, DefaultVisual(display, screen), DefaultColormap(display, screen), colstr, &color))
-	die("error, cannot allocate color '%s'\n", colstr);
+	eprint("error, cannot allocate color '%s'\n", colstr);
 
     return color;
 }
@@ -1190,7 +1190,7 @@ void
 initfont(const char *fontstr) {
     if(!(dc.font.xfont = XftFontOpenName(display,screen,fontstr))
        && !(dc.font.xfont = XftFontOpenName(display,screen,"fixed")))
-        die("error, cannot load font: '%s'\n", fontstr);
+        eprint("error, cannot load font: '%s'\n", fontstr);
 
     dc.font.ascent = dc.font.xfont->ascent;
     dc.font.descent = dc.font.xfont->descent;
@@ -1261,7 +1261,7 @@ manage(Window w, XWindowAttributes *wa) {
     }
 
     if(!(c = calloc(1, sizeof(Client))))
-	die("fatal: could not malloc() %u bytes\n", sizeof(Client));
+	eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
     c->win = w;
     updatetitle(c);
     if(XGetTransientForHint(display, w, &trans) && (t = wintoclient(trans))) {
@@ -1503,7 +1503,7 @@ reload(const Arg *arg) {
     if (arg) {
 	cleanup();
 	execvp(cargv[0], cargv);
-	die("Can't exec: %s\n", strerror(errno));
+	eprint("Can't exec: %s\n", strerror(errno));
     }
 }
 
@@ -1906,7 +1906,7 @@ showhide(Client *c) {
 void
 sigchld(int unused) {
     if(signal(SIGCHLD, sigchld) == SIG_ERR)
-	die("Can't install SIGCHLD handler");
+	eprint("Can't install SIGCHLD handler");
     while(0 < waitpid(-1, NULL, WNOHANG));
 }
 
@@ -2126,7 +2126,7 @@ updategeom(void) {
 	for(n = 0, m = mons; m; m = m->next, n++);
 	/* only consider unique geometries as separate screens */
 	if(!(unique = (XineramaScreenInfo *)malloc(sizeof(XineramaScreenInfo) * nn)))
-	    die("fatal: could not malloc() %u bytes\n", sizeof(XineramaScreenInfo) * nn);
+	    eprint("fatal: could not malloc() %u bytes\n", sizeof(XineramaScreenInfo) * nn);
 	for(i = 0, j = 0; i < nn; i++)
 	    if(isuniquegeom(unique, j, &info[i]))
 		memcpy(&unique[j++], &info[i], sizeof(XineramaScreenInfo));
@@ -2338,7 +2338,7 @@ updatesystray(void) {
     if(!systray) {
 	/* init systray */
 	if(!(systray = (Systray *)calloc(1, sizeof(Systray))))
-	    die("fatal: could not malloc() %u bytes\n", sizeof(Systray));
+	    eprint("fatal: could not malloc() %u bytes\n", sizeof(Systray));
         systray->win = XCreateSimpleWindow(display, root, x, selmon->by, w, bh, 0, 0, dc.norm[ColBG].pixel);
 	wa.event_mask = ButtonPressMask | ExposureMask;
 	wa.override_redirect = True;
@@ -2489,20 +2489,20 @@ xerrordummy(Display *display, XErrorEvent *ee) {
  * is already running. */
 int
 xerrorstart(Display *display, XErrorEvent *ee) {
-    die("swm: another window manager is already running\n");
+    eprint("swm: another window manager is already running\n");
     return -1;
 }
 
 int
 main(int argc, char *argv[]) {
     if(argc == 2 && !strcmp("-v", argv[1]))
-	die("swm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\nCustomized and patched by Ivaylo Kuzev.\n");
+	eprint("swm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\nCustomized and patched by Ivaylo Kuzev.\n");
     else if(argc != 1)
-	die("usage: swm [-v]\n");
+	eprint("usage: swm [-v]\n");
     if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 	fputs("warning: no locale support\n", stderr);
     if(!(display = XOpenDisplay(NULL)))
-	die("swm: cannot open display\n");
+	eprint("swm: cannot open display\n");
     cargv = argv;
     checkotherwm();
     setup();
