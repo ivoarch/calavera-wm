@@ -1826,7 +1826,7 @@ setup(void) {
     xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
     /* init cursors */
     cursor[CurNormal] = XCreateFontCursor(display, XC_left_ptr);
-    cursor[CurResize] = XCreateFontCursor(display, XC_sizing);
+    cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
     /* init appearance */
@@ -1985,6 +1985,7 @@ togglefloating(const Arg *arg) {
 	resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
 	       selmon->sel->sfw, selmon->sel->sfh, False);
     else
+	/* save last known float dimensions */
     savefloat(selmon->sel);
     arrange(selmon);
 }
