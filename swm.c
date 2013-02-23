@@ -1393,6 +1393,7 @@ movemouse(const Arg *arg) {
     restack(selmon);
     ocx = c->x;
     ocy = c->y;
+    XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w / 2, c->h / 2);
     if(XGrabPointer(display, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		    None, cursor[CurMove], CurrentTime) != GrabSuccess)
 	return;
