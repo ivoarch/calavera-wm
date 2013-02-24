@@ -63,7 +63,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
-#define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight)
+#define RESIZE_MASK             CWX|CWY|CWWidth|CWHeight|CWBorderWidth
 
 /* systray  */
 #define SYSTEM_TRAY_REQUEST_DOCK    0
