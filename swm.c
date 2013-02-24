@@ -801,7 +801,6 @@ void eprint(const char *errstr, ...) {
 void drawbar(Monitor *m) {
     int x;
     unsigned int i, occ = 0, urg = 0;
-    unsigned int w, tw;
     XftColor *col;
     Client *c;
 
@@ -862,21 +861,13 @@ void drawbar(Monitor *m) {
 	drawtext(buf, dc.norm, False);
 
 	dc.x = x;
+        /* draw client title */
 	if(m->sel && showtitle) {
-	    tw = MIN((w = dc.w), MIN(180, TEXTW(m->sel->name)));
-            dc.w = tw;
 	drawtext(m->sel->name, dc.norm, False);
-        if(w > tw) {
-	    dc.x += tw;
-	    dc.w = w - tw;
-	    drawtext(NULL, dc.norm, False);
-	}
-	}
-	else
-	    drawtext(NULL, dc.norm, False);
     }
     XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
     XSync(display, False);
+    }
 }
 
 void drawbars(void) {
