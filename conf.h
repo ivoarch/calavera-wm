@@ -58,7 +58,7 @@ static Key keys[] = {
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
-	{ ShiftMask,                  XK_b,      togglebar,      {0} },
+	{ None,                       XK_space,  togglefullscreen, {0} },
 	{ None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },

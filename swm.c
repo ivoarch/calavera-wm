@@ -63,7 +63,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
-#define RESIZE_MASK             CWX|CWY|CWWidth|CWHeight|CWBorderWidth
+#define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
 
 /* systray  */
 #define SYSTEM_TRAY_REQUEST_DOCK    0
@@ -292,8 +292,8 @@ static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static Bool typedesktop(Window *w);
 static int textnw(const char *text, unsigned int len);
-static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullscreen(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -1875,24 +1875,6 @@ int textnw(const char *text, unsigned int len) {
     return ext.xOff;
 }
 
-void togglebar(const Arg *arg) {
-    selmon->showbar = !selmon->showbar;
-    updatebarpos(selmon);
-    resizebarwin(selmon);
-    if(showsystray) {
-	XWindowChanges wc;
-	if(!selmon->showbar)
-	    wc.y = -bh;
-	else if(selmon->showbar) {
-	    wc.y = 0;
-	    if(!selmon->topbar)
-		wc.y = selmon->mh - bh;
-	}
-	XConfigureWindow(display, systray->win, CWY, &wc);
-    }
-    arrange(selmon);
-}
-
 void togglefloating(const Arg *arg) {
     if(!selmon->sel)
 	return;
@@ -1907,6 +1889,13 @@ void togglefloating(const Arg *arg) {
 	/* save last known float dimensions */
     savefloat(selmon->sel);
     arrange(selmon);
+}
+
+void togglefullscreen(const Arg *arg) {
+
+    if(!selmon->sel)
+	return;
+    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 }
 
 void unfocus(Client *c, Bool setfocus) {
