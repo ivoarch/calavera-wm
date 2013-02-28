@@ -91,6 +91,7 @@ enum { ClkTagBar, ClkClientWin, ClkRootWin, ClkLast };   /* clicks */
 
 /* EWMH atoms */
 enum {
+    NetActiveWindow,
     NetSupported,
     NetSystemTray,
     NetSystemTrayOP,
@@ -98,12 +99,12 @@ enum {
     NetWMName,
     NetWMState,
     NetWMFullscreen,
-    NetActiveWindow,
     NetWMWindowType,
     NetWMWindowTypeDialog,
     NetWMWindowTypeDesktop,
     NetClientList,
     NetClientListStacking,
+    NetWMDesktop,
     NetNumberOfDesktops,
     NetCurrentDesktop,
     NetLast
@@ -297,6 +298,7 @@ static void togglefullscreen(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
+static void updateclientdesktop(Client *c);
 static void updatecurrenddesktop(void);
 static Bool updategeom(void);
 static void updatebarpos(Monitor *m);
@@ -1265,6 +1267,8 @@ void manage(Window w, XWindowAttributes *wa) {
     arrange(c->mon);
     XMapWindow(display, c->win); /* maps the window */
     focus(NULL);
+    /* set clients tag as current desktop (_NET_WM_DESKTOP) */
+    updateclientdesktop(c);
 }
 
 /* regrab when keyboard map changes */
@@ -1618,6 +1622,7 @@ void sendmon(Client *c, Monitor *m) {
     detachstack(c);
     c->mon = m;
     c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
+    updateclientdesktop(c);
     attach(c);
     attachstack(c);
     focus(NULL);
@@ -1749,6 +1754,7 @@ void setup(void) {
     netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
     netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
     netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
+    netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
     xatom[Manager] = XInternAtom(display, "MANAGER", False);
     xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
     xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
@@ -1863,6 +1869,7 @@ Bool typedesktop(Window *w) {
 void moveto_workspace(const Arg *arg) {
     if(selmon->sel && arg->ui & TAGMASK) {
 	selmon->sel->tags = arg->ui & TAGMASK;
+        updateclientdesktop(selmon->sel);
 	focus(NULL);
 	arrange(selmon);
     }
@@ -1996,6 +2003,13 @@ void updateclientlist() {
 	    XChangeProperty(display, root, netatom[NetClientList],
 			    XA_WINDOW, 32, PropModeAppend,
 			    (unsigned char *) &(c->win), 1);
+}
+
+void updateclientdesktop(Client *c) {
+     long data[] = { c->tags };
+
+     XChangeProperty(display, c->win, netatom[NetWMDesktop], XA_CARDINAL, 32,
+		     PropModeReplace, (unsigned char *)data, 1);
 }
 
 void updatecurrenddesktop() {
