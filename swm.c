@@ -1873,6 +1873,7 @@ void moveto_workspace(const Arg *arg) {
 	focus(NULL);
 	arrange(selmon);
     }
+    updatecurrenddesktop();
 }
 
 int textnw(const char *text, unsigned int len) {
