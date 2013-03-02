@@ -308,6 +308,7 @@ static Bool updategeom(void);
 static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updateclientlist(void);
+static void updateclientlist_stacking(void);
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
 static void updatestatus(void);
@@ -1957,6 +1958,7 @@ void unmanage(Client *c, Bool destroyed) {
     free(c);
     focus(NULL);
     updateclientlist();
+    updateclientlist_stacking();
     arrange(m);
 }
 
@@ -2022,6 +2024,19 @@ void updateclientlist() {
 	    XChangeProperty(display, root, netatom[NetClientList],
 			    XA_WINDOW, 32, PropModeAppend,
 			    (unsigned char *) &(c->win), 1);
+}
+
+// should be corrected
+void updateclientlist_stacking() {
+    Client *c;
+    Monitor *m;
+
+    XDeleteProperty(display, root, netatom[NetClientListStacking]);
+    for(m = mons; m; m = m->next)
+        for(c = m->clients; c; c = c->next)
+            XChangeProperty(display, root, netatom[NetClientListStacking],
+                            XA_WINDOW, 32, PropModeAppend,
+                            (unsigned char *) &(c->win), 1);
 }
 
 void updateclientdesktop(Client *c) {
