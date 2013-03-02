@@ -238,6 +238,7 @@ static void clientmessage(XEvent *e);
 static void configure(Client *c);
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
+static void create_bar(void);
 static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
@@ -307,7 +308,6 @@ static void updateclientdesktop(Client *c);
 static void updatecurrenddesktop(void);
 static Bool updategeom(void);
 static void updatebarpos(Monitor *m);
-static void updatebars(void);
 static void updateclientlist(void);
 static void updateclientlist_stacking(void);
 static void updatenumlockmask(void);
@@ -690,7 +690,7 @@ void configurenotify(XEvent *e) {
 	    if(dc.drawable != 0)
 		XFreePixmap(display, dc.drawable);
 	    dc.drawable = XCreatePixmap(display, root, screen_w, bh, DefaultDepth(display, screen));
-	    updatebars();
+	    create_bar();
 	    for(m = mons; m; m = m->next)
 		resizebarwin(m);
 	    focus(NULL);
@@ -1799,7 +1799,7 @@ void setup(void) {
     /* init system tray */
     updatesystray();
     /* init bars */
-    updatebars();
+    create_bar();
     updatestatus();
     /* EWMH support per view */
     XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
@@ -1989,8 +1989,7 @@ void unmapnotify(XEvent *e) {
     }
 }
 
-/* create bar */
-void updatebars(void) {
+void create_bar(void) {
     unsigned int w;
     Monitor *m;
     XSetWindowAttributes wa = {
