@@ -247,6 +247,7 @@ static void drawbar(Monitor *m);
 static void drawbars(void);
 static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
 static void enternotify(XEvent *e);
+static void ewmh_init(void);
 static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
@@ -930,6 +931,36 @@ void enternotify(XEvent *e) {
 	return;
     focus(c);
     XRaiseWindow(display, m->sel->win);
+}
+
+void ewmh_init(void) {
+
+    /* init atoms */
+    wmatom[WMProtocols] = XInternAtom(display, "WM_PROTOCOLS", False);
+    wmatom[WMDelete] = XInternAtom(display, "WM_DELETE_WINDOW", False);
+    wmatom[WMState] = XInternAtom(display, "WM_STATE", False);
+    wmatom[WMTakeFocus] = XInternAtom(display, "WM_TAKE_FOCUS", False);
+    netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
+    netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
+    netatom[NetSupportingCheck] = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
+    netatom[NetSystemTray] = XInternAtom(display, "_NET_SYSTEM_TRAY_S0", False);
+    netatom[NetSystemTrayOP] = XInternAtom(display, "_NET_SYSTEM_TRAY_OPCODE", False);
+    netatom[NetSystemTrayOrientation] = XInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION", False);
+    netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
+    netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
+    netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
+    netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
+    netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+    netatom[NetWMWindowTypeDesktop] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
+    netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
+    netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
+    netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
+    netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
+    netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
+    netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
+    xatom[Manager] = XInternAtom(display, "MANAGER", False);
+    xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
+    xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
 }
 
 void expose(XEvent *e) {
@@ -1741,32 +1772,12 @@ void setup(void) {
     screen_h = DisplayHeight(display, screen);
     bh = dc.h = dc.font.height + 2;
     updategeom();
-    /* init atoms */
-    wmatom[WMProtocols] = XInternAtom(display, "WM_PROTOCOLS", False);
-    wmatom[WMDelete] = XInternAtom(display, "WM_DELETE_WINDOW", False);
-    wmatom[WMState] = XInternAtom(display, "WM_STATE", False);
-    wmatom[WMTakeFocus] = XInternAtom(display, "WM_TAKE_FOCUS", False);
-    netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
-    netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
-    netatom[NetSupportingCheck] = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
-    netatom[NetSystemTray] = XInternAtom(display, "_NET_SYSTEM_TRAY_S0", False);
-    netatom[NetSystemTrayOP] = XInternAtom(display, "_NET_SYSTEM_TRAY_OPCODE", False);
-    netatom[NetSystemTrayOrientation] = XInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION", False);
-    netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
-    netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
-    netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
-    netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
-    netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
-    netatom[NetWMWindowTypeDesktop] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
-    netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
-    netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
-    netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
-    netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
-    netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
-    netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
-    xatom[Manager] = XInternAtom(display, "MANAGER", False);
-    xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
-    xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
+
+    /*
+     * extended windowmanager hints
+     */
+    ewmh_init();
+
     /* init cursors */
     cursor[CurNormal] = XCreateFontCursor(display, XC_left_ptr);
     cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
@@ -1802,7 +1813,6 @@ void setup(void) {
 		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
     XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
 		    PropModeReplace, (unsigned char*)&win, 1);
-
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     /* set EWMH NUMBER_OF_DESKTOPS */
