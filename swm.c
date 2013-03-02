@@ -49,6 +49,8 @@
 /* for multimedia keys, etc. */
 #include <X11/XF86keysym.h>
 
+#define WMNAME "swm"
+
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
@@ -93,6 +95,7 @@ enum { ClkTagBar, ClkClientWin, ClkRootWin, ClkLast };   /* clicks */
 enum {
     NetActiveWindow,
     NetSupported,
+    NetSupportingCheck,
     NetSystemTray,
     NetSystemTrayOP,
     NetSystemTrayOrientation,
@@ -107,6 +110,7 @@ enum {
     NetWMDesktop,
     NetNumberOfDesktops,
     NetCurrentDesktop,
+    Utf8String,
     NetLast
 };
 
@@ -322,6 +326,7 @@ static int xerrordummy(Display *display, XErrorEvent *ee);
 static int xerrorstart(Display *display, XErrorEvent *ee);
 
 /* variables */
+static char *wm_name = WMNAME;
 static Systray *systray = NULL;
 static unsigned long systrayorientation = _NET_SYSTEM_TRAY_ORIENTATION_HORZ;
 static const char broken[] = "broken";
@@ -1722,6 +1727,7 @@ void setnumbdesktops(void) {
 
 void setup(void) {
     XSetWindowAttributes wa;
+    Window win;
 
     /* clean up any zombies immediately */
     sigchld(0);
@@ -1741,6 +1747,7 @@ void setup(void) {
     wmatom[WMTakeFocus] = XInternAtom(display, "WM_TAKE_FOCUS", False);
     netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
+    netatom[NetSupportingCheck] = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
     netatom[NetSystemTray] = XInternAtom(display, "_NET_SYSTEM_TRAY_S0", False);
     netatom[NetSystemTrayOP] = XInternAtom(display, "_NET_SYSTEM_TRAY_OPCODE", False);
     netatom[NetSystemTrayOrientation] = XInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION", False);
@@ -1755,6 +1762,7 @@ void setup(void) {
     netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
     netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
     netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
+    netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
     xatom[Manager] = XInternAtom(display, "MANAGER", False);
     xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
     xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
@@ -1784,6 +1792,16 @@ void setup(void) {
     /* EWMH support per view */
     XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
 		    PropModeReplace, (unsigned char *) netatom, NetLast);
+    /* set _NET_SUPPORTING_WM_CHECK */
+    wa.override_redirect = True;
+    win = XCreateWindow(display, root, -100, 0, 1, 1,
+			0, DefaultDepth(display, screen), CopyFromParent,
+			DefaultVisual(display, screen), CWOverrideRedirect, &wa);
+    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
+		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
+    XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
+		    PropModeReplace, (unsigned char*)&win, 1);
+
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     /* set EWMH NUMBER_OF_DESKTOPS */
