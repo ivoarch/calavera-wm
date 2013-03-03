@@ -2,7 +2,7 @@
 
 /* appearance */
 #include "themes/default.c"
-static const char font[]           = "Sans:size=11:bold:antialias=true:hinting=true";
+static const char font[]           = "Sans :size=11:antialias=true:hinting=true";
 static const unsigned int snap     = 16;   /* snap pixel */
 static const unsigned int borderpx = 2;    /* border pixel of floating windows */
 static const Bool showbar          = True; /* False means no bar */
