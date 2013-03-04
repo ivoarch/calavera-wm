@@ -933,6 +933,8 @@ void enternotify(XEvent *e) {
 }
 
 void ewmh_init(void) {
+    XSetWindowAttributes wa;
+    Window win;
 
     /* init atoms */
     wmatom[WMProtocols] = XInternAtom(display, "WM_PROTOCOLS", False);
@@ -960,6 +962,20 @@ void ewmh_init(void) {
     xatom[Manager] = XInternAtom(display, "MANAGER", False);
     xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
     xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
+
+    /* EWMH support per view */
+    XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
+		    PropModeReplace, (unsigned char *) netatom, NetLast);
+    /* set _NET_SUPPORTING_WM_CHECK */
+    wa.override_redirect = True;
+    win = XCreateWindow(display, root, -100, 0, 1, 1,
+			0, DefaultDepth(display, screen), CopyFromParent,
+			DefaultVisual(display, screen), CWOverrideRedirect, &wa);
+    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
+		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
+    XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
+		    PropModeReplace, (unsigned char*)&win, 1);
+
 }
 
 void expose(XEvent *e) {
@@ -1758,7 +1774,6 @@ void setnumbdesktops(void) {
 
 void setup(void) {
     XSetWindowAttributes wa;
-    Window win;
 
     /* clean up any zombies immediately */
     sigchld(0);
@@ -1772,9 +1787,7 @@ void setup(void) {
     bh = dc.h = dc.font.height + 2;
     updategeom();
 
-    /*
-     * extended windowmanager hints
-     */
+    /* Standard & EWMH atoms */
     ewmh_init();
 
     /* init cursors */
@@ -1800,18 +1813,6 @@ void setup(void) {
     /* init bars */
     create_bar();
     updatestatus();
-    /* EWMH support per view */
-    XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
-		    PropModeReplace, (unsigned char *) netatom, NetLast);
-    /* set _NET_SUPPORTING_WM_CHECK */
-    wa.override_redirect = True;
-    win = XCreateWindow(display, root, -100, 0, 1, 1,
-			0, DefaultDepth(display, screen), CopyFromParent,
-			DefaultVisual(display, screen), CWOverrideRedirect, &wa);
-    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
-		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
-    XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
-		    PropModeReplace, (unsigned char*)&win, 1);
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     /* set EWMH NUMBER_OF_DESKTOPS */
