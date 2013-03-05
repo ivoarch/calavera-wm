@@ -100,6 +100,7 @@ enum {
     NetSystemTrayOP,
     NetSystemTrayOrientation,
     NetWMName,
+    NetWMPid,
     NetWMState,
     NetWMFullscreen,
     NetWMWindowType,
@@ -948,6 +949,7 @@ void ewmh_init(void) {
     netatom[NetSystemTrayOP] = XInternAtom(display, "_NET_SYSTEM_TRAY_OPCODE", False);
     netatom[NetSystemTrayOrientation] = XInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION", False);
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
+    netatom[NetWMPid] = XInternAtom(display, "_NET_WM_PID", False);
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
@@ -963,19 +965,27 @@ void ewmh_init(void) {
     xatom[Xembed] = XInternAtom(display, "_XEMBED", False);
     xatom[XembedInfo] = XInternAtom(display, "_XEMBED_INFO", False);
 
-    /* EWMH support per view */
+    /* Tell which ewmh atoms are supported */
     XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
 		    PropModeReplace, (unsigned char *) netatom, NetLast);
-    /* set _NET_SUPPORTING_WM_CHECK */
+
+    /* Create our own window! */
     wa.override_redirect = True;
     win = XCreateWindow(display, root, -100, 0, 1, 1,
 			0, DefaultDepth(display, screen), CopyFromParent,
 			DefaultVisual(display, screen), CWOverrideRedirect, &wa);
-    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
-		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
+
     XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
 		    PropModeReplace, (unsigned char*)&win, 1);
 
+    /* Set WM name */
+    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
+		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
+
+    /* Set WM pid */
+    int pid = getpid();
+    XChangeProperty(display, root, netatom[NetWMPid], XA_CARDINAL, 32,
+    		    PropModeReplace, (unsigned char*)&pid, 1);
 }
 
 void expose(XEvent *e) {
@@ -2035,14 +2045,13 @@ void updateclientlist() {
 			    (unsigned char *) &(c->win), 1);
 }
 
-// should be corrected
 void updateclientlist_stacking() {
     Client *c;
     Monitor *m;
 
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     for(m = mons; m; m = m->next)
-        for(c = m->clients; c; c = c->next)
+        for(c = m->clients; c; c = c->snext)
             XChangeProperty(display, root, netatom[NetClientListStacking],
                             XA_WINDOW, 32, PropModeAppend,
                             (unsigned char *) &(c->win), 1);
