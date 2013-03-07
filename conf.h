@@ -33,11 +33,10 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* commands */
-#define MENU "dmenu_run"
 #define PROMPT "Run Command: "
 static const char *CMD_LAUNCHER[] =
 {
-  MENU,
+  "dmenu_run",
   "-fn", font,
   "-nb", normbgcolor,
   "-nf", normfgcolor,
@@ -70,6 +69,7 @@ static Key keys[] = {
 	WS_KEY(                        XK_F4,                      3)
 	{ ShiftMask,                  XK_r,      reload,         {0} },
 
+        /* Multimedia keys */
 	{0, XF86XK_AudioLowerVolume,
             spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
         {0, XF86XK_AudioRaiseVolume,
