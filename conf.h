@@ -49,7 +49,7 @@ static const char *CMD_LAUNCHER[] =
 
 static const char *CMD_TERM[]  = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
-static const char *CMD_EDITOR[] = { "emacsclient", "-c", NULL };
+static const char *CMD_EDITOR[] = { "emacsclient", "-c", "-a", "", NULL};
 
 /* KEY BINDINGS */
 static Key keys[] = {
