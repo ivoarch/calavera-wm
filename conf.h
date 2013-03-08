@@ -33,20 +33,7 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 	{ None,                       KEY,      change_workspace,  {.ui = 1 << WS} }, \
 	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
-/* commands */
-#define PROMPT "Run Command: "
-static const char *CMD_LAUNCHER[] =
-{
-  "dmenu_run",
-  "-fn", font,
-  "-nb", normbgcolor,
-  "-nf", normfgcolor,
-  "-sb", selbgcolor,
-  "-sf", selfgcolor,
-  "-p",  PROMPT,
-  NULL
-};
-
+/* default commands */
 static const char *CMD_TERM[]  = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
 static const char *CMD_EDITOR[] = { "emacsclient", "-c", "-a", "", NULL};
@@ -54,7 +41,7 @@ static const char *CMD_EDITOR[] = { "emacsclient", "-c", "-a", "", NULL};
 /* KEY BINDINGS */
 static Key keys[] = {
 	/* modifier                   key        function        argument */
-	{ None,                       XK_d,      spawn,          {.v = CMD_LAUNCHER } },
+        { None,                       XK_F2,     launcher,       {0} },
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
@@ -64,10 +51,10 @@ static Key keys[] = {
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
 	{ None,                       XK_k,      killclient,     {0} },
 	{ None,                       XK_f,      togglefloating, {0} },
-	WS_KEY(                        XK_F1,                      0)
-	WS_KEY(                        XK_F2,                      1)
-	WS_KEY(                        XK_F3,                      2)
-	WS_KEY(                        XK_F4,                      3)
+	WS_KEY(                        XK_1,                      0)
+	WS_KEY(                        XK_2,                      1)
+	WS_KEY(                        XK_3,                      2)
+	WS_KEY(                        XK_4,                      3)
 	{ ShiftMask,                  XK_r,      reload,         {0} },
 
         /* Multimedia keys */

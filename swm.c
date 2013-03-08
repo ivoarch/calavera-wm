@@ -22,6 +22,7 @@
  */
 
 /* headers */
+#include <err.h>
 #include <errno.h>
 #include <locale.h>
 #include <stdarg.h>
@@ -66,6 +67,7 @@
 #define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 #define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
+#define ROOT                    RootWindow(display, DefaultScreen(display))
 
 /* systray  */
 #define SYSTEM_TRAY_REQUEST_DOCK    0
@@ -203,6 +205,7 @@ struct Monitor {
     Client *stack;
     Monitor *next;
     Window barwin;
+    Window launcher_win;
 };
 
 typedef struct {
@@ -327,6 +330,8 @@ static Client *wintosystrayicon(Window w);
 static int xerror(Display *display, XErrorEvent *ee);
 static int xerrordummy(Display *display, XErrorEvent *ee);
 static int xerrorstart(Display *display, XErrorEvent *ee);
+static void launcher(const Arg *arg);
+static pid_t shexec(const char *cmd);
 
 /* variables */
 static char *wm_name = WMNAME;
@@ -2435,6 +2440,91 @@ int xerrordummy(Display *display, XErrorEvent *ee) {
 int xerrorstart(Display *display, XErrorEvent *ee) {
     eprint("swm: another window manager is already running\n");
     return -1;
+}
+
+void launcher(const Arg *arg) {
+    int x, pos;
+    const char prompt[] = "Run Command: ";
+    char tmp[32];
+    char buf[256];
+    Bool grabbing = True;
+    KeySym ks;
+    XEvent ev;
+
+    // Clear the array
+    memset(tmp, 0, sizeof(tmp));
+    memset(buf, 0, sizeof(buf));
+    pos = 0;
+
+    // Initial x position
+    x = 0;
+    dc.x = x;
+    dc.w = selmon->ww - x - TEXTW(stext);
+    XGrabKeyboard(display, ROOT, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+
+    // draw the prompt
+    drawtext(prompt, dc.norm, False);
+    dc.x += TEXTW(prompt);
+
+    XCopyArea(display, dc.drawable, selmon -> barwin, dc.gc, x, 0, dc.w, bh, x, 0);
+    XSync(display, False);
+
+    // grab keys
+    while(grabbing){
+	if(ev.type == KeyPress) {
+	    XLookupString(&ev.xkey, tmp, sizeof(tmp), &ks, 0);
+
+	    switch(ks){
+	    case XK_Return:
+		shexec(buf);
+		grabbing = False;
+		break;
+	    case XK_BackSpace:
+		if(pos) buf[--pos] = 0;
+		break;
+	    case XK_Escape:
+		grabbing = False;
+		break;
+	    default:
+		strncat(buf, tmp, sizeof(tmp));
+		++pos;
+		break;
+	    }
+
+            // draw text buf
+	    drawtext(buf, dc.norm, False);
+
+	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(prompt), bh, dc.x, 0);
+	    XSync(display, False);
+	}
+	XNextEvent(display, &ev);
+    }
+     // Restore bar
+    drawbar(selmon);
+
+    XUngrabKeyboard(display, CurrentTime);
+    return;
+}
+
+pid_t shexec(const char *cmd) {
+    char *sh = NULL;
+    pid_t pid;
+
+    if(!(sh = getenv("SHELL"))) sh = "/bin/sh";
+
+    if((pid = fork()) == 0){
+	if(display)
+	    close(ConnectionNumber(display));
+	setsid();
+	//	execl(sh, sh, "-c", cmd, (char*)NULL);
+	execlp(sh, sh, "-c", cmd, (char*)NULL);
+	err(1, "execl(%s)", cmd);
+        _exit(0);
+    }
+    if (pid == -1)
+	warn("fork()");
+
+    return pid;
 }
 
 int main(int argc, char *argv[]) {
