@@ -205,7 +205,6 @@ struct Monitor {
     Client *stack;
     Monitor *next;
     Window barwin;
-    Window launcher_win;
 };
 
 typedef struct {
