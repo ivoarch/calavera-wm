@@ -5,6 +5,7 @@
 static const char font[]           = "Sans :size=11:antialias=true:hinting=true";
 static const unsigned int snap     = 16;   /* snap pixel */
 static const unsigned int borderpx = 2;    /* border pixel of floating windows */
+static const int barheight         = 24;   /* the height of the bar in pixels */
 static const Bool showbar          = True; /* False means no bar */
 static const Bool topbar           = True; /* False means bottom bar */
 static const Bool showtitle        = True; /* False means do not show title in status bar */

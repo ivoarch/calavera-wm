@@ -1795,6 +1795,7 @@ void setup(void) {
     screen_w = DisplayWidth(display, screen);
     screen_h = DisplayHeight(display, screen);
     bh = dc.h = dc.font.height + 2;
+    if(bh < barheight) bh = dc.h = barheight;
     updategeom();
 
     /* Standard & EWMH atoms */
