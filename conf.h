@@ -10,14 +10,13 @@ static const Bool showbar          = True; /* False means no bar */
 static const Bool topbar           = True; /* False means bottom bar */
 static const Bool showtitle        = True; /* False means do not show title in status bar */
 static const char clock_fmt[]      = "%a %I:%M %p"; /* Clock format on the bar */
+static const Bool showsystray      = True; /* False means no systray */
+static const unsigned int systrayspacing = 10; /* systray spacing */
 
 #define CURSOR_WAITKEY XC_icon /* X Font cursor theme for command mode
 			        * see http://tronche.com/gui/x/xlib/appendix/b/ */
 static const Bool waitkey = 1; /* 1 the cursor should change into a square when waiting for a key. */
 static const Bool banishhook = 0; /* 1 the banish command will be executed, when the prefix key is pressed */
-
-static const unsigned int systrayspacing = 2; /* systray spacing */
-static const Bool showsystray = True; /* False means no systray */
 
 #define HOME "/home/ivo"  /* autostart script path */
 static const char autostartscript[] = HOME"/swm/autostart.sh";
