@@ -861,14 +861,12 @@ void drawbar(Monitor *m) {
     // draw clock
     if((dc.w = dc.x - x) > bh) {
 	char buf[20];
-	time_t t;
-	struct tm *tm;
+	time_t now;
 	int len;
 
 	dc.x = x;
-	time(&t);
-	tm = localtime(&t);
-	strftime(buf, 20, clock_fmt, tm);
+	time(&now);
+	strftime(buf, sizeof buf, clock_fmt, localtime(&now));
 	len = TEXTW(buf);
         drawtext(NULL, dc.norm, False);
        	dc.w = MIN(dc.w, len);
