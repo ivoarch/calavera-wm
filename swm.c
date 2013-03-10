@@ -511,7 +511,7 @@ void banish(const Arg *arg) {
 
 void buttonpress(XEvent *e) {
     unsigned int i, x, click;
-    char buf[5];
+    char cnt[5];
     Arg arg = {0};
     Client *c;
     Monitor *m;
@@ -527,7 +527,7 @@ void buttonpress(XEvent *e) {
     if(ev->window == selmon->barwin) {
         i = x = 0;
                 do
-                    x += TEXTW(buf);
+                    x += TEXTW(cnt);
                 while(ev->x >= x && ++i < (N_WORKSPACES));
                 if(i < (N_WORKSPACES)) {
                     click = ClkTagBar;
@@ -826,19 +826,19 @@ void drawbar(Monitor *m) {
     }
     dc.x = 0;
 
-    /* init count workspaces */
+    /* count clients */
     for(i = 0; i < N_WORKSPACES; i++) {
-	char buf[5];
+    	char cnt[5];
 	int n = 0;
 	for(c = m->clients; c; c = c->next) {
 	    if(c->tags & 1 << i)
-		n++;
+	    n++;
 	}
-	snprintf(buf, 5, "%d", n);
-	dc.w = TEXTW(buf);
+    	snprintf(cnt, sizeof cnt, "%d", n);
+	dc.w = TEXTW(cnt);
 
-        col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
-        drawtext(buf, col, urg & 1 << i);
+	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
+	drawtext(cnt, col, urg & 1 << i);
 	dc.x += dc.w;
         XSetForeground(display, dc.gc, dc.sel[ColBorder].pixel);
         XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
@@ -858,6 +858,7 @@ void drawbar(Monitor *m) {
     }
     else
 	dc.x = m->ww;
+    // draw clock
     if((dc.w = dc.x - x) > bh) {
 	char buf[20];
 	time_t t;
@@ -2515,7 +2516,6 @@ pid_t shexec(const char *cmd) {
 	if(display)
 	    close(ConnectionNumber(display));
 	setsid();
-	//	execl(sh, sh, "-c", cmd, (char*)NULL);
 	execlp(sh, sh, "-c", cmd, (char*)NULL);
 	err(1, "execl(%s)", cmd);
         _exit(0);
