@@ -35,7 +35,7 @@ static const char autostartscript[] = HOME"/swm/autostart.sh";
 /* default commands */
 static const char *CMD_TERM[]  = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
-static const char *CMD_EDITOR[] = { "emacsclient", "-c", "-a", "", NULL};
+static const char *CMD_EDITOR[] = { "emacsclient", "-n", "-c", "-a", "", NULL};
 
 /* KEY BINDINGS */
 static Key keys[] = {

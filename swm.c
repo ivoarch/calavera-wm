@@ -2055,7 +2055,7 @@ void updateclientlist_stacking() {
 
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     for(m = mons; m; m = m->next)
-        for(c = m->clients; c; c = c->snext)
+        for(c = m->stack; c; c = c->snext)
             XChangeProperty(display, root, netatom[NetClientListStacking],
                             XA_WINDOW, 32, PropModeAppend,
                             (unsigned char *) &(c->win), 1);
