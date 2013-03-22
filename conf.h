@@ -16,7 +16,6 @@ static const unsigned int systrayspacing = 10; /* systray spacing */
 #define CURSOR_WAITKEY XC_icon /* X Font cursor theme for command mode
 			        * see http://tronche.com/gui/x/xlib/appendix/b/ */
 static const Bool waitkey = 1; /* 1 the cursor should change into a square when waiting for a key. */
-static const Bool banishhook = 0; /* 1 the banish command will be executed, when the prefix key is pressed */
 
 #define N_WORKSPACES 4         /* Number of Workspaces */
 #define FLOATING_AS_DEFAULT 1; /* 0 Monocle as default */
@@ -42,7 +41,6 @@ static Key keys[] = {
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
 	{ None,                       XK_space,  togglefullscreen, {0} },
-	{ None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
 	{ None,                       XK_k,      killclient,     {0} },
@@ -52,6 +50,7 @@ static Key keys[] = {
 	WS_KEY(                        XK_3,                      2)
 	WS_KEY(                        XK_4,                      3)
 	{ ShiftMask,                  XK_r,      reload,         {0} },
+        { ShiftMask,                  XK_q,      quit,           {0} },
 
         /* Multimedia keys */
 	{0, XF86XK_AudioLowerVolume,

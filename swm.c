@@ -231,7 +231,6 @@ static void attach(Client *c);
 static void attachstack(Client *c);
 static void attachend(Client *c);
 static void attachstackend(Client *c);
-static void banish(const Arg *arg);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void);
@@ -278,6 +277,7 @@ static void moveto_workspace(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
+static void quit(const Arg *arg);
 static void reload(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void removesystrayicon(Client *i);
@@ -503,11 +503,6 @@ void attachstack(Client *c) {
     c->snext = c->mon->stack;
     c->mon->stack = c;
 }
-
-void banish(const Arg *arg) {
-    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
-}
-
 
 void buttonpress(XEvent *e) {
     unsigned int i, x, click;
@@ -1191,11 +1186,7 @@ void grabkeys(int keytype) {
     else {
 	XUngrabKey(display, AnyKey, AnyModifier, root);
 
-        if(banishhook) {
-	    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
-        }
-
-        if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))
+	if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))
 	    for(i = 0; i < LENGTH(modifiers); i++)
 		XGrabKey(display, code, PREFIX_MODKEY | modifiers[i],
 			 root, True, GrabModeAsync,
@@ -1503,6 +1494,10 @@ void propertynotify(XEvent *e) {
 	if(ev->atom == netatom[NetWMWindowType])
 	    updatewindowtype(c);
     }
+}
+
+void quit(const Arg *arg) {
+    running = False;
 }
 
 void reload(const Arg *arg) {
