@@ -1638,14 +1638,17 @@ void restack(Monitor *m) {
 
 void run(void) {
     XEvent ev;
+    char path[PATH_MAX];
+    char *home;
 
     /* execute autostart script */
-    if (access(autostartscript, F_OK) == 0) {
-	if (system(autostartscript) == -1) {
-	    printf("There was an error while executing autostart script: %s\n",
-		   autostartscript);
-	}
-    }
+    if (!(home = getenv("HOME")))
+        return;
+
+    snprintf(path, sizeof(path), "%s/swm/autostart", home);
+    const char* autostartcmd[] = { path, NULL };
+    Arg a = {.v = autostartcmd };
+    spawn(&a);
 
     /* main event loop */
     XSync(display, False);

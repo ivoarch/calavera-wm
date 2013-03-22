@@ -18,9 +18,6 @@ static const unsigned int systrayspacing = 10; /* systray spacing */
 static const Bool waitkey = 1; /* 1 the cursor should change into a square when waiting for a key. */
 static const Bool banishhook = 0; /* 1 the banish command will be executed, when the prefix key is pressed */
 
-#define HOME "/home/ivo"  /* autostart script path */
-static const char autostartscript[] = HOME"/swm/autostart.sh";
-
 #define N_WORKSPACES 4         /* Number of Workspaces */
 #define FLOATING_AS_DEFAULT 1; /* 0 Monocle as default */
 
