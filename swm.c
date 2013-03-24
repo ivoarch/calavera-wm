@@ -2433,9 +2433,10 @@ void launcher(const Arg *arg) {
     XGrabKeyboard(display, ROOT, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 
     // draw the prompt
-    drawtext(prompt, dc.norm, False);
+    drawtext(prompt, dc.sel, False);
     dc.x += TEXTW(prompt);
 
+    drawtext(NULL, dc.norm, False);
     XCopyArea(display, dc.drawable, selmon -> barwin, dc.gc, x, 0, dc.w, bh, x, 0);
     XSync(display, False);
 
@@ -2461,7 +2462,7 @@ void launcher(const Arg *arg) {
 		break;
 	    }
 
-            // draw text buf
+	    // draw text buf
 	    drawtext(buf, dc.norm, False);
 
 	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(prompt), bh, dc.x, 0);
