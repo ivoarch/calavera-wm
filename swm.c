@@ -315,7 +315,6 @@ static void updateclientlist(void);
 static void updateclientlist_stacking(void);
 static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
-static void updatestatus(void);
 static void updatesystray(void);
 static void updatesystrayicongeom(Client *i, int w, int h);
 static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
@@ -837,19 +836,11 @@ void drawbar(Monitor *m) {
         XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
-    if(m == selmon) { /* status is only drawn on selected monitor */
-        dc.w = TEXTW(stext);
-	dc.x = m->ww - dc.w;
+    // for systray
+    dc.x = m->ww - dc.w;
 	if(m == selmon) {
 	    dc.x -= getsystraywidth();
 	}
-	if(dc.x < x) {
-	    dc.x = x;
-	    dc.w = m->ww - x;
-	}
-        drawtext(stext, dc.norm, False);
-    }
-    else
 	dc.x = m->ww;
     // draw clock
     if((dc.w = dc.x - x) > bh) {
@@ -1463,9 +1454,7 @@ void propertynotify(XEvent *e) {
 	resizebarwin(selmon);
 	updatesystray();
     }
-    if((ev->window == root) && (ev->atom == XA_WM_NAME))
-	updatestatus();
-    else if(ev->state == PropertyDelete)
+    if(ev->state == PropertyDelete)
 	return; /* ignore */
     else if((c = wintoclient(ev->window))) {
 	switch(ev->atom) {
@@ -1821,7 +1810,6 @@ void setup(void) {
     updatesystray();
     /* init bars */
     create_bar();
-    updatestatus();
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     /* set EWMH NUMBER_OF_DESKTOPS */
@@ -2219,15 +2207,6 @@ void updatetitle(Client *c) {
 	gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
     if(c->name[0] == '\0') /* hack to mark broken clients */
 	strcpy(c->name, broken);
-}
-
-void updatestatus(void) {
-    char *username;
-    username = getlogin();
-
-    if(!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-        strcpy(stext, username);
-    drawbar(selmon);
 }
 
 void updatesystrayicongeom(Client *i, int w, int h) {

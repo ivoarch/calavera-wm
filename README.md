@@ -45,15 +45,6 @@ the DISPLAY environment variable is set correctly, e.g.:
 
 (This will start swm on display :1 of the host foo.bar.)
 
-In order to display status info in the bar, you can do something
-like this in your .xinitrc:
-
-    while true ; do
-        xsetroot -name "$(acpi -b | awk 'sub(/,/,"") {print $3, $4}')"
-        sleep 1m
-    done &
-    exec swm
-
 Configuration
 -------------
 The configuration of swm is done by creating a custom conf.h
