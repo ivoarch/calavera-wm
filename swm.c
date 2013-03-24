@@ -564,11 +564,9 @@ void cleanup(void) {
     XFreeCursor(display, cursor[CurMove]);
     while(mons)
 	cleanupmon(mons);
-    if(showsystray) {
 	XUnmapWindow(display, systray->win);
 	XDestroyWindow(display, systray->win);
 	free(systray);
-    }
     XSync(display, False);
     XSetInputFocus(display, PointerRoot, RevertToPointerRoot, CurrentTime);
     XDeleteProperty(display, root, netatom[NetActiveWindow]);
@@ -605,7 +603,7 @@ void clientmessage(XEvent *e) {
     XClientMessageEvent *cme = &e->xclient;
     Client *c = wintoclient(cme->window);
 
-    if(showsystray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
+    if(cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
 	/* add systray icons */
 	if(cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
 	    if(!(c = (Client *)calloc(1, sizeof(Client))))
@@ -842,7 +840,7 @@ void drawbar(Monitor *m) {
     if(m == selmon) { /* status is only drawn on selected monitor */
         dc.w = TEXTW(stext);
 	dc.x = m->ww - dc.w;
-	if(showsystray && m == selmon) {
+	if(m == selmon) {
 	    dc.x -= getsystraywidth();
 	}
 	if(dc.x < x) {
@@ -1109,8 +1107,7 @@ unsigned int getsystraywidth() {
     unsigned int w = 0;
     Client *i;
 
-    if(showsystray)
-	for(i = systray->icons; i; w += i->w + systrayspacing, i = i->next) ;
+    for(i = systray->icons; i; w += i->w + systrayspacing, i = i->next) ;
     return w ? w + systrayspacing : 1;
 }
 
@@ -1524,7 +1521,7 @@ Monitor *recttomon(int x, int y, int w, int h) {
 void removesystrayicon(Client *i) {
     Client **ii;
 
-    if(!showsystray || !i)
+    if(!i)
 	return;
     for(ii = &systray->icons; *ii && *ii != i; ii = &(*ii)->next);
     if(ii)
@@ -1540,7 +1537,7 @@ void resize(Client *c, int x, int y, int w, int h, Bool interact) {
 void resizebarwin(Monitor *m) {
     unsigned int w = m->ww;
 
-    if(showsystray && m == selmon)
+    if(m == selmon)
 	w -= getsystraywidth();
     XMoveResizeWindow(display, m->barwin, m->wx, m->by, w, bh);
 }
@@ -2013,7 +2010,7 @@ void create_bar(void) {
 	if (m->barwin)
 	    continue;
 	w = m->ww;
-	if(showsystray && m == selmon)
+	if(m == selmon)
 	    w -= getsystraywidth();
 	m->barwin = XCreateWindow(display, root, m->wx, m->by, w, bh, 0, DefaultDepth(display, screen),
 				  CopyFromParent, DefaultVisual(display, screen),
@@ -2259,7 +2256,7 @@ void updatesystrayiconstate(Client *i, XPropertyEvent *ev) {
     long flags;
     int code = 0;
 
-    if(!showsystray || !i || ev->atom != xatom[XembedInfo] ||
+    if(!i || ev->atom != xatom[XembedInfo] ||
        !(flags = getatomprop(i, xatom[XembedInfo])))
 	return;
 
@@ -2287,8 +2284,6 @@ void updatesystray(void) {
     unsigned int x = selmon->mx + selmon->mw;
     unsigned int w = 1;
 
-    if(!showsystray)
-	return;
     if(!systray) {
 	/* init systray */
 	if(!(systray = (Systray *)calloc(1, sizeof(Systray))))
@@ -2342,7 +2337,7 @@ void updatewindowtype(Client *c) {
 Client *wintosystrayicon(Window w) {
     Client *i = NULL;
 
-    if(!showsystray || !w)
+    if(!w)
 	return i;
     for(i = systray->icons; i && i->win != w; i = i->next) ;
     return i;
