@@ -836,35 +836,42 @@ void drawbar(Monitor *m) {
         XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
-    // for systray
+    // for clock
+    char buf[20];
+    time_t now;
+
+    time(&now);
+    strftime(buf, sizeof buf, clock_fmt, localtime(&now));
+
+    if(m == selmon) {
+    dc.w = TEXTW(buf);
     dc.x = m->ww - dc.w;
-	if(m == selmon) {
-	    dc.x -= getsystraywidth();
-	}
-	dc.x = m->ww;
-    // draw clock
-    if((dc.w = dc.x - x) > bh) {
-	char buf[20];
-	time_t now;
-	int len;
 
+    // for systray
+    if(m == selmon) {
+	dc.x -= getsystraywidth();
+    }
+    // for clock
+    if(dc.x < x) {
 	dc.x = x;
-	time(&now);
-	strftime(buf, sizeof buf, clock_fmt, localtime(&now));
-	len = TEXTW(buf);
-        drawtext(NULL, dc.norm, False);
-       	dc.w = MIN(dc.w, len);
-	dc.x = MAX(dc.x, (m->mw / 2) - (len / 2));
-	drawtext(buf, dc.norm, False);
-
+	dc.w = m->ww - x;
+    }
+    // draw clock
+    drawtext(buf, dc.norm, False);
+    }
+    else
+	dc.x = m->ww;
+    if((dc.w = dc.x - x) > bh) {
 	dc.x = x;
         /* draw client title */
 	if(m->sel && showtitle) {
-	drawtext(m->sel->name, dc.norm, False);
+	    drawtext(m->sel->name, dc.norm, False);
+	}
+	else
+	    drawtext(NULL, dc.norm, False);
     }
-    XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
-    XSync(display, False);
-    }
+	XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
+	XSync(display, False);
 }
 
 void drawbars(void) {
