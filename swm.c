@@ -806,7 +806,7 @@ void eprint(const char *errstr, ...) {
 
 void drawbar(Monitor *m) {
     int x;
-    unsigned int i, occ = 0, urg = 0;
+    unsigned int i, w, tw, occ = 0, urg = 0;
     XftColor *col;
     Client *c;
 
@@ -865,7 +865,14 @@ void drawbar(Monitor *m) {
 	dc.x = x;
         /* draw client title */
 	if(m->sel && showtitle) {
+	    tw = MIN((w = dc.w), MIN(250, TEXTW(m->sel->name))); // title width
+	    dc.w = tw;
 	    drawtext(m->sel->name, dc.norm, False);
+            if(w > tw) {
+		dc.x += tw;
+		dc.w = w - tw;
+		drawtext(NULL, dc.norm, False);
+	    }
 	}
 	else
 	    drawtext(NULL, dc.norm, False);
