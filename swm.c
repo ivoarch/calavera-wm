@@ -837,11 +837,11 @@ void drawbar(Monitor *m) {
     }
     x = dc.x;
     // for clock
-    char buf[20];
+    char buf[256];
     time_t now;
 
     time(&now);
-    strftime(buf, sizeof buf, clock_fmt, localtime(&now));
+    strftime(buf, sizeof buf, clock_format, localtime(&now));
 
     if(m == selmon) {
     dc.w = TEXTW(buf);
@@ -1635,6 +1635,7 @@ void run(void) {
     XEvent ev;
     char path[PATH_MAX];
     char *home;
+    int xfd = ConnectionNumber(display);
 
     /* execute autostart script */
     if (!(home = getenv("HOME")))
@@ -1647,9 +1648,28 @@ void run(void) {
 
     /* main event loop */
     XSync(display, False);
-    while(running && !XNextEvent(display, &ev))
-	if(handler[ev.type])
-	    handler[ev.type](&ev); /* call handler */
+    while(running) {
+	struct timeval timeout = {.tv_sec = 1, .tv_usec = 0};
+	fd_set fds;
+
+	FD_ZERO(&fds);
+	FD_SET(xfd, &fds);
+
+	if (select(xfd + 1, &fds, NULL, NULL, &timeout) == -1) {
+	    if (errno == EINTR)
+		continue;
+	    err(EXIT_FAILURE, NULL);
+        }
+
+	/* Process all X events */
+	while(XPending(display)) {
+	    XNextEvent(display, &ev);
+	    if(handler[ev.type])
+		(handler[ev.type])(&ev); /* call handler */
+	}
+        drawbars();
+	XFlush(display);
+    }
 }
 
 void scan(void) {
