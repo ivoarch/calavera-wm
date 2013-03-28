@@ -28,8 +28,11 @@ Start
 Start
 .BR conkeror (1).
 .TP
-.B C\-t Space
+.B C\-t f
 Toggles fullscreen.
+.TP
+.B C\-t m
+Maximise focused window.
 .TP
 .B C\-t n
 Focus next window.
@@ -39,9 +42,6 @@ Focus previous window.
 .TP
 .B C\-t k
 Close focused window.
-.TP
-.B C\-t f
-Toggle focused window between monocle and floating state.
 .TP
 .B C\-t Shift\-1\fP|\fB2\fP|\fB3\fP|\fB4\fP|\fB5\fP|\fB6\fP|\fB7\fP|\fB8\fP|\fB9
 Move focused window to another workspace.
@@ -57,10 +57,10 @@ Quit swm.
 .SS Mouse commands
 .TP
 .B ControlMask\-Button1
-Move focused window while dragging. Monocle windows will be toggled to the floating state.
+Move focused window.
 .TP
 .B ControlMask\-Button2
-Resize focused window while dragging. Monocle windows will be toggled to the floating state.
+Resize focused window.
 .SH CUSTOMIZATION
 swm is customized by creating a custom conf.h and (re)compiling the source
 code.

@@ -155,7 +155,6 @@ struct Client {
     char name[256];
     float mina, maxa;
     int x, y, w, h;  /* current position and size */
-    int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
     int oldx, oldy, oldw, oldh;
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
@@ -226,7 +225,6 @@ struct Systray {
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *m);
-static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
 static void attachend(Client *c);
@@ -270,11 +268,10 @@ static void killclient(const Arg *arg);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
-static void monocle(Monitor *m);
+static void maximize(const Arg *arg);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static void moveto_workspace(const Arg *arg);
-static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
@@ -296,14 +293,12 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, Bool fullscreen);
 static void setnumbdesktops(void);
 static void setup(void);
-static void savefloat(Client *c);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
 static Bool typedesktop(Window *w);
 static int textnw(const char *text, unsigned int len);
-static void togglefloating(const Arg *arg);
-static void togglefullscreen(const Arg *arg);
+static void fullscreen(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void unmapnotify(XEvent *e);
@@ -379,7 +374,7 @@ void applyrules(Client *c) {
     XClassHint ch = { NULL, NULL };
 
     /* rule matching */
-    c->isfloating = FLOATING_AS_DEFAULT;
+    c->isfloating = 1;
     c->tags = 0;
     XGetClassHint(display, c->win, &ch);
 
@@ -460,15 +455,7 @@ void arrange(Monitor *m) {
 	showhide(m->stack);
     else for(m = mons; m; m = m->next)
 	     showhide(m->stack);
-    if(m) {
-	arrangemon(m);
-	restack(m);
-    } else for(m = mons; m; m = m->next)
-	       arrangemon(m);
-}
-
-inline void arrangemon(Monitor *m) {
-    monocle(m);
+    restack(m);
 }
 
 void attachend(Client *c) {
@@ -1303,7 +1290,6 @@ void manage(Window w, XWindowAttributes *wa) {
     updatewindowtype(c);
     updatesizehints(c);
     updatewmhints(c);
-    savefloat(c);
     XSelectInput(display, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
     grabbuttons(c, False);
     if(!c->isfloating)
@@ -1358,16 +1344,10 @@ void maprequest(XEvent *e) {
 	manage(ev->window, &wa);
 }
 
-void monocle(Monitor *m) {
-    Client *c;
-
-    for(c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
-	/* Don't draw borders. */
-	c->bw = 0;
-	resize(c, m->wx, m->wy, m->ww, m->wh, False);
-	/* Restore borders. */
-	c->bw = borderpx;
-    }
+void maximize(const Arg *arg) {
+    if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
+	return;
+    resize(selmon->sel, selmon->wx, selmon->wy,	selmon->ww - 2 * selmon->sel->bw, selmon->wh - 2 * selmon->sel->bw, False);
 }
 
 void motionnotify(XEvent *e) {
@@ -1425,9 +1405,8 @@ void movemouse(const Arg *arg) {
 		    ny = selmon->wy;
 		else if(abs((selmon->wy + selmon->wh) - (ny + HEIGHT(c))) < snap)
 		    ny = selmon->wy + selmon->wh - HEIGHT(c);
-                if(!c->isfloating && (abs(nx - c->x) > snap || abs(ny - c->y) > snap))
-		    togglefloating(NULL);
-	    }
+                if(!c->isfloating && (abs(nx - c->x) > snap || abs(ny - c->y) > snap));
+		    }
             if(c->isfloating)
 		resize(c, nx, ny, c->w, c->h, True);
 	    break;
@@ -1439,11 +1418,6 @@ void movemouse(const Arg *arg) {
 	selmon = m;
 	focus(NULL);
     }
-}
-
-Client *nexttiled(Client *c) {
-    for(; c && (c->isfloating || !ISVISIBLE(c)); c = c->next);
-    return c;
 }
 
 void pop(Client *c) {
@@ -1601,8 +1575,7 @@ void resizemouse(const Arg *arg) {
 	    if(c->mon->wx + nw >= selmon->wx && c->mon->wx + nw <= selmon->wx + selmon->ww
 	       && c->mon->wy + nh >= selmon->wy && c->mon->wy + nh <= selmon->wy + selmon->wh)
 		{
-		    if(!c->isfloating && (abs(nw - c->w) > snap || abs(nh - c->h) > snap))
-			togglefloating(NULL);
+		    if(!c->isfloating && (abs(nw - c->w) > snap || abs(nh - c->h) > snap));
 		}
 	    if(c->isfloating)
 		resize(c, c->x, c->y, nw, nh, True);
@@ -1860,14 +1833,6 @@ void setup(void) {
     grabkeys(PrefixKey);
 }
 
-/* restore floats dimensions */
-void savefloat(Client *c) {
-    c->sfx = c->x;
-    c->sfy = c->y;
-    c->sfw = c->w;
-    c->sfh = c->h;
-}
-
 void showhide(Client *c) {
     if(!c)
 	return;
@@ -1943,23 +1908,7 @@ int textnw(const char *text, unsigned int len) {
     return ext.xOff;
 }
 
-void togglefloating(const Arg *arg) {
-    if(!selmon->sel)
-	return;
-    if(selmon->sel->isfullscreen) /* no support for fullscreen windows */
-	return;
-    selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
-    if(selmon->sel->isfloating)
-	/*restore last known float dimensions*/
-	resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
-	       selmon->sel->sfw, selmon->sel->sfh, False);
-    else
-	/* save last known float dimensions */
-    savefloat(selmon->sel);
-    arrange(selmon);
-}
-
-void togglefullscreen(const Arg *arg) {
+void fullscreen(const Arg *arg) {
 
     if(!selmon->sel)
 	return;

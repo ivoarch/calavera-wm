@@ -17,7 +17,6 @@ static const unsigned int systrayspacing = 10; /* systray spacing */
 static const Bool waitkey = 1; /* 1 the cursor should change into a square when waiting for a key. */
 
 #define N_WORKSPACES 4         /* Number of Workspaces */
-#define FLOATING_AS_DEFAULT 1; /* 0 Monocle as default */
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
@@ -39,11 +38,11 @@ static Key keys[] = {
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
-	{ None,                       XK_space,  togglefullscreen, {0} },
+	{ None,                       XK_f,      fullscreen,     {0} },
+	{ None,                       XK_m,      maximize,       {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
 	{ None,                       XK_k,      killclient,     {0} },
-	{ None,                       XK_f,      togglefloating, {0} },
 	WS_KEY(                        XK_1,                      0)
 	WS_KEY(                        XK_2,                      1)
 	WS_KEY(                        XK_3,                      2)
