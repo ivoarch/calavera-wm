@@ -230,6 +230,7 @@ static void attachstack(Client *c);
 static void attachend(Client *c);
 static void attachstackend(Client *c);
 static void buttonpress(XEvent *e);
+static void center(const Arg *arg);
 static void checkotherwm(void);
 static void cleanup(void);
 static void cleanupmon(Monitor *mon);
@@ -523,6 +524,14 @@ void buttonpress(XEvent *e) {
 	if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
 	   && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
 	    buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+}
+
+void center(const Arg *arg) {
+    if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
+	return;
+    resize(selmon->sel, selmon->wx + 0.5 * (selmon->ww - selmon->sel->w), selmon->wy + 0.5 * (selmon->wh - selmon->sel->h),
+	   selmon->sel->w, selmon->sel->h, False);
+    arrange(selmon);
 }
 
 void checkotherwm(void) {
@@ -1348,6 +1357,7 @@ void maximize(const Arg *arg) {
     if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
 	return;
     resize(selmon->sel, selmon->wx, selmon->wy,	selmon->ww - 2 * selmon->sel->bw, selmon->wh - 2 * selmon->sel->bw, False);
+    arrange(selmon);
 }
 
 void motionnotify(XEvent *e) {

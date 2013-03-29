@@ -40,6 +40,7 @@ static Key keys[] = {
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
 	{ None,                       XK_f,      fullscreen,     {0} },
 	{ None,                       XK_m,      maximize,       {0} },
+	{ None,                       XK_period, center,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
 	{ None,                       XK_k,      killclient,     {0} },
