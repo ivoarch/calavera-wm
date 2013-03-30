@@ -1,5 +1,33 @@
+# swm version
+VERSION = `git rev-parse HEAD`
 
-include conf.mk
+# paths
+PREFIX = /usr/local
+
+X11INC=/usr/include/X11
+X11LIB=/usr/lib/X11
+
+# Xinerama, comment if you don't want it
+XINERAMALIBS = -lXinerama
+XINERAMAFLAGS = -DXINERAMA
+
+# Xft
+XFTINC = -I/usr/include/freetype2
+XFTLIBS = -L${X11LIB} -lXft
+XFTFLAGS = -DXFT
+
+# includes and libs
+INCS = -I${X11INC} -I/usr/include/freetype2
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} -lutil -lXext -lXft -lfontconfig
+
+# flags
+CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+#CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+CFLAGS = -std=c99 -pedantic -Wall -Werror -O2 -fomit-frame-pointer -s ${INCS} ${CPPFLAGS}
+LDFLAGS = -s ${LIBS}
+
+# compiler and linker
+CC = cc
 
 SRC = swm.c
 OBJ = ${SRC:.c=.o}
@@ -7,7 +35,6 @@ OBJ = ${SRC:.c=.o}
 all: options swm
 
 options:
-	@echo swm build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -16,29 +43,21 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: conf.h conf.mk
+${OBJ}: conf.h
 
 swm: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	@rm -f swm ${OBJ} swm-${VERSION}.tar.gz
+	@rm -f swm ${OBJ}
 
 install: all
-	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	@cp -f swm ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/swm
-	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man1
-	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
-	@sed "s/VERSION/${VERSION}/g" < swm.1 > ${DESTDIR}${MANPREFIX}/man1/swm.1
-	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/swm.1
 
 uninstall:
-	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/swm
-	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
-	@rm -f ${DESTDIR}${MANPREFIX}/man1/swm.1
 
 .PHONY: all options clean dist install uninstall
