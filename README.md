@@ -7,26 +7,26 @@ Commands
 
 ### keyboard shortcuts
 
-<kbd>C-t c</kbd> Start `Urxvt`.
-<kbd>C-t F2</kbd> Start app launcher.
-<kbd>C-t e</kbd> Start `Emacs`.
-<kbd>C-t w</kbd> Start `Conkeror`.
-<kbd>C-t f</kbd> Toggles fullscreen.
-<kbd>C-t m</kbd> Maximise focused window.
-<kbd>C-t .</kbd> Center focused window.
-<kbd>C-t n</kbd> Focus next window.
-<kbd>C-t p</kbd> Focus previous window.
-<kbd>C-t k</kbd> Close focused window.
-<kbd>C-t-Shift 1,2,3</kbd> Move focused window to another workspace.
-<kbd>C-t 1,2,3</kbd> Switch to workspace number 1|2|...
-<kbd>C-t-Shift r</kbd> Reload swm configuration.
-<kbd>C-t-Shift q</kbd> Quit swm.
+- <kbd>C-t c</kbd> Start `Urxvt`.
+- <kbd>C-t F2</kbd> Start app launcher.
+- <kbd>C-t e</kbd> Start `Emacs`.
+- <kbd>C-t w</kbd> Start `Conkeror`.
+- <kbd>C-t f</kbd> Toggles fullscreen.
+- <kbd>C-t m</kbd> Maximise focused window.
+- <kbd>C-t .</kbd> Center focused window.
+- <kbd>C-t n</kbd> Focus next window.
+- <kbd>C-t p</kbd> Focus previous window.
+- <kbd>C-t k</kbd> Close focused window.
+- <kbd>C-t-Shift 1,2,3</kbd> Move focused window to another workspace.
+- <kbd>C-t 1,2,3</kbd> Switch to workspace number 1|2|...
+- <kbd>C-t-Shift r</kbd> Reload swm configuration.
+- <kbd>C-t-Shift q</kbd> Quit swm.
 
 ### Mouse
 
-<kbd>ControlMask\-Button1</kbd> Move focused window.
-<kbd>ControlMask\-Button2</kbd> Resize focused window.
-<kbd>Button1</kbd> Change_workspace.
+- <kbd>ControlMask\-Button1</kbd> Move focused window.
+- <kbd>ControlMask\-Button2</kbd> Resize focused window.
+- <kbd>Button1</kbd> Change_workspace.
 
 About
 -------
