@@ -2,10 +2,11 @@
 
 is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
-SCREENSHOTS PREVIEW
+SCREENSHOTS
 --------------------
 [![gimp](http://ompldr.org/taHhreg)](http://ompldr.org/vaHhreg/2013-03-30-113939_1024x768_scrot.png)
 [![conkeror](http://ompldr.org/taHhsMA)](http://ompldr.org/vaHhsMA/2013-03-30-114110_1024x768_scrot.png)
+[![icons](http://ompldr.org/taHhwaw)](http://ompldr.org/vaHhwaw/2013-03-30-190326_1024x768_scrot.png)
 
 FEATURES
 --------
