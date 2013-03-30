@@ -2,6 +2,18 @@
 
 is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
+FEATURES
+--------
+- Floating window manager.
+- Toggling windows to `center`, `maximize` and `full screen maximizing`.
+- Good keyboard control (Emacs keybindings).
+- Reasonable EWMH support (though not yet fully compliant).
+- Autostart file read on startup.
+- Support for xft fonts.
+- System tray.
+- Xinerama support.
+- Few dependencies :)
+
 Commands
 -----------------
 
