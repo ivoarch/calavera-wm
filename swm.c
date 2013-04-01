@@ -221,111 +221,130 @@ struct Systray {
     Client *icons;
 };
 
-/* function declarations */
+/* DATA */
+
+// atoms - ewmh
+static void ewmh_init(void);
+static Atom getatomprop(Client *c, Atom prop);
+static long getstate(Window w);
+static void setclientstate(Client *c, long state);
+static Bool sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
+static void setnumbdesktops(void);
+static Bool typedesktop(Window *w);
+static void updatecurrenddesktop(void);
+static void updateclientdesktop(Client *c);
+static void updateclientlist(void);
+static void updateclientlist_stacking(void);
+static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
+static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
+
+// bar
+static void create_bar(void);
+static void drawbar(Monitor *m);
+static void drawbars(void);
+static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
+static void updatebarpos(Monitor *m);
+static int textnw(const char *text, unsigned int len);
+static void initfont(const char *fontstr);
+static void updatesystray(void);
+
+// colors
+static XftColor getcolor(const char *colstr);
+
+// clients
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
-static void arrange(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
 static void attachend(Client *c);
 static void attachstackend(Client *c);
-static void buttonpress(XEvent *e);
-static void center(const Arg *arg);
-static void checkotherwm(void);
-static void cleanup(void);
-static void cleanupmon(Monitor *mon);
 static void clearurgent(Client *c);
-static void clientmessage(XEvent *e);
 static void configure(Client *c);
-static void configurenotify(XEvent *e);
-static void configurerequest(XEvent *e);
-static void create_bar(void);
-static Monitor *createmon(void);
-static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
-static void eprint(const char *errstr, ...);
-static void drawbar(Monitor *m);
-static void drawbars(void);
-static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
-static void enternotify(XEvent *e);
-static void ewmh_init(void);
-static void expose(XEvent *e);
 static void focus(Client *c);
-static void focusin(XEvent *e);
-static void focusstack(const Arg *arg);
-static Atom getatomprop(Client *c, Atom prop);
-static XftColor getcolor(const char *colstr);
-static Bool getrootptr(int *x, int *y);
-static long getstate(Window w);
-static unsigned int getsystraywidth();
-static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
-static void grab_pointer(void);
 static void grabbuttons(Client *c, Bool focused);
-static void grabkeys(int keytype);
-static void initfont(const char *fontstr);
-static void keypress(XEvent *e);
-static void killclient(const Arg *arg);
-static void manage(Window w, XWindowAttributes *wa);
-static void mappingnotify(XEvent *e);
-static void maprequest(XEvent *e);
-static void maximize(const Arg *arg);
-static void motionnotify(XEvent *e);
-static void movemouse(const Arg *arg);
-static void moveto_workspace(const Arg *arg);
 static void pop(Client *);
-static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
-static void reload(const Arg *arg);
-static Monitor *recttomon(int x, int y, int w, int h);
-static void removesystrayicon(Client *i);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
-static void resizebarwin(Monitor *m);
+static void removesystrayicon(Client *i);
 static void resizeclient(Client *c, int x, int y, int w, int h);
-static void resizemouse(const Arg *arg);
-static void restack(Monitor *m);
-static void resizerequest(XEvent *e);
-static void run(void);
-static void scan(void);
-static Bool sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void sendmon(Client *c, Monitor *m);
-static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, Bool fullscreen);
-static void setnumbdesktops(void);
-static void setup(void);
 static void showhide(Client *c);
-static void sigchld(int unused);
-static void spawn(const Arg *arg);
-static Bool typedesktop(Window *w);
-static int textnw(const char *text, unsigned int len);
-static void fullscreen(const Arg *arg);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
-static void unmapnotify(XEvent *e);
-static void updateclientdesktop(Client *c);
-static void updatecurrenddesktop(void);
-static Bool updategeom(void);
-static void updatebarpos(Monitor *m);
-static void updateclientlist(void);
-static void updateclientlist_stacking(void);
-static void updatenumlockmask(void);
 static void updatesizehints(Client *c);
-static void updatesystray(void);
 static void updatesystrayicongeom(Client *i, int w, int h);
-static void updatesystrayiconstate(Client *i, XPropertyEvent *ev);
 static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
-static void change_workspace(const Arg *arg);
 static Client *wintoclient(Window w);
-static Monitor *wintomon(Window w);
 static Client *wintosystrayicon(Window w);
+
+// events
+static void buttonpress(XEvent *e);
+static void clientmessage(XEvent *e);
+static void configurenotify(XEvent *e);
+static void configurerequest(XEvent *e);
+static void destroynotify(XEvent *e);
+static void enternotify(XEvent *e);
+static void expose(XEvent *e);
+static void focusin(XEvent *e);
+static void keypress(XEvent *e);
+static void mappingnotify(XEvent *e);
+static void maprequest(XEvent *e);
+static void motionnotify(XEvent *e);
+static void propertynotify(XEvent *e);
+static void resizerequest(XEvent *e);
+static void unmapnotify(XEvent *e);
+
+// manage
+static void grabkeys(int keytype);
+static void manage(Window w, XWindowAttributes *wa);
+static void grab_pointer(void);
+static void updatenumlockmask(void);
+static unsigned int getsystraywidth();
+
+// main
+static void checkotherwm(void);
+static void cleanup(void);
+static void eprint(const char *errstr, ...);
+static Bool getrootptr(int *x, int *y);
+static void run(void);
+static void scan(void);
+static void setup(void);
+static void sigchld(int unused);
+static void sync_display(void);
 static int xerror(Display *display, XErrorEvent *ee);
 static int xerrordummy(Display *display, XErrorEvent *ee);
 static int xerrorstart(Display *display, XErrorEvent *ee);
-static void launcher(const Arg *arg);
 static pid_t shexec(const char *cmd);
+
+// monitor
+static void arrange(Monitor *m);
+static void cleanupmon(Monitor *mon);
+static Monitor *createmon(void);
+static Monitor *recttomon(int x, int y, int w, int h);
+static void resizebarwin(Monitor *m);
+static void restack(Monitor *m);
+static Bool updategeom(void);
+static Monitor *wintomon(Window w);
+
+// actions
+static void center(const Arg *arg);
+static void focusstack(const Arg *arg);
+static void killclient(const Arg *arg);
+static void launcher(const Arg *arg);
+static void maximize(const Arg *arg);
+static void movemouse(const Arg *arg);
+static void moveto_workspace(const Arg *arg);
+static void quit(const Arg *arg);
+static void reload(const Arg *arg);
+static void resizemouse(const Arg *arg);
+static void spawn(const Arg *arg);
+static void fullscreen(const Arg *arg);
+static void change_workspace(const Arg *arg);
 
 /* variables */
 static char *wm_name = WMNAME;
@@ -538,9 +557,9 @@ void checkotherwm(void) {
     xerrorxlib = XSetErrorHandler(xerrorstart);
     /* this causes an error if some other window manager is running */
     XSelectInput(display, DefaultRootWindow(display), SubstructureRedirectMask);
-    XSync(display, False);
+    sync_display();
     XSetErrorHandler(xerror);
-    XSync(display, False);
+    sync_display();
 }
 
 void cleanup(void) {
@@ -562,7 +581,7 @@ void cleanup(void) {
 	XUnmapWindow(display, systray->win);
 	XDestroyWindow(display, systray->win);
 	free(systray);
-    XSync(display, False);
+	sync_display();
     XSetInputFocus(display, PointerRoot, RevertToPointerRoot, CurrentTime);
     XDeleteProperty(display, root, netatom[NetActiveWindow]);
 }
@@ -743,7 +762,7 @@ void configurerequest(XEvent *e) {
 	wc.stack_mode = ev->detail;
 	XConfigureWindow(display, ev->window, ev->value_mask, &wc);
     }
-    XSync(display, False);
+    sync_display();
 }
 
 Monitor *createmon(void) {
@@ -874,7 +893,7 @@ void drawbar(Monitor *m) {
 	    drawtext(NULL, dc.norm, False);
     }
 	XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
-	XSync(display, False);
+	sync_display();
 }
 
 void drawbars(void) {
@@ -1247,7 +1266,7 @@ void killclient(const Arg *arg) {
 	XSetErrorHandler(xerrordummy);
 	XSetCloseDownMode(display, DestroyAll);
 	XKillClient(display, selmon->sel->win);
-	XSync(display, False);
+	sync_display();
 	XSetErrorHandler(xerror);
 	XUngrabServer(display);
     }
@@ -1539,7 +1558,7 @@ void resizeclient(Client *c, int x, int y, int w, int h) {
     wc.border_width = c->bw;
     XConfigureWindow(display, c->win, RESIZE_MASK, &wc);
     configure(c);
-    XSync(display, False);
+    sync_display();
 }
 
 void resizerequest(XEvent *e) {
@@ -1610,7 +1629,7 @@ void restack(Monitor *m) {
     if(!m->sel)
 	return;
     XRaiseWindow(display, m->sel->win);
-    XSync(display, False);
+    sync_display();
     while(XCheckMaskEvent(display, EnterWindowMask, &ev));
 }
 
@@ -1630,7 +1649,7 @@ void run(void) {
     spawn(&a);
 
     /* main event loop */
-    XSync(display, False);
+    sync_display();
     while(running) {
 	struct timeval timeout = {.tv_sec = 1, .tv_usec = 0};
 	fd_set fds;
@@ -1881,6 +1900,10 @@ void spawn(const Arg *arg) {
     }
 }
 
+void sync_display(void) {
+    XSync(display, False);
+}
+
 Bool typedesktop(Window *w) {
     int f;
     unsigned char *data = NULL;
@@ -1951,7 +1974,7 @@ void unmanage(Client *c, Bool destroyed) {
 	XConfigureWindow(display, c->win, CWBorderWidth, &wc); /* restore border */
 	XUngrabButton(display, AnyButton, AnyModifier, c->win);
 	setclientstate(c, WithdrawnState);
-	XSync(display, False);
+	sync_display();
 	XSetErrorHandler(xerror);
 	XUngrabServer(display);
     }
@@ -2273,7 +2296,7 @@ void updatesystray(void) {
 	XSetSelectionOwner(display, netatom[NetSystemTray], systray->win, CurrentTime);
 	if(XGetSelectionOwner(display, netatom[NetSystemTray]) == systray->win) {
 	    sendevent(root, xatom[Manager], StructureNotifyMask, CurrentTime, netatom[NetSystemTray], systray->win, 0, 0);
-	    XSync(display, False);
+	    sync_display();
 	}
 	else {
 	    fprintf(stderr, "swm: unable to obtain system tray.\n");
@@ -2293,7 +2316,7 @@ void updatesystray(void) {
     w = w ? w + systrayspacing : 1;
     x -= w;
     XMoveResizeWindow(display, systray->win, x, selmon->by, w, bh);
-    XSync(display, False);
+    sync_display();
 }
 
 void updatewindowtype(Client *c) {
@@ -2431,7 +2454,7 @@ void launcher(const Arg *arg) {
 
     drawtext(NULL, dc.norm, False);
     XCopyArea(display, dc.drawable, selmon -> barwin, dc.gc, x, 0, dc.w, bh, x, 0);
-    XSync(display, False);
+    sync_display();
 
     // grab keys
     while(grabbing){
@@ -2459,7 +2482,7 @@ void launcher(const Arg *arg) {
 	    drawtext(buf, dc.norm, False);
 
 	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(prompt), bh, dc.x, 0);
-	    XSync(display, False);
+	    sync_display();
 	}
 	XNextEvent(display, &ev);
     }

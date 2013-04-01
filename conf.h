@@ -29,7 +29,8 @@ static const Bool waitkey = 1; /* 1 the cursor should change into a square when 
 /* default commands */
 static const char *CMD_TERM[]  = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
-static const char *CMD_EDITOR[] = { "emacsclient", "-n", "-c", "-a", "", NULL};
+static const char *CMD_EDITOR[] = { "emacsclient", "-n", "-c", "-a", "", NULL };
+static const char *CMD_LOCK[] = { "xlock", "-mode", "star", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
@@ -38,6 +39,7 @@ static Key keys[] = {
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
+	{ None,                       XK_l,      spawn,          {.v = CMD_LOCK } },
 	{ None,                       XK_f,      fullscreen,     {0} },
 	{ None,                       XK_m,      maximize,       {0} },
 	{ None,                       XK_period, center,         {0} },
