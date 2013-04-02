@@ -319,7 +319,6 @@ static void sync_display(void);
 static int xerror(Display *display, XErrorEvent *ee);
 static int xerrordummy(Display *display, XErrorEvent *ee);
 static int xerrorstart(Display *display, XErrorEvent *ee);
-static pid_t shexec(const char *cmd);
 
 // monitor
 static void arrange(Monitor *m);
@@ -859,19 +858,14 @@ void drawbar(Monitor *m) {
     strftime(buf, sizeof buf, clock_format, localtime(&now));
 
     if(m == selmon) {
-    dc.w = TEXTW(buf);
-    dc.x = m->ww - dc.w;
+	dc.w = TEXTW(buf);
+	dc.x = m->ww - dc.w;
+    dc.x -= getsystraywidth();
 
-    // for systray
-    if(m == selmon) {
-	dc.x -= getsystraywidth();
-    }
-    // for clock
     if(dc.x < x) {
-	dc.x = x;
+    	dc.x = x;
 	dc.w = m->ww - x;
     }
-    // draw clock
     drawtext(buf, dc.norm, False);
     }
     else
@@ -2463,7 +2457,7 @@ void launcher(const Arg *arg) {
 
 	    switch(ks){
 	    case XK_Return:
-		shexec(buf);
+		goto launch;
 		grabbing = False;
 		break;
 	    case XK_BackSpace:
@@ -2489,28 +2483,15 @@ void launcher(const Arg *arg) {
      // Restore bar
     drawbar(selmon);
 
+ launch:
+    if (pos) {
+	char *termcmd[]  = { buf, NULL };
+        Arg arg = {.v = termcmd };
+	spawn (&arg);
+    }
+
     XUngrabKeyboard(display, CurrentTime);
     return;
-}
-
-pid_t shexec(const char *cmd) {
-    char *sh = NULL;
-    pid_t pid;
-
-    if(!(sh = getenv("SHELL"))) sh = "/bin/sh";
-
-    if((pid = fork()) == 0){
-	if(display)
-	    close(ConnectionNumber(display));
-	setsid();
-	execlp(sh, sh, "-c", cmd, (char*)NULL);
-	err(1, "execl(%s)", cmd);
-        _exit(0);
-    }
-    if (pid == -1)
-	warn("fork()");
-
-    return pid;
 }
 
 int main(int argc, char *argv[]) {
