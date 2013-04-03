@@ -91,7 +91,7 @@
 enum { PrefixKey, CmdKey };                              /* prefix key */
 enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
 enum { ColBorder, ColFG, ColBG, ColLast };               /* color */
-enum { ClkTagBar, ClkClientWin, ClkRootWin, ClkLast };   /* clicks */
+enum { ClkClientWin, ClkRootWin, ClkLast };              /* clicks */
 
 /* EWMH atoms */
 enum {
@@ -510,9 +510,7 @@ void attachstack(Client *c) {
 }
 
 void buttonpress(XEvent *e) {
-    unsigned int i, x, click;
-    char cnt[5];
-    Arg arg = {0};
+    unsigned int i, click;
     Client *c;
     Monitor *m;
     XButtonPressedEvent *ev = &e->xbutton;
@@ -524,16 +522,6 @@ void buttonpress(XEvent *e) {
         selmon = m;
         focus(NULL);
     }
-    if(ev->window == selmon->barwin) {
-        i = x = 0;
-                do
-                    x += TEXTW(cnt);
-                while(ev->x >= x && ++i < (N_WORKSPACES));
-                if(i < (N_WORKSPACES)) {
-                    click = ClkTagBar;
-                    arg.ui = 1 << i;
-                }
-    }
     if((c = wintoclient(ev->window))) {
 	focus(c);
 	click = ClkClientWin;
@@ -541,7 +529,7 @@ void buttonpress(XEvent *e) {
     for(i = 0; i < LENGTH(buttons); i++)
 	if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
 	   && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-	    buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+	    buttons[i].func(&buttons[i].arg);
 }
 
 void center(const Arg *arg) {

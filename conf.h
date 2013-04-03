@@ -67,5 +67,4 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
-        { ClkTagBar,            0,              Button1,     change_workspace,  {0} },
 };

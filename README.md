@@ -45,7 +45,6 @@ Commands
 
 - <kbd>ControlMask\-Button1</kbd> Move focused window.
 - <kbd>ControlMask\-Button2</kbd> Resize focused window.
-- <kbd>Button1</kbd> Change_workspace.
 
 About
 -------
