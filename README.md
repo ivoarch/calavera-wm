@@ -44,7 +44,8 @@ Commands
 ### Mouse
 
 - <kbd>ControlMask\-Button1</kbd> Move focused window.
-- <kbd>ControlMask\-Button2</kbd> Resize focused window.
+- <kbd>ControlMask\-Button3</kbd> Resize focused window.
+- <kbd>ControlMask\-Button2</kbd> Kill focused window.
 
 About
 -------

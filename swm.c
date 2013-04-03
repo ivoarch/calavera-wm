@@ -263,6 +263,7 @@ static void configure(Client *c);
 static void detach(Client *c);
 static void detachstack(Client *c);
 static void focus(Client *c);
+static void killclient(Client *c);
 static void grabbuttons(Client *c, Bool focused);
 static void pop(Client *);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
@@ -333,7 +334,7 @@ static Monitor *wintomon(Window w);
 // actions
 static void center(const Arg *arg);
 static void focusstack(const Arg *arg);
-static void killclient(const Arg *arg);
+static void killfocused(const Arg *arg);
 static void launcher(const Arg *arg);
 static void maximize(const Arg *arg);
 static void movemouse(const Arg *arg);
@@ -1240,7 +1241,7 @@ void keypress(XEvent *e) {
     }
 }
 
-void killclient(const Arg *arg) {
+void killclient(Client *c) {
     if(!selmon->sel)
 	return;
     if(!sendevent(selmon->sel->win, wmatom[WMDelete], NoEventMask, wmatom[WMDelete], CurrentTime, 0 , 0, 0)) {
@@ -1252,6 +1253,12 @@ void killclient(const Arg *arg) {
 	XSetErrorHandler(xerror);
 	XUngrabServer(display);
     }
+}
+
+void killfocused(const Arg *arg) {
+    if(!selmon->sel)
+	return;
+    killclient(selmon->sel);
 }
 
 /* manage the new client */

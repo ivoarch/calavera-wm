@@ -45,7 +45,7 @@ static Key keys[] = {
 	{ None,                       XK_period, center,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
-	{ None,                       XK_k,      killclient,     {0} },
+	{ None,                       XK_k,      killfocused,    {0} },
 	WS_KEY(                        XK_1,                      0)
 	WS_KEY(                        XK_2,                      1)
 	WS_KEY(                        XK_3,                      2)
@@ -67,4 +67,5 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
+        { ClkClientWin,         ControlMask,    Button2,        killfocused,    {0} },
 };
