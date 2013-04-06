@@ -919,7 +919,7 @@ void enternotify(XEvent *e) {
     Monitor *m;
     XCrossingEvent *ev = &e->xcrossing;
 
-    //    if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
+    if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 	return;
     c = wintoclient(ev->window);
     m = c ? c->mon : wintomon(ev->window);
