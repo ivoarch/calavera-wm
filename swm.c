@@ -172,6 +172,7 @@ typedef struct {
     XftColor norm[ColLast];
     XftColor sel[ColLast];
     XftColor tags[ColLast];
+    XftColor urgent[ColLast];
     GC gc;
     struct {
 	int ascent;
@@ -833,7 +834,7 @@ void drawbar(Monitor *m) {
 	dc.w = TEXTW(cnt);
 
 	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
-	drawtext(cnt, col, urg & 1 << i);
+        drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
 	dc.x += dc.w;
         XSetForeground(display, dc.gc, dc.sel[ColBorder].pixel);
         XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
@@ -1827,6 +1828,8 @@ void setup(void) {
     dc.sel[ColFG] = getcolor(selfgcolor);
     dc.tags[ColBG] = getcolor(workspaces_bgcolor);
     dc.tags[ColFG] = getcolor(workspaces_fgcolor);
+    dc.urgent[ColBG] = getcolor(urgentbgcolor);
+    dc.urgent[ColFG] = getcolor(urgentfgcolor);
     dc.drawable = XCreatePixmap(display, root, DisplayWidth(display, screen), bh, DefaultDepth(display, screen));
     dc.gc = XCreateGC(display, root, 0, NULL);
     /* set line drawing attributes */

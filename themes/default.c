@@ -13,3 +13,5 @@ static const char selbgcolor[]         = "#386596"; // background color of activ
 static const char selfgcolor[]         = "#eeeeee"; // font color of active workspace
 static const char workspaces_bgcolor[] = "#202420"; // color of workspace area
 static const char workspaces_fgcolor[] = "#eeeeee"; // font color of workspace area
+static const char urgentbgcolor[]      = "#ffffff"; // urgent color of workspace area
+static const char urgentfgcolor[]      = "#FF0000"; // urgent font color of workspace area
