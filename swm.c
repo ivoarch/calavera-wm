@@ -96,11 +96,15 @@ enum { ClkClientWin, ClkRootWin, ClkLast };              /* clicks */
 /* EWMH atoms */
 enum {
     NetActiveWindow,
+    NetClientList,
+    NetClientListStacking,
+    NetCurrentDesktop,
     NetSupported,
     NetSupportingCheck,
     NetSystemTray,
     NetSystemTrayOP,
     NetSystemTrayOrientation,
+    NetWMDesktop,
     NetWMName,
     NetWMPid,
     NetWMState,
@@ -108,12 +112,7 @@ enum {
     NetWMWindowType,
     NetWMWindowTypeDialog,
     NetWMWindowTypeDesktop,
-    NetClientList,
-    NetClientListStacking,
-    NetWMDesktop,
     NetNumberOfDesktops,
-    NetCurrentDesktop,
-    Utf8String,
     NetLast
 };
 
@@ -131,7 +130,8 @@ enum {
     WMDelete,
     WMState,
     WMTakeFocus,
-    WMLast
+    WMLast,
+    Utf8String,
 };
 
 typedef union {
@@ -351,7 +351,7 @@ static void change_workspace(const Arg *arg);
 static char *wm_name = WMNAME;
 static Systray *systray = NULL;
 static unsigned long systrayorientation = _NET_SYSTEM_TRAY_ORIENTATION_HORZ;
-static const char broken[] = "broken";
+static const char broken[] = "no name";
 static char **cargv;
 static char stext[256];
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
@@ -920,6 +920,7 @@ void enternotify(XEvent *e) {
     Monitor *m;
     XCrossingEvent *ev = &e->xcrossing;
 
+    if (!follow_mouse) return;
     if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 	return;
     c = wintoclient(ev->window);

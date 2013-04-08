@@ -11,12 +11,16 @@ static const Bool topbar           = True; /* False means bottom bar */
 static const Bool showtitle        = True; /* False means do not show title in status bar */
 static const char clock_format[]   = "%a %B %d, %R"; /* Clock format */
 static const unsigned int systrayspacing = 2; /* systray spacing */
+static const Bool follow_mouse     = True; /* Focus the window with the mouse */
+static const Bool waitkey          = True; /* Show the cursor when waiting for a key */
 
-#define CURSOR_WAITKEY XC_icon /* X Font cursor theme for command mode
-			        * see http://tronche.com/gui/x/xlib/appendix/b/ */
-static const Bool waitkey = 1; /* 1 the cursor should change into a square when waiting for a key. */
+/* X Font cursor theme for command mode
+ * see http://tronche.com/gui/x/xlib/appendix/b/
+ */
+#define CURSOR_WAITKEY XC_icon
 
-#define N_WORKSPACES 4         /* Number of Workspaces */
+/* Number of Workspaces */
+#define N_WORKSPACES 4
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
