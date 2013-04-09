@@ -50,6 +50,9 @@
 /* for multimedia keys, etc. */
 #include <X11/XF86keysym.h>
 
+/* swm default colors */
+#include "colors.h"
+
 #define WMNAME "swm"
 
 /* macros */
@@ -1821,16 +1824,16 @@ void setup(void) {
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
     /* init appearance */
-    dc.norm[ColBorder] = getcolor(normbordercolor);
-    dc.norm[ColBG] = getcolor(normbgcolor);
-    dc.norm[ColFG] = getcolor(normfgcolor);
-    dc.sel[ColBorder] = getcolor(selbordercolor);
-    dc.sel[ColBG] = getcolor(selbgcolor);
-    dc.sel[ColFG] = getcolor(selfgcolor);
-    dc.tags[ColBG] = getcolor(workspaces_bgcolor);
-    dc.tags[ColFG] = getcolor(workspaces_fgcolor);
-    dc.urgent[ColBG] = getcolor(urgentbgcolor);
-    dc.urgent[ColFG] = getcolor(urgentfgcolor);
+    dc.norm[ColBorder] = getcolor(NORM_BORDERCOLOR);
+    dc.norm[ColBG] = getcolor(NORM_BGCOLOR);
+    dc.norm[ColFG] = getcolor(NORM_FGCOLOR);
+    dc.sel[ColBorder] = getcolor(SEL_BORDERCOLOR);
+    dc.sel[ColBG] = getcolor(SEL_BGCOLOR);
+    dc.sel[ColFG] = getcolor(SEL_FGCOLOR);
+    dc.tags[ColBG] = getcolor(WORKSPACES_BGCOLOR);
+    dc.tags[ColFG] = getcolor(WORKSPACES_FGCOLOR);
+    dc.urgent[ColBG] = getcolor(URGENT_BGCOLOR);
+    dc.urgent[ColFG] = getcolor(URGENT_FGCOLOR);
     dc.drawable = XCreatePixmap(display, root, DisplayWidth(display, screen), bh, DefaultDepth(display, screen));
     dc.gc = XCreateGC(display, root, 0, NULL);
     /* set line drawing attributes */

@@ -40,13 +40,11 @@ options:
 	@echo "CC       = ${CC}"
 
 .c.o:
-	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: conf.h
+${OBJ}: conf.h colors.h
 
 swm: ${OBJ}
-	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:

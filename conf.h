@@ -1,7 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-#include "themes/default.c"
 static const char font[]           = "DejaVu Sans Mono-10";
 static const unsigned int snap     = 16;   /* snap pixel */
 static const unsigned int borderpx = 2;    /* border pixel of floating windows */
