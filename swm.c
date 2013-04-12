@@ -38,11 +38,11 @@
 #include <X11/keysym.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
+#include <X11/XKBlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
 #include <fontconfig/fontconfig.h>
 #include <X11/Xft/Xft.h>
-#include <X11/XKBlib.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
@@ -53,7 +53,10 @@
 /* swm default colors */
 #include "colors.h"
 
+/* windows manager name */
 #define WMNAME "swm"
+
+#define BUFSIZE 256
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -102,6 +105,7 @@ enum {
     NetClientList,
     NetClientListStacking,
     NetCurrentDesktop,
+    NetNumberOfDesktops,
     NetSupported,
     NetSupportingCheck,
     NetSystemTray,
@@ -115,7 +119,6 @@ enum {
     NetWMWindowType,
     NetWMWindowTypeDialog,
     NetWMWindowTypeDesktop,
-    NetNumberOfDesktops,
     NetLast
 };
 
@@ -155,7 +158,7 @@ typedef struct {
 typedef struct Monitor Monitor;
 typedef struct Client Client;
 struct Client {
-    char name[256];
+    char name[BUFSIZE];
     float mina, maxa;
     int x, y, w, h;  /* current position and size */
     int oldx, oldy, oldw, oldh;
@@ -356,7 +359,7 @@ static Systray *systray = NULL;
 static unsigned long systrayorientation = _NET_SYSTEM_TRAY_ORIENTATION_HORZ;
 static const char broken[] = "no name";
 static char **cargv;
-static char stext[256];
+static char stext[BUFSIZE];
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
 static int bh;      /* bar geometry */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
@@ -844,7 +847,7 @@ void drawbar(Monitor *m) {
     }
     x = dc.x;
     // for clock
-    char buf[256];
+    char buf[BUFSIZE];
     time_t now;
 
     time(&now);
@@ -892,7 +895,7 @@ void drawbars(void) {
 }
 
 void drawtext(const char *text, XftColor col[ColLast], Bool invert) {
-    char buf[256];
+    char buf[BUFSIZE];
     int i, x, y, h, len, olen;
     XftDraw *d;
 
@@ -2428,7 +2431,7 @@ void launcher(const Arg *arg) {
     int x, pos;
     const char prompt[] = "Run Command: ";
     char tmp[32];
-    char buf[256];
+    char buf[BUFSIZE];
     Bool grabbing = True;
     KeySym ks;
     XEvent ev;
