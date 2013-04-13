@@ -179,6 +179,7 @@ typedef struct {
     XftColor sel[ColLast];
     XftColor tags[ColLast];
     XftColor urgent[ColLast];
+    XftColor clock[ColLast];
     GC gc;
     struct {
 	int ascent;
@@ -844,7 +845,7 @@ void drawbar(Monitor *m) {
 	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
         drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
 	dc.x += dc.w;
-        XSetForeground(display, dc.gc, dc.sel[ColBorder].pixel);
+        XSetForeground(display, dc.gc, dc.norm[ColBorder].pixel);
         XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
@@ -864,7 +865,7 @@ void drawbar(Monitor *m) {
     	dc.x = x;
 	dc.w = m->ww - x;
     }
-    drawtext(buf, dc.norm, False);
+    drawtext(buf, dc.clock, False);
     }
     else
 	dc.x = m->ww;
@@ -1853,6 +1854,9 @@ void setup(void) {
     dc.tags[ColFG] = getcolor(WORKSPACES_FGCOLOR);
     dc.urgent[ColBG] = getcolor(URGENT_BGCOLOR);
     dc.urgent[ColFG] = getcolor(URGENT_FGCOLOR);
+    dc.clock[ColBG] = getcolor(CLOCK_BGCOLOR);
+    dc.clock[ColFG] = getcolor(CLOCK_FGCOLOR);
+
     dc.drawable = XCreatePixmap(display, root, DisplayWidth(display, screen), bh, DefaultDepth(display, screen));
     dc.gc = XCreateGC(display, root, 0, NULL);
     /* set line drawing attributes */

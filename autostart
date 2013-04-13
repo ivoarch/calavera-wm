@@ -7,10 +7,10 @@ xsetroot -solid '#2e2e2e'
 #unclutter -idle 3 -jitter 2 -root &
 
 # Java recognizes
-wmname LG3D &
+#wmname LG3D &
 
 # external disk tray
-ejectsy &
+#ejectsy &
 
 # battery tray
 cbatticon -i symbolic -c 5 -u 5 &
@@ -28,7 +28,7 @@ nm-applet &
 #wicd-client --tray &
 
 # File Manager
-pcmanfm --desktop &
+#pcmanfm --desktop &
 
 # Browser
 #conkeror &
