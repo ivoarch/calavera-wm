@@ -1197,6 +1197,10 @@ void grabkeys(int keytype) {
     else {
 	XUngrabKey(display, AnyKey, AnyModifier, root);
 
+        if(guru_mode) {
+	    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
+	}
+
 	if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))
 	    for(i = 0; i < LENGTH(modifiers); i++)
 		XGrabKey(display, code, PREFIX_MODKEY | modifiers[i],
@@ -1427,6 +1431,8 @@ void movemouse(const Arg *arg) {
 	return;
     if(!getrootptr(&x, &y))
 	return;
+    if(guru_mode)
+	running = 0;
     do {
 	XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
 	switch(ev.type) {
@@ -1604,6 +1610,8 @@ void resizemouse(const Arg *arg) {
 		    None, cursor[CurResize], CurrentTime) != GrabSuccess)
 	return;
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
+    if(guru_mode)
+	running = 0;
     do {
 	XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
 	switch(ev.type) {

@@ -12,6 +12,7 @@ static const char clock_format[]   = "%a %B %d, %R"; /* Clock format */
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool follow_mouse     = True; /* Focus the window with the mouse */
 static const Bool waitkey          = True; /* Show the cursor when waiting for a key */
+static const Bool guru_mode        = False;/* Completely ignore the mouse */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
