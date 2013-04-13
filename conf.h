@@ -45,6 +45,8 @@ static Key keys[] = {
 	{ None,                       XK_l,      spawn,          {.v = CMD_LOCK } },
 	{ None,                       XK_f,      fullscreen,     {0} },
 	{ None,                       XK_m,      maximize,       {0} },
+	{ None,                       XK_h,      horizontalmax,  {0} },
+        { None,                       XK_v,      verticalmax,    {0} },
 	{ None,                       XK_period, center,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },

@@ -11,7 +11,7 @@ SCREENSHOTS
 FEATURES
 --------
 - Floating window manager.
-- Toggling windows to `center`, `maximize` and `full screen maximizing`.
+- Toggling windows to `center`, `maximize`, `verticalmax`, `horizontalmax`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
 - Reasonable EWMH support (though not yet fully compliant).
 - Autostart file read on startup.
@@ -32,6 +32,8 @@ Commands
 - <kbd>C-t l</kbd> Locks the screen with `Xlock`.
 - <kbd>C-t f</kbd> Toggles fullscreen.
 - <kbd>C-t m</kbd> Maximise focused window.
+- <kbd>C-t v</kbd> Vertical maximise.
+- <kbd>C-t h</kbd> Horizontal maximise.
 - <kbd>C-t .</kbd> Center focused window.
 - <kbd>C-t n</kbd> Focus next window.
 - <kbd>C-t p</kbd> Focus previous window.

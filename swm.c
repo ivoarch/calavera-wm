@@ -344,6 +344,8 @@ static void focusstack(const Arg *arg);
 static void killfocused(const Arg *arg);
 static void launcher(const Arg *arg);
 static void maximize(const Arg *arg);
+static void horizontalmax(const Arg *arg);
+static void verticalmax(const Arg *arg);
 static void movemouse(const Arg *arg);
 static void moveto_workspace(const Arg *arg);
 static void quit(const Arg *arg);
@@ -1373,6 +1375,20 @@ void maximize(const Arg *arg) {
     if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
 	return;
     resize(selmon->sel, selmon->wx, selmon->wy,	selmon->ww - 2 * selmon->sel->bw, selmon->wh - 2 * selmon->sel->bw, False);
+    arrange(selmon);
+}
+
+void horizontalmax(const Arg *arg) {
+    if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
+	return;
+    resize(selmon->sel, selmon->wx, selmon->sel->y, selmon->ww - 2 * selmon->sel->bw, selmon->sel->h, False);
+    arrange(selmon);
+}
+
+void verticalmax(const Arg *arg) {
+    if(!selmon->sel || selmon->sel->isfullscreen || !(selmon->sel->isfloating))
+	return;
+    resize(selmon->sel, selmon->sel->x, selmon->wy, selmon->sel->w, selmon->wh - 2 * selmon->sel->bw, False);
     arrange(selmon);
 }
 
