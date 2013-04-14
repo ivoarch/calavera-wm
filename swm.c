@@ -870,7 +870,7 @@ void drawbar(Monitor *m) {
 	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
         drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
 	dc.x += dc.w;
-        XSetForeground(display, dc.gc, dc.norm[ColBorder]);
+        XSetForeground(display, dc.gc, dc.tags[ColBorder]);
 	XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
@@ -1960,6 +1960,7 @@ void setup(void) {
     dc.sel[ColFG] = getcolor(SEL_FGCOLOR);
     dc.tags[ColBG] = getcolor(WORKSPACES_BGCOLOR);
     dc.tags[ColFG] = getcolor(WORKSPACES_FGCOLOR);
+    dc.tags[ColBorder] = getcolor(WORKSPACES_BORDERCOLOR);
     dc.urgent[ColBG] = getcolor(URGENT_BGCOLOR);
     dc.urgent[ColFG] = getcolor(URGENT_FGCOLOR);
     dc.clock[ColBG] = getcolor(CLOCK_BGCOLOR);

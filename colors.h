@@ -2,7 +2,7 @@
 #define _SWM_COLORS_H
 
 /* Borders */
-#define NORM_BORDERCOLOR     "black" // border of inactiv window && workspaces area border
+#define NORM_BORDERCOLOR     "black" // border of inactiv window
 #define SEL_BORDERCOLOR      "gray" // border of active window
 
 /* Bar */
@@ -16,6 +16,7 @@
 #define WORKSPACES_FGCOLOR   "white"           // font color of workspace area
 #define URGENT_BGCOLOR       "white"           // urgent color of workspace area
 #define URGENT_FGCOLOR       "salmon1"         // urgent font color of workspace area
+#define WORKSPACES_BORDERCOLOR "black"         // border color around workspaces area
 
 /* Clock */
 #define CLOCK_BGCOLOR  "black"  // clock background color
