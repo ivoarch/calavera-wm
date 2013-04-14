@@ -854,6 +854,8 @@ void drawbar(Monitor *m) {
 
     /* count clients */
     for(i = 0; i < N_WORKSPACES; i++) {
+	if (HIDE_EMPTY_WS && !(m->tagset[m->seltags] & 1 << i) && !(occ & 1 << i))
+	    continue;
     	char cnt[5];
 	int n = 0;
 	for(c = m->clients; c; c = c->next) {

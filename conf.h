@@ -24,8 +24,8 @@ static const char launcher_prompt[] = "Exec: "; /* Launcher prompt look  */
  */
 #define CURSOR_WAITKEY XC_icon
 
-/* Number of Workspaces */
-#define N_WORKSPACES 4
+#define N_WORKSPACES 4  /* Number of Workspaces */
+#define HIDE_EMPTY_WS 0 /* 1=hide workspaces with no clients */
 
 /* key definitions */
 #define PREFIX_MODKEY ControlMask /* modifier prefix */
