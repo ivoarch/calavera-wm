@@ -13,6 +13,7 @@ static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool follow_mouse     = True; /* Focus the window with the mouse */
 static const Bool hide_cursor      = False;/* Pressing a key sends the cursor to the bottom right corner */
 static const Bool waitkey          = True; /* Show the cursor when waiting for a key */
+static const char launcher_prompt[] = "Exec: "; /* Launcher prompt look  */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/

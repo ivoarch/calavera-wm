@@ -846,7 +846,7 @@ void drawbar(Monitor *m) {
         drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
 	dc.x += dc.w;
         XSetForeground(display, dc.gc, dc.norm[ColBorder].pixel);
-        XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
+	XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
     // for clock
@@ -2453,7 +2453,6 @@ int xerrorstart(Display *display, XErrorEvent *ee) {
 
 void launcher(const Arg *arg) {
     int x, pos;
-    const char prompt[] = "Run Command: ";
     char tmp[32];
     char buf[BUFSIZE];
     Bool grabbing = True;
@@ -2472,8 +2471,8 @@ void launcher(const Arg *arg) {
     XGrabKeyboard(display, ROOT, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 
     // draw the prompt
-    drawtext(prompt, dc.sel, False);
-    dc.x += TEXTW(prompt);
+    drawtext(launcher_prompt, dc.sel, False);
+    dc.x += TEXTW(launcher_prompt);
 
     drawtext(NULL, dc.norm, False);
     XCopyArea(display, dc.drawable, selmon -> barwin, dc.gc, x, 0, dc.w, bh, x, 0);
@@ -2504,7 +2503,7 @@ void launcher(const Arg *arg) {
 	    // draw text buf
 	    drawtext(buf, dc.norm, False);
 
-	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(prompt), bh, dc.x, 0);
+	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(launcher_prompt), bh, dc.x, 0);
 	    sync_display();
 	}
 	XNextEvent(display, &ev);
