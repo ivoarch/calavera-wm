@@ -13,6 +13,7 @@ static const Bool showbar          = True; /* False means no bar */
 static const Bool topbar           = True; /* False means bottom bar */
 static const Bool showtitle        = True; /* False means do not show title in status bar */
 static const char clock_format[]   = "%a %B %d, %R"; /* Clock format */
+static const Bool showsystray      = True; /* Show systray */
 static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool follow_mouse     = True; /* Focus the window with the mouse */
 static const Bool hide_cursor      = False;/* Pressing a key sends the cursor to the bottom right corner */
