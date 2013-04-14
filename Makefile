@@ -7,9 +7,13 @@ PREFIX = /usr/local
 X11INC=/usr/include/X11
 X11LIB=/usr/lib/X11
 
-# Xinerama, comment if you don't want it
-XINERAMALIBS = -lXinerama
-XINERAMAFLAGS = -DXINERAMA
+# OPTIONAL XINERAMA
+
+# Xinerama, uncomment if you want it
+#XINERAMALIBS = -lXinerama
+#XINERAMAFLAGS = -DXINERAMA
+
+# OPTIONAL XFT FONTS
 
 # Xft, uncomment if you want it
 #XFTINC = -I/usr/include/freetype2

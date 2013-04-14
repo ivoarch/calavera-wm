@@ -15,9 +15,9 @@ FEATURES
 - Good keyboard control (Emacs keybindings).
 - Reasonable EWMH support (though not yet fully compliant).
 - Autostart file read on startup.
-- Support for xft fonts.
 - System tray.
-- Xinerama support.
+- (Optional) Xft fonts support.
+- (Optional) Xinerama support.
 - Few dependencies :)
 
 Commands
