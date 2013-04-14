@@ -2625,6 +2625,7 @@ void launcher(const Arg *arg) {
 
 	    // draw text buf
 	    drawtext(buf, dc.norm, False);
+	    XDrawLine(display, dc.drawable, dc.gc, dc.x+TEXTW(buf), 6, dc.x+TEXTW(buf), bh-6);
 
 	    XCopyArea(display, dc.drawable, selmon->barwin, dc.gc, dc.x, 0, dc.w-TEXTW(launcher_prompt), bh, dc.x, 0);
 	    sync_display();
