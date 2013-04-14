@@ -11,17 +11,17 @@ X11LIB=/usr/lib/X11
 XINERAMALIBS = -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
-# Xft
-XFTINC = -I/usr/include/freetype2
-XFTLIBS = -L${X11LIB} -lXft
-XFTFLAGS = -DXFT
+# Xft, uncomment if you want it
+#XFTINC = -I/usr/include/freetype2
+#XFTLIBS = -L${X11LIB} -lXft
+#XFTFLAGS = -DXFT
 
 # includes and libs
 INCS = -I${X11INC} -I/usr/include/freetype2
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} -lutil -lXext -lXft -lfontconfig
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS} -lutil -lXext -lXft -lfontconfig
 
 # flags
-CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} ${XFTFLAGS}
 #CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
 CFLAGS = -std=c99 -pedantic -Wall -Werror -O2 -fomit-frame-pointer -s ${INCS} ${CPPFLAGS}
 LDFLAGS = -s ${LIBS}

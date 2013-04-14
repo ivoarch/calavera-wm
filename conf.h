@@ -1,7 +1,11 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]           = "DejaVu Sans Mono-10";
+#ifdef XFT
+static const char font[]           = "Sans:size=11";
+#else
+static const char font[]           = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
+#endif
 static const unsigned int snap     = 16;   /* snap pixel */
 static const unsigned int borderpx = 2;    /* border pixel of floating windows */
 static const int barheight         = 24;   /* the height of the bar in pixels */

@@ -22,6 +22,7 @@
  */
 
 /* headers */
+#include <limits.h>
 #include <err.h>
 #include <errno.h>
 #include <locale.h>
@@ -41,8 +42,12 @@
 #include <X11/XKBlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
+
+#ifdef XFT
 #include <fontconfig/fontconfig.h>
 #include <X11/Xft/Xft.h>
+#endif /* XFT */
+
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
@@ -175,17 +180,22 @@ struct Client {
 typedef struct {
     int x, y, w, h;
     Drawable drawable;
-    XftColor norm[ColLast];
-    XftColor sel[ColLast];
-    XftColor tags[ColLast];
-    XftColor urgent[ColLast];
-    XftColor clock[ColLast];
+    unsigned long norm[ColLast];
+    unsigned long sel[ColLast];
+    unsigned long tags[ColLast];
+    unsigned long urgent[ColLast];
+    unsigned long clock[ColLast];
     GC gc;
     struct {
 	int ascent;
 	int descent;
 	int height;
-	XftFont *xfont;
+#ifdef XFT
+        XftFont *xft;
+#else
+	XFontSet set;
+	XFontStruct *xfont;
+#endif
     } font;
 } DC; /* draw context */
 
@@ -250,14 +260,14 @@ static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void create_bar(void);
 static void drawbar(Monitor *m);
 static void drawbars(void);
-static void drawtext(const char *text, XftColor col[ColLast], Bool invert);
+static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
 static void updatebarpos(Monitor *m);
 static int textnw(const char *text, unsigned int len);
 static void initfont(const char *fontstr);
 static void updatesystray(void);
 
 // colors
-static XftColor getcolor(const char *colstr);
+static unsigned long getcolor(const char *colstr);
 
 // clients
 static void applyrules(Client *c);
@@ -392,6 +402,9 @@ static Display *display; /* The connection to the X server. */
 static DC dc;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
+#ifdef XFT
+static XftDraw *xftdraw;
+#endif
 
 /* configuration, allows nested code to access above variables */
 #include "conf.h"
@@ -568,6 +581,14 @@ void cleanup(void) {
     for(m = mons; m; m = m->next)
 	while(m->stack)
 	    unmanage(m->stack, False);
+#ifdef XFT
+    XftFontClose(display, dc.font.xft);
+#else
+    if(dc.font.set)
+	XFreeFontSet(display, dc.font.set);
+    else
+	XFreeFont(display, dc.font.xfont);
+#endif
     XUngrabKey(display, AnyKey, AnyModifier, root);
     XFreePixmap(display, dc.drawable);
     XFreeGC(display, dc.gc);
@@ -820,7 +841,7 @@ void eprint(const char *errstr, ...) {
 void drawbar(Monitor *m) {
     int x;
     unsigned int i, w, tw, occ = 0, urg = 0;
-    XftColor *col;
+    unsigned long *col;
     Client *c;
 
     resizebarwin(m);
@@ -845,7 +866,7 @@ void drawbar(Monitor *m) {
 	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
         drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
 	dc.x += dc.w;
-        XSetForeground(display, dc.gc, dc.norm[ColBorder].pixel);
+        XSetForeground(display, dc.gc, dc.norm[ColBorder]);
 	XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
@@ -897,12 +918,23 @@ void drawbars(void) {
     updatesystray();
 }
 
-void drawtext(const char *text, XftColor col[ColLast], Bool invert) {
+void drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
     char buf[BUFSIZE];
     int i, x, y, h, len, olen;
-    XftDraw *d;
+#ifdef XFT
+    int p;
+    XColor color;
+    XftColor xftcolor;
 
-    XSetForeground(display, dc.gc, col[invert ? ColFG : ColBG].pixel);
+    color.pixel = col[ColFG];
+    XQueryColor(display, DefaultColormap(display, screen), &color);
+    xftcolor.color.red = color.red;
+    xftcolor.color.green = color.green;
+    xftcolor.color.blue = color.blue;
+    xftcolor.color.alpha = 0xffff;
+#endif
+
+    XSetForeground(display, dc.gc, col[invert ? ColFG : ColBG]);
     XFillRectangle(display, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
     if(!text)
 	return;
@@ -915,13 +947,42 @@ void drawtext(const char *text, XftColor col[ColLast], Bool invert) {
     if(!len)
 	return;
     memcpy(buf, text, len);
+#ifdef XFT
+    if(len < olen) {
+	for(i = len - 1, p = 0; i; --i, ++p) {
+	    if(buf[i] & 0x80) { /* 10xxxxxx */
+		if((buf[i] & 0x40) && (p >= 2)) { /* 11xxxxxx */
+		    buf[i] = '.';
+		    break;
+		}
+		buf[i] = '.';
+	    }
+	    else {
+		buf[i] = '.';
+		if(p == 2) break;
+	    }
+	}
+	++p;
+	if (p > 3)
+	    len -= p - 3;
+    }
+
+    XftColorAllocValue(display, XDefaultVisual(display, screen),
+		       DefaultColormap(display, screen),
+		       &xftcolor.color, &xftcolor);
+    XftDrawStringUtf8(xftdraw, &xftcolor, dc.font.xft, x, y,
+		      (XftChar8*)buf, len);
+    XftColorFree(display, XDefaultVisual(display, screen),
+		 DefaultColormap(display, screen), &xftcolor);
+#else
     if(len < olen)
 	for(i = len; i && i > len - 3; buf[--i] = '.');
-
-    d = XftDrawCreate(display, dc.drawable, DefaultVisual(display, screen), DefaultColormap(display,screen));
-
-    XftDrawStringUtf8(d, &col[invert ? ColBG : ColFG], dc.font.xfont, x, y, (XftChar8 *) buf, len);
-	XftDrawDestroy(d);
+    XSetForeground(display, dc.gc, col[ColFG]);
+    if(dc.font.set)
+	XmbDrawString(display, dc.drawable, dc.font.set, dc.gc, x, y, buf, len);
+    else
+	XDrawString(display, dc.drawable, dc.gc, x, y, buf, len);
+#endif
 }
 
 void enternotify(XEvent *e) {
@@ -1020,7 +1081,7 @@ void focus(Client *c) {
 	detachstack(c);
 	attachstack(c);
 	grabbuttons(c, True);
-        XSetWindowBorder(display, c->win, dc.sel[ColBorder].pixel);
+        XSetWindowBorder(display, c->win, dc.sel[ColBorder]);
 	setfocus(c);
     }
     else {
@@ -1084,13 +1145,13 @@ Atom getatomprop(Client *c, Atom prop) {
     return atom;
 }
 
-XftColor getcolor(const char *colstr) {
-    XftColor color;
+unsigned long getcolor(const char *colstr) {
+    Colormap cmap = DefaultColormap(display, screen);
+    XColor color;
 
-    if(!XftColorAllocName(display, DefaultVisual(display, screen), DefaultColormap(display, screen), colstr, &color))
+    if(!XAllocNamedColor(display, cmap, colstr, &color, &color))
 	eprint("error, cannot allocate color '%s'\n", colstr);
-
-    return color;
+    return color.pixel;
 }
 
 Bool getrootptr(int *x, int *y) {
@@ -1212,13 +1273,51 @@ void grabkeys(int keytype) {
 }
 
 void initfont(const char *fontstr) {
-    if(!(dc.font.xfont = XftFontOpenName(display,screen,fontstr))
-       && !(dc.font.xfont = XftFontOpenName(display,screen,"fixed")))
-        eprint("error, cannot load font: '%s'\n", fontstr);
+#ifdef XFT
+    XftResult result;
+    XftPattern *p;
+    XftPattern *m;
 
-    dc.font.ascent = dc.font.xfont->ascent;
-    dc.font.descent = dc.font.xfont->descent;
+    p = XftNameParse(fontstr);
+    m = XftFontMatch(display, screen, p, &result);
+    dc.font.xft = XftFontOpenPattern(display, m);
+    dc.font.ascent = dc.font.xft->ascent;
+    dc.font.descent = dc.font.xft->descent;
+
     dc.font.height = dc.font.ascent + dc.font.descent;
+#else
+    char *def, **missing;
+    int i, n;
+
+    missing = NULL;
+    dc.font.set = XCreateFontSet(display, fontstr, &missing, &n, &def);
+    if(missing) {
+	while(n--)
+	    fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);
+	XFreeStringList(missing);
+    }
+    if(dc.font.set) {
+	XFontStruct **xfonts;
+	char **font_names;
+
+	dc.font.ascent = dc.font.descent = 0;
+	XExtentsOfFontSet(dc.font.set);
+	n = XFontsOfFontSet(dc.font.set, &xfonts, &font_names);
+	for(i = 0, dc.font.ascent = 0, dc.font.descent = 0; i < n; i++) {
+	    dc.font.ascent = MAX(dc.font.ascent, (*xfonts)->ascent);
+	    dc.font.descent = MAX(dc.font.descent,(*xfonts)->descent);
+	    xfonts++;
+	}
+    }
+    else {
+	if(!(dc.font.xfont = XLoadQueryFont(display, fontstr))
+	   && !(dc.font.xfont = XLoadQueryFont(display, "fixed")))
+	    eprint("error, cannot load font: '%s'\n", fontstr);
+	dc.font.ascent = dc.font.xfont->ascent;
+	dc.font.descent = dc.font.xfont->descent;
+    }
+    dc.font.height = dc.font.ascent + dc.font.descent;
+#endif
 }
 
 #ifdef XINERAMA
@@ -1317,7 +1416,7 @@ void manage(Window w, XWindowAttributes *wa) {
 
     wc.border_width = c->bw;
     XConfigureWindow(display, w, CWBorderWidth, &wc);
-    XSetWindowBorder(display, w, dc.norm[ColBorder].pixel);
+    XSetWindowBorder(display, w, dc.norm[ColBorder]);
     configure(c); /* propagates border_width, if size doesn't change */
     updatewindowtype(c);
     updatesizehints(c);
@@ -1659,7 +1758,7 @@ void run(void) {
 
     /* execute autostart script */
     if (!(home = getenv("HOME")))
-        return;
+	return;
 
     snprintf(path, sizeof(path), "%s/swm/autostart", home);
     const char* autostartcmd[] = { path, NULL };
@@ -1865,6 +1964,12 @@ void setup(void) {
     dc.gc = XCreateGC(display, root, 0, NULL);
     /* set line drawing attributes */
     XSetLineAttributes(display, dc.gc, 1, LineSolid, CapButt, JoinMiter);
+#ifndef XFT
+    if(!dc.font.set)
+	XSetFont(display, dc.gc, dc.font.xfont->fid);
+#else
+    xftdraw = XftDrawCreate(display, dc.drawable, XDefaultVisual(display, screen), DefaultColormap(display, screen));
+#endif
     /* init system tray */
     updatesystray();
     /* init bars */
@@ -1959,9 +2064,19 @@ void moveto_workspace(const Arg *arg) {
 
 int textnw(const char *text, unsigned int len) {
 
-    XGlyphInfo ext;
-    XftTextExtentsUtf8(display, dc.font.xfont, (XftChar8 *) text, len, &ext);
-    return ext.xOff;
+#ifdef XFT
+    XGlyphInfo g;
+    XftTextExtentsUtf8(display, dc.font.xft, (XftChar8*)text, len, &g);
+    return g.xOff;
+#else
+    XRectangle r;
+
+    if(dc.font.set) {
+	XmbTextExtents(dc.font.set, text, len, NULL, &r);
+	return r.width;
+    }
+    return XTextWidth(dc.font.xfont, text, len);
+#endif
 }
 
 void fullscreen(const Arg *arg) {
@@ -1975,7 +2090,7 @@ void unfocus(Client *c, Bool setfocus) {
     if(!c)
 	return;
     grabbuttons(c, False);
-    XSetWindowBorder(display, c->win, dc.norm[ColBorder].pixel);
+    XSetWindowBorder(display, c->win, dc.norm[ColBorder]);
     if(setfocus) {
 	XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
 	XDeleteProperty(display, root, netatom[NetActiveWindow]);
@@ -2306,11 +2421,11 @@ void updatesystray(void) {
 	/* init systray */
 	if(!(systray = (Systray *)calloc(1, sizeof(Systray))))
 	    eprint("fatal: could not malloc() %u bytes\n", sizeof(Systray));
-        systray->win = XCreateSimpleWindow(display, root, x, selmon->by, w, bh, 0, 0, dc.norm[ColBG].pixel);
+        systray->win = XCreateSimpleWindow(display, root, x, selmon->by, w, bh, 0, 0, dc.norm[ColBG]);
 	wa.event_mask = ButtonPressMask | ExposureMask;
 	wa.override_redirect = True;
         wa.background_pixmap = ParentRelative;
-        wa.background_pixel = dc.norm[ColBG].pixel;
+        wa.background_pixel = dc.norm[ColBG];
 	XSelectInput(display, systray->win, SubstructureNotifyMask);
 	XChangeProperty(display, systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32,
 			PropModeReplace, (unsigned char *)&systrayorientation, 1);
