@@ -929,7 +929,7 @@ void enternotify(XEvent *e) {
     Monitor *m;
     XCrossingEvent *ev = &e->xcrossing;
 
-    if (guru_mode) return;
+    if (!follow_mouse) return;
     if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 	return;
     c = wintoclient(ev->window);
@@ -1197,7 +1197,7 @@ void grabkeys(int keytype) {
     else {
 	XUngrabKey(display, AnyKey, AnyModifier, root);
 
-        if(guru_mode) {
+        if(hide_cursor) {
 	    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 	}
 
@@ -1431,8 +1431,6 @@ void movemouse(const Arg *arg) {
 	return;
     if(!getrootptr(&x, &y))
 	return;
-    if(guru_mode)
-	running = 0;
     do {
 	XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
 	switch(ev.type) {
@@ -1610,8 +1608,6 @@ void resizemouse(const Arg *arg) {
 		    None, cursor[CurResize], CurrentTime) != GrabSuccess)
 	return;
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
-    if(guru_mode)
-	running = 0;
     do {
 	XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
 	switch(ev.type) {
