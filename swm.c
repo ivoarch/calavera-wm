@@ -2603,6 +2603,8 @@ void launcher(const Arg *arg) {
     // draw the prompt
     drawtext(launcher_prompt, dc.sel, False);
     dc.x += TEXTW(launcher_prompt);
+    XSetForeground(display, dc.gc, dc.tags[ColBorder]);
+    XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
 
     drawtext(NULL, dc.norm, False);
     XCopyArea(display, dc.drawable, selmon -> barwin, dc.gc, x, 0, dc.w, bh, x, 0);
