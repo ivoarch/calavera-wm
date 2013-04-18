@@ -856,8 +856,10 @@ void drawbar(Monitor *m) {
 
     /* count clients */
     for(i = 0; i < N_WORKSPACES; i++) {
+#ifdef HIDE_EMPTY_WS
 	if (HIDE_EMPTY_WS && !(m->tagset[m->seltags] & 1 << i) && !(occ & 1 << i))
 	    continue;
+#endif
     	char cnt[5];
 	int n = 0;
 	for(c = m->clients; c; c = c->next) {
@@ -1965,6 +1967,11 @@ void setup(void) {
     dc.urgent[ColFG] = getcolor(URGENT_FGCOLOR);
     dc.clock[ColBG] = getcolor(CLOCK_BGCOLOR);
     dc.clock[ColFG] = getcolor(CLOCK_FGCOLOR);
+
+    // Set Cool background color via Xsetroot
+    const char* wall_cmd[] = { "xsetroot", "-solid", SEL_BGCOLOR, NULL };
+    Arg a = { .v = wall_cmd };
+    spawn(&a);
 
     dc.drawable = XCreatePixmap(display, root, DisplayWidth(display, screen), bh, DefaultDepth(display, screen));
     dc.gc = XCreateGC(display, root, 0, NULL);

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Wallpaper
-xsetroot -solid '#2e2e2e'
-
 # Hide cursor
 #unclutter -idle 3 -jitter 2 -root &
 
