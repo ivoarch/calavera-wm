@@ -45,7 +45,7 @@ static const char *CMD_LOCK[] = { "xlock", "-mode", "star", NULL };
 /* KEY BINDINGS */
 static Key keys[] = {
 	/* modifier                   key        function        argument */
-        { None,                       XK_F2,     launcher,       {0} },
+        { None,                       XK_a,      launcher,       {0} },
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },

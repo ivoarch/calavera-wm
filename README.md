@@ -26,7 +26,7 @@ Commands
 ### keyboard shortcuts
 
 - <kbd>C-t c</kbd> Start `Urxvt`.
-- <kbd>C-t F2</kbd> Start app launcher.
+- <kbd>C-t a</kbd> Start app launcher.
 - <kbd>C-t e</kbd> Start `Emacs`.
 - <kbd>C-t w</kbd> Start `Conkeror`.
 - <kbd>C-t l</kbd> Locks the screen with `Xlock`.
