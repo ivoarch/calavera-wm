@@ -58,6 +58,7 @@ install: all
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	@cp -f swm ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/swm
+	@cp swm.desktop /usr/share/xsessions
 
 uninstall:
 	@rm -f ${DESTDIR}${PREFIX}/bin/swm

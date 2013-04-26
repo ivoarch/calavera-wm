@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=SWM
+Comment=Stacking window manager
+Exec=/usr/local/bin/swm
+Icon=swm
+Type=XSession
