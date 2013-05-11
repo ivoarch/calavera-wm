@@ -4,9 +4,7 @@ is a minimalist stacking window manager, using prefix key style, à la ratpoison
 
 SCREENSHOTS
 --------------------
-[![gimp](http://ompldr.org/taHhreg)](http://ompldr.org/vaHhreg/2013-03-30-113939_1024x768_scrot.png)
-[![conkeror](http://ompldr.org/taHhsMA)](http://ompldr.org/vaHhsMA/2013-03-30-114110_1024x768_scrot.png)
-[![icons](http://ompldr.org/taHhwaw)](http://ompldr.org/vaHhwaw/2013-03-30-190326_1024x768_scrot.png)
+[![swm-2013-05-11](http://ompldr.org/taWRnbA)](http://ompldr.org/vaWRnbA/Screenshot%20from%202013-05-11%2021:14:26.png)
 
 FEATURES
 --------
@@ -69,17 +67,16 @@ In order to build swm you need the header files.
 
 Installation
 ------------
-Edit conf.mk to match your local setup (swm is installed into
-the /usr/local namespace by default).
+Swm is installed into the /usr/local namespace by default,
+change the path indicated in the Makefile.
 
 Afterwards enter the following command to build and install swm (if
 necessary as root):
 
     make clean install
 
-If you are going to use the default bluegray color scheme it is highly
-recommended to also install the bluegray files shipped in the dextra package.
-
+**Note:** By default Swm will not be compiled with Xinerama and XFT support.
+Uncomment the respective lines in the Makefile to change this.
 
 Running swm
 -----------
