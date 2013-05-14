@@ -848,32 +848,28 @@ void drawbar(Monitor *m) {
 
     resizebarwin(m);
     for(c = m->clients; c; c = c->next) {
-	occ |= c->tags;
-	if(c->isurgent)
+      occ |= c->tags;
+      if(c->isurgent)
 	    urg |= c->tags;
     }
     dc.x = 0;
 
     /* count clients */
     for(i = 0; i < N_WORKSPACES; i++) {
-#ifdef HIDE_EMPTY_WS
-	if (HIDE_EMPTY_WS && !(m->tagset[m->seltags] & 1 << i) && !(occ & 1 << i))
-	    continue;
-#endif
-    	char cnt[5];
-	int n = 0;
-	for(c = m->clients; c; c = c->next) {
+      char cnt[5];
+      int n = 0;
+      for(c = m->clients; c; c = c->next) {
 	    if(c->tags & 1 << i)
-	    n++;
-	}
-    	snprintf(cnt, sizeof cnt, "%d", n);
-	dc.w = TEXTW(cnt);
+          n++;
+      }
+      snprintf(cnt, sizeof cnt, "%d", n);
+      dc.w = TEXTW(cnt);
 
-	col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
-        drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
-	dc.x += dc.w;
-        XSetForeground(display, dc.gc, dc.tags[ColBorder]);
-	XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
+      col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.tags;
+      drawtext(cnt, urg & 1 << i ? dc.urgent : col, urg & 1 << i);
+      dc.x += dc.w;
+      XSetForeground(display, dc.gc, dc.tags[ColBorder]);
+      XDrawRectangle(display, dc.drawable ,dc.gc, 0, 0, dc.x-1, bh-1);
     }
     x = dc.x;
     // for clock
@@ -884,32 +880,32 @@ void drawbar(Monitor *m) {
     strftime(buf, sizeof buf, clock_format, localtime(&now));
 
     if(m == selmon) {
-	dc.w = TEXTW(buf);
-	dc.x = m->ww - dc.w;
-    dc.x -= getsystraywidth();
+      dc.w = TEXTW(buf);
+      dc.x = m->ww - dc.w;
+      dc.x -= getsystraywidth();
 
     if(dc.x < x) {
-    	dc.x = x;
-	dc.w = m->ww - x;
+      dc.x = x;
+      dc.w = m->ww - x;
     }
     drawtext(buf, dc.clock, False);
     }
     else
-	dc.x = m->ww;
+      dc.x = m->ww;
     if((dc.w = dc.x - x) > bh) {
-	dc.x = x;
-        /* draw client title */
-	if(m->sel && showtitle) {
+      dc.x = x;
+      /* draw client title */
+      if(m->sel && showtitle) {
 	    tw = MIN((w = dc.w), MIN(250, TEXTW(m->sel->name))); // title width
 	    dc.w = tw;
 	    drawtext(m->sel->name, dc.norm, False);
-            if(w > tw) {
-		dc.x += tw;
-		dc.w = w - tw;
-		drawtext(NULL, dc.norm, False);
+        if(w > tw) {
+          dc.x += tw;
+          dc.w = w - tw;
+          drawtext(NULL, dc.norm, False);
 	    }
-	}
-	else
+      }
+      else
 	    drawtext(NULL, dc.norm, False);
     }
 	XCopyArea(display, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
@@ -920,7 +916,7 @@ void drawbars(void) {
     Monitor *m;
 
     for(m = mons; m; m = m->next)
-	drawbar(m);
+    drawbar(m);
     updatesystray();
 }
 
