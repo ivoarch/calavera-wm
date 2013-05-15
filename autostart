@@ -1,5 +1,5 @@
 #!/bin/bash
 
-~/bin/dzonky.sh &
+#~/bin/dzonky.sh &
 
 xsetroot -solid darkslategray 
