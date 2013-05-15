@@ -13,13 +13,6 @@ X11LIB=/usr/lib/X11
 #XINERAMALIBS = -lXinerama
 #XINERAMAFLAGS = -DXINERAMA
 
-# OPTIONAL XFT FONTS
-
-# Xft, uncomment if you want it
-#XFTINC = -I/usr/include/freetype2
-#XFTLIBS = -L${X11LIB} -lXft
-#XFTFLAGS = -DXFT
-
 # includes and libs
 INCS = -I${X11INC} -I/usr/include/freetype2
 LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${XFTLIBS} -lutil -lXext -lXft -lfontconfig
@@ -46,7 +39,7 @@ options:
 .c.o:
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: conf.h colors.h
+${OBJ}: conf.h 
 
 swm: ${OBJ}
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}

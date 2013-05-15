@@ -1,24 +1,13 @@
 /* See LICENSE file for copyright and license details. */
 
-/* appearance */
-#ifdef XFT
-static const char font[]           = "Sans:size=11";
-#else
-static const char font[]           = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
-#endif
+#define NORM_BORDERCOLOR     "black"       /* border of inactiv window */
+#define SEL_BORDERCOLOR      "SandyBrown"  /* border of active window */
+static const unsigned int padding  = 20;    /* gap at top of screen */
 static const unsigned int snap     = 16;   /* snap pixel */
 static const unsigned int borderpx = 2;    /* border pixel of floating windows */
-static const int barheight         = 24;   /* the height of the bar in pixels */
-static const Bool showbar          = True; /* False means no bar */
-static const Bool topbar           = True; /* False means bottom bar */
-static const Bool showtitle        = True; /* False means do not show title in status bar */
-static const char clock_format[]   = "%a %B %d, %R"; /* Clock format */
-static const Bool showsystray      = True; /* Show systray */
-static const unsigned int systrayspacing = 2; /* systray spacing */
 static const Bool follow_mouse     = True; /* Focus the window with the mouse */
 static const Bool hide_cursor      = False;/* Pressing a key sends the cursor to the bottom right corner */
 static const Bool waitkey          = True; /* Show the cursor when waiting for a key */
-static const char launcher_prompt[] = "Exec: "; /* Launcher prompt look  */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
@@ -44,15 +33,15 @@ static const char *CMD_LOCK[] = { "xlock", "-mode", "star", NULL };
 /* KEY BINDINGS */
 static Key keys[] = {
 	/* modifier                   key        function        argument */
-        { None,                       XK_a,      launcher,       {0} },
+    { None,                       XK_a,      launcher,       {0} },
 	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
-        { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
+    { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
 	{ None,                       XK_l,      spawn,          {.v = CMD_LOCK } },
 	{ None,                       XK_f,      fullscreen,     {0} },
 	{ None,                       XK_m,      maximize,       {0} },
 	{ None,                       XK_h,      horizontalmax,  {0} },
-        { None,                       XK_v,      verticalmax,    {0} },
+    { None,                       XK_v,      verticalmax,    {0} },
 	{ None,                       XK_period, center,         {0} },
 	{ None,                       XK_n,      focusstack,     {.i = +1 } },
 	{ None,                       XK_p,      focusstack,     {.i = -1 } },
@@ -61,15 +50,20 @@ static Key keys[] = {
 	WS_KEY(                        XK_2,                      1)
 	WS_KEY(                        XK_3,                      2)
 	WS_KEY(                        XK_4,                      3)
+    WS_KEY(                        XK_5,                      4)
+    WS_KEY(                        XK_6,                      5)
+    WS_KEY(                        XK_7,                      6) 
+    WS_KEY(                        XK_8,                      7)
+    WS_KEY(                        XK_9,                      8)
 	{ ShiftMask,                  XK_r,      reload,         {0} },
-        { ShiftMask,                  XK_q,      quit,           {0} },
+    { ShiftMask,                  XK_q,      quit,           {0} },
 
-        /* Multimedia keys */
+    /* Multimedia keys */
 	{0, XF86XK_AudioLowerVolume,
-            spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
-        {0, XF86XK_AudioRaiseVolume,
+        spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
+    {0, XF86XK_AudioRaiseVolume,
 	    spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL}}},
-        {0, XF86XK_AudioMute,
+    {0, XF86XK_AudioMute,
 	    spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
