@@ -4,7 +4,7 @@
 #define SEL_BORDERCOLOR      "SandyBrown"  /* border of active window */
 static const unsigned int padding  = 0;    /* gap at top of screen */
 static const unsigned int snap     = 16;   /* snap pixel */
-static const unsigned int borderpx = 2;    /* border pixel of floating windows */
+static const unsigned int borderpx = 1;    /* windows pixel */
 static const Bool follow_mouse     = True; /* Focus the window with the mouse */
 static const Bool hide_cursor      = False;/* Pressing a key sends the cursor to the bottom right corner */
 static const Bool waitkey          = True; /* Show the cursor when waiting for a key */

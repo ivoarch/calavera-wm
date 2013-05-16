@@ -94,7 +94,6 @@ enum {
     NetWMFullscreen,
     NetWMWindowType,
     NetWMWindowTypeDialog,
-    NetWMWindowTypeDesktop,
     NetLast
 };
 
@@ -180,12 +179,10 @@ static long getstate(Window w);
 static void setclientstate(Client *c, long state);
 static Bool sendevent(Client *c, Atom proto);
 static void setnumbdesktops(void);
-static Bool typedesktop(Window *w);
 static void updatecurrenddesktop(void);
 static void updateclientdesktop(Client *c);
 static void updateclientlist(void);
 static void updateclientlist_stacking(void);
-static Bool gettextprop(Window w, Atom atom, char *text, unsigned int size);
 
 // bar
 static void set_padding(Monitor *m);
@@ -218,7 +215,6 @@ static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void updatesizehints(Client *c);
 static void updatewindowtype(Client *c);
-static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
 static Client *wintoclient(Window w);
 
@@ -709,7 +705,6 @@ void ewmh_init(void) {
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
     netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
-    netatom[NetWMWindowTypeDesktop] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
     netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
     netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
     netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
@@ -843,30 +838,6 @@ long getstate(Window w) {
     return result;
 }
 
-Bool gettextprop(Window w, Atom atom, char *text, unsigned int size) {
-    char **list = NULL;
-    int n;
-    XTextProperty name;
-
-    if(!text || size == 0)
-	return False;
-    text[0] = '\0';
-    XGetTextProperty(display, w, &name, atom);
-    if(!name.nitems)
-	return False;
-    if(name.encoding == XA_STRING)
-	strncpy(text, (char *)name.value, size - 1);
-    else {
-	if(XmbTextPropertyToTextList(display, &name, &list, &n) >= Success && n > 0 && *list) {
-	    strncpy(text, *list, size - 1);
-	    XFreeStringList(list);
-	}
-    }
-    text[size - 1] = '\0';
-    XFree(name.value);
-    return True;
-}
-
 void grab_pointer() {
     XGrabPointer (display, root, True, 0,
 		  GrabModeAsync, GrabModeAsync,
@@ -990,14 +961,9 @@ void manage(Window w, XWindowAttributes *wa) {
     Window trans = None;
     XWindowChanges wc;
 
-    if (typedesktop(&w)) {
-	return;
-    }
-
     if(!(c = calloc(1, sizeof(Client))))
 	eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
     c->win = w;
-    updatetitle(c);
     if(XGetTransientForHint(display, w, &trans) && (t = wintoclient(trans))) {
 	c->mon = t->mon;
 	c->tags = t->tags;
@@ -1198,10 +1164,6 @@ void propertynotify(XEvent *e) {
 	    updatewmhints(c);
 	    break;
 	}
-	if(ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]) {
-	    updatetitle(c);
-        //        	    if(c == c->mon->sel)
-    }                
 	if(ev->atom == netatom[NetWMWindowType])
 	    updatewindowtype(c);
     }
@@ -1470,7 +1432,7 @@ void setup(void) {
     ewmh_init();
 
     /* init cursors */
-    cursor[CurNormal] = XCreateFontCursor(display, XC_left_ptr);
+    cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
     cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
@@ -1534,26 +1496,6 @@ void spawn(const Arg *arg) {
 
 void sync_display(void) {
     XSync(display, False);
-}
-
-Bool typedesktop(Window *w) {
-    int f;
-    unsigned char *data = NULL;
-    unsigned long n, extra, i;
-    Atom real, result = None;
-
-    if(XGetWindowProperty(display, *w, netatom[NetWMWindowType], 0L, 0x7FFFFFFF, False, AnyPropertyType,
-			  &real, &f, &n, &extra, &data) == Success) {
-
-	for(i = 0; i < n; ++i)
-	result = * (Atom *) data;
-
-	XMapWindow(display, *w);
-	XMapSubwindows(display, *w);
-    }
-
-    XFree(data);
-    return result == netatom[NetWMWindowTypeDesktop] ? True : False;
 }
 
 void moveto_workspace(const Arg *arg) {
@@ -1807,13 +1749,6 @@ void updatesizehints(Client *c) {
 	c->maxa = c->mina = 0.0;
     c->isfixed = (c->maxw && c->minw && c->maxh && c->minh
 		  && c->maxw == c->minw && c->maxh == c->minh);
-}
-
-void updatetitle(Client *c) {
-    if(!gettextprop(c->win, netatom[NetWMName], c->name, sizeof c->name))
-	gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
-    if(c->name[0] == '\0') /* hack to mark broken clients */
-	strcpy(c->name, broken);
 }
 
 void updatewindowtype(Client *c) {

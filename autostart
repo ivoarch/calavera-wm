@@ -1,5 +1,5 @@
 #!/bin/bash
 
 #~/bin/dzonky.sh &
-
-xsetroot -solid darkslategray 
+xsetroot -solid darkslategray
+xclock -digital -fg black -bg white -geometry -0-0 &
