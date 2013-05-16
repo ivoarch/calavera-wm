@@ -208,7 +208,6 @@ typedef struct {
 } Key;
 
 struct Monitor {
-    float mfact;
     int num;
     int by;               /* bar geometry */
     int mx, my, mw, mh;   /* screen size */
@@ -226,8 +225,6 @@ struct Monitor {
 
 typedef struct {
     const char *class;
-    const char *instance;
-    const char *title;
     unsigned int tags;
     Bool isfloating;
     int monitor;

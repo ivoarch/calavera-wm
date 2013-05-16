@@ -57,6 +57,10 @@ Clone with Git by doing:
 
     git clone https://github.com/ivoarch/swm.git
 
+Branches
+---------
+- [Experiments](https://github.com/ivoarch/swm/tree/experiments) is an even more stripped and minimal version of swm.
+
 Requirements
 ------------
 In order to build swm you need the header files.
