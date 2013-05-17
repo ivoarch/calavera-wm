@@ -3,7 +3,8 @@
 is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
 SCREENSHOTS
---------------------
+-------------
+[![swm-2013-05-11](http://3image.com/images/2013/05/17/2013-05-17-1115521024x768scrot.th.png)](http://3image.com/images/2013/05/17/2013-05-17-1115521024x768scrot.png)
 
 FEATURES
 --------
@@ -88,6 +89,10 @@ and (re)compiling the source code.
 About
 -----
 This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/calavera-wm/master/LICENSE) file.
+
+Inspiration
+-------------
+Thanks to the authors of `DWM`, `Ratpoison`, `Stumpwm`, `Evilwm`.
 
 Licensing
 ----------
