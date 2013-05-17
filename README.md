@@ -36,7 +36,7 @@ Commands
 - <kbd>C-t-Shift 1,2,3</kbd> Move focused window to another workspace.
 - <kbd>C-t 1,2,3</kbd> Switch to workspace number 1|2|...
 - <kbd>C-t-Shift r</kbd> Reload calavera-wm configuration.
-- <kbd>C-t-Shift q</kbd> Quit swm.
+- <kbd>C-t-Shift q</kbd> Quit calavera-wm
 
 ### Mouse
 
@@ -57,7 +57,7 @@ Requirements
 
 Installation
 ------------
-Swm is installed into the /usr/local namespace by default,
+Calavera-wm is installed into the /usr/local namespace by default,
 change the path indicated in the Makefile.
 
 Afterwards enter the following command to build and install Calavera-wm (if
@@ -68,17 +68,17 @@ necessary as root):
 **Note:** By default Calavera-wm will not be compiled with Xinerama support.
 Uncomment the respective lines in the Makefile to change this.
 
-Running swm
+Running Calavera-wm
 -----------
-Add the following line to your .xinitrc to start swm using startx:
+Add the following line to your .xinitrc to start calavera-wm using startx:
 
     exec calavera-wm
 
-In order to connect swm to a specific display, make sure that
+In order to connect calavera-wm to a specific display, make sure that
 the DISPLAY environment variable is set correctly, e.g.:
 
     DISPLAY=foo.bar:1 exec calavera-wm
-    (This will start swm on display :1 of the host foo.bar.)
+    (This will start calavera-wm on display :1 of the host foo.bar.)
 
 Configuration
 -------------

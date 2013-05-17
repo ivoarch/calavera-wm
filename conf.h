@@ -3,11 +3,11 @@
  * See LICENSE file for copyright and license details.
  */
 
-#ifndef SWM_CONFIG_H_
-#define SWM_CONFIG_H_
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#define BORDERCOLOR "black"     
-#define FOCUS_BORDERCOLOR  "SandyBrown" 
+#define UNFOCUS "black"     
+#define FOCUS "SandyBrown" 
 #define PADDING_TOP      0  /* gap at top of screen */
 #define SNAP             16 /* pixel */
 #define BORDER_WIDTH     1  /* pixel */
