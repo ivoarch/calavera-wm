@@ -7,9 +7,11 @@
 #define CONFIG_H
 
 #define UNFOCUS "black"     
-#define FOCUS "SandyBrown" 
+#define FOCUS   "SandyBrown" 
 #define PADDING_TOP      0  /* gap at top of screen */
-#define SNAP             16 /* pixel */
+#define MOVESTEP         32 /* pixels to move a window at a time */
+#define RESIZESTEP       32 /* Pixels to resize a window at a time.*/
+#define SNAP             16 /* monitor edge snap distance */
 #define FOLLOW_MOUSE     1  /* Focus the window with the mouse */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
@@ -60,6 +62,14 @@ static Key keys[] = {
         WS_KEY(                        XK_8,                      7)
         WS_KEY(                        XK_9,                      8)
         WS_KEY(                        XK_0,                      9)
+        { None,                       XK_Down,   moveresize,     {.v = (int []){ 0, MOVESTEP, 0, 0 }}},
+        { None,                       XK_Up,     moveresize,     {.v = (int []){ 0, -MOVESTEP, 0, 0 }}},
+        { None,                       XK_Right,  moveresize,     {.v = (int []){ MOVESTEP, 0, 0, 0 }}},
+        { None,                       XK_Left,   moveresize,     {.v = (int []){ -MOVESTEP, 0, 0, 0 }}},
+        { ShiftMask,                  XK_Down,   moveresize,     {.v = (int []){ 0, 0, 0, RESIZESTEP }}},
+        { ShiftMask,                  XK_Up,     moveresize,     {.v = (int []){ 0, 0, 0, -RESIZESTEP }}},
+        { ShiftMask,                  XK_Right,  moveresize,     {.v = (int []){ 0, 0, RESIZESTEP, 0 }}},
+        { ShiftMask,                  XK_Left,   moveresize,     {.v = (int []){ 0, 0, -RESIZESTEP, 0 }}},
         { ShiftMask,                  XK_r,      reload,         {0} }, 
         { ShiftMask,                  XK_q,      quit,           {0} },
 
