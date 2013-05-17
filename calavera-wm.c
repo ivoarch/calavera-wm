@@ -23,7 +23,6 @@
 
 /* headers */
 #include <limits.h>
-#include <err.h>
 #include <errno.h>
 #include <locale.h>
 #include <stdarg.h>
@@ -31,7 +30,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -281,7 +279,6 @@ static void change_workspace(const Arg *arg);
 
 /* variables */
 static char *wm_name = WMNAME;
-static const char broken[] = "no name";
 static char **cargv;
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
