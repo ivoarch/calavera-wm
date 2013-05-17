@@ -3,8 +3,8 @@
  * See LICENSE file for copyright and license details.
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONF_H
+#define CONF_H
 
 #define UNFOCUS "black"     
 #define FOCUS   "SandyBrown" 
@@ -44,6 +44,7 @@ static Key keys[] = {
         { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
 	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
 	{ None,                       XK_l,      spawn,          {.v = CMD_LOCK } },
+        { None,                       XK_b,      banish,         {0} },
 	{ None,                       XK_f,      fullscreen,     {0} },
 	{ None,                       XK_m,      maximize,       {0} },
 	{ None,                       XK_h,      horizontalmax,  {0} },

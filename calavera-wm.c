@@ -255,6 +255,7 @@ static Bool updategeom(void);
 static Monitor *wintomon(Window w);
 
 // actions
+static void banish(const Arg *arg);
 static void center(const Arg *arg);
 static void focusstack(const Arg *arg);
 static void killfocused(const Arg *arg);
@@ -451,6 +452,10 @@ void buttonpress(XEvent *e) {
 	if(click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
 	   && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
 	    buttons[i].func(&buttons[i].arg);
+}
+
+void banish(const Arg *arg) {
+  XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 }
 
 void center(const Arg *arg) {
@@ -880,7 +885,7 @@ void grabkeys(int keytype) {
 	XUngrabKey(display, AnyKey, AnyModifier, root);
 
         if(HIDE_CURSOR) {
-	    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
+          XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 	}
 
 	if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))

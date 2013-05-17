@@ -26,6 +26,7 @@ Commands
 - <kbd>C-t e</kbd> Start `Emacs`.
 - <kbd>C-t w</kbd> Start `Conkeror`.
 - <kbd>C-t l</kbd> Locks the screen with `Xlock`.
+- <kbd>C-t b</kbd> Banish the mouse cursor.
 - <kbd>C-t f</kbd> Toggles fullscreen.
 - <kbd>C-t m</kbd> Maximise focused window.
 - <kbd>C-t v</kbd> Vertical maximise.
