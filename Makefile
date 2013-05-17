@@ -56,5 +56,6 @@ install: all
 
 uninstall:
 	@rm -f ${DESTDIR}${PREFIX}/bin/calavera-wm
+	@rm -f /usr/share/xsessions/calavera-wm.desktop
 
 .PHONY: all options clean dist install uninstall
