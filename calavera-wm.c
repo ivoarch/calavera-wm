@@ -73,7 +73,6 @@
 /* enums */
 enum { PrefixKey, CmdKey };                              /* prefix key */
 enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
-enum { ColBorder, ColLast };                             /* color */
 enum { ClkClientWin, ClkRootWin, ClkLast };              /* clicks */
 
 /* EWMH atoms */
@@ -136,11 +135,6 @@ struct Client {
     Monitor *mon;
     Window win; /* The window */
 };
-
-typedef struct {
-    unsigned long norm[ColLast];
-    unsigned long sel[ColLast];
-} DC; /* draw context */
 
 /* key struct */
 typedef struct {
@@ -278,6 +272,8 @@ static void fullscreen(const Arg *arg);
 static void change_workspace(const Arg *arg);
 
 /* variables */
+static unsigned int win_focus;                                                                                                
+static unsigned int win_unfocus;
 static char *wm_name = WMNAME;
 static char **cargv;
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
@@ -303,7 +299,6 @@ static Atom wmatom[WMLast], netatom[NetLast];
 static Bool running = True;
 static Cursor cursor[CurLast];
 static Display *display; /* The connection to the X server. */
-static DC dc;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 
@@ -746,7 +741,7 @@ void focus(Client *c) {
 	detachstack(c);
 	attachstack(c);
 	grabbuttons(c, True);
-        XSetWindowBorder(display, c->win, dc.sel[ColBorder]);
+        XSetWindowBorder(display, c->win, win_focus);
 	setfocus(c);
     }
     else {
@@ -984,11 +979,11 @@ void manage(Window w, XWindowAttributes *wa) {
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= c->mon->wx)
                       && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? PADDING_TOP : c->mon->my);
-    c->bw = BORDER_WIDTH;
+    c->bw = 1;
 
     wc.border_width = c->bw;
     XConfigureWindow(display, w, CWBorderWidth, &wc);
-    XSetWindowBorder(display, w, dc.norm[ColBorder]);
+    XSetWindowBorder(display, w, win_focus);
     configure(c); /* propagates border_width, if size doesn't change */
     updatewindowtype(c);
     updatesizehints(c);
@@ -1434,8 +1429,8 @@ void setup(void) {
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
     /* border colors */
-    dc.norm[ColBorder] = getcolor(UNFOCUS);
-    dc.sel[ColBorder] = getcolor(FOCUS);
+    win_unfocus = getcolor(UNFOCUS);
+    win_focus = getcolor(FOCUS);
 
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
@@ -1516,7 +1511,7 @@ void unfocus(Client *c, Bool setfocus) {
     if(!c)
 	return;
     grabbuttons(c, False);
-    XSetWindowBorder(display, c->win, dc.norm[ColBorder]);
+    XSetWindowBorder(display, c->win, win_unfocus);
     if(setfocus) {
 	XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
 	XDeleteProperty(display, root, netatom[NetActiveWindow]);

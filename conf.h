@@ -10,7 +10,6 @@
 #define FOCUS "SandyBrown" 
 #define PADDING_TOP      0  /* gap at top of screen */
 #define SNAP             16 /* pixel */
-#define BORDER_WIDTH     1  /* pixel */
 #define FOLLOW_MOUSE     1  /* Focus the window with the mouse */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
