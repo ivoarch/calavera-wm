@@ -1437,8 +1437,8 @@ void setup(void) {
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
     /* border colors */
-    dc.norm[ColBorder] = getcolor(BORDERCOLOR);
-    dc.sel[ColBorder] = getcolor(FOCUS_BORDERCOLOR);
+    dc.norm[ColBorder] = getcolor(UNFOCUS);
+    dc.sel[ColBorder] = getcolor(FOCUS);
 
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
