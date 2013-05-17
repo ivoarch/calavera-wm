@@ -1,4 +1,4 @@
-# swm version
+# Calavera-wm version
 VERSION = `git rev-parse HEAD`
 
 # paths
@@ -27,10 +27,10 @@ LDFLAGS = -s ${LIBS}
 # compiler and linker
 CC = cc
 
-SRC = swm.c
+SRC = calavera-wm.c
 OBJ = ${SRC:.c=.o}
 
-all: options swm
+all: options calavera-wm
 
 options:
 	@echo "CFLAGS   = ${CFLAGS}"
@@ -42,19 +42,19 @@ options:
 
 ${OBJ}: conf.h 
 
-swm: ${OBJ}
+calavera-wm: ${OBJ}
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	@rm -f swm ${OBJ}
+	@rm -f calavera-wm ${OBJ}
 
 install: all
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f swm ${DESTDIR}${PREFIX}/bin
-	@chmod 755 ${DESTDIR}${PREFIX}/bin/swm
-	@cp swm.desktop /usr/share/xsessions
+	@cp -f calavera-wm ${DESTDIR}${PREFIX}/bin
+	@chmod 755 ${DESTDIR}${PREFIX}/bin/calavera-wm
+	@cp calavera-wm.desktop /usr/share/xsessions
 
 uninstall:
-	@rm -f ${DESTDIR}${PREFIX}/bin/swm
+	@rm -f ${DESTDIR}${PREFIX}/bin/calavera-wm
 
 .PHONY: all options clean dist install uninstall

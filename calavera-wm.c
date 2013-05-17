@@ -51,7 +51,7 @@
 #include <X11/XF86keysym.h>
 
 /* windows manager name */
-#define WMNAME "swm"
+#define WMNAME "calavera-wm"
 
 #define BUFSIZE 256
 
@@ -359,10 +359,10 @@ Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 	if(*y + *h + 2 * c->bw <= m->wy)
 	    *y = m->wy;
     }
-    if(*h < padding)
-      *h = padding;
-    if(*w < padding)
-      *w = padding;
+    if(*h < PADDING_TOP)
+      *h = PADDING_TOP;
+    if(*w < PADDING_TOP)
+      *w = PADDING_TOP;
     if(c->isfloating) {
 	/* see last two sentences in ICCCM 4.1.2.3 */
 	baseismin = c->basew == c->minw && c->baseh == c->minh;
@@ -673,7 +673,7 @@ void enternotify(XEvent *e) {
     Monitor *m;
     XCrossingEvent *ev = &e->xcrossing;
 
-    if (!follow_mouse) return;
+    if (!"FOLLOW_MOUSE") return;
     if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 	return;
     c = wintoclient(ev->window);
@@ -879,14 +879,14 @@ void grabkeys(int keytype) {
 	XGrabKey(display, AnyKey, AnyModifier, root, True, GrabModeAsync,
 		 GrabModeAsync);
 
-        if (waitkey) {
+        if (WAITKEY) {
 	    grab_pointer();
 	}
     }
     else {
 	XUngrabKey(display, AnyKey, AnyModifier, root);
 
-        if(hide_cursor) {
+        if(HIDE_CURSOR) {
 	    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 	}
 
@@ -986,8 +986,8 @@ void manage(Window w, XWindowAttributes *wa) {
     c->x = MAX(c->x, c->mon->mx);
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= c->mon->wx)
-                      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? padding : c->mon->my);
-    c->bw = borderpx;
+                      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? PADDING_TOP : c->mon->my);
+    c->bw = BORDER_WIDTH;
 
     wc.border_width = c->bw;
     XConfigureWindow(display, w, CWBorderWidth, &wc);
@@ -1112,15 +1112,15 @@ void movemouse(const Arg *arg) {
 	    ny = ocy + (ev.xmotion.y - y);
 	    if(nx >= selmon->wx && nx <= selmon->wx + selmon->ww
 	       && ny >= selmon->wy && ny <= selmon->wy + selmon->wh) {
-		if(abs(selmon->wx - nx) < snap)
+		if(abs(selmon->wx - nx) < SNAP)
 		    nx = selmon->wx;
-		else if(abs((selmon->wx + selmon->ww) - (nx + WIDTH(c))) < snap)
+		else if(abs((selmon->wx + selmon->ww) - (nx + WIDTH(c))) < SNAP)
 		    nx = selmon->wx + selmon->ww - WIDTH(c);
-		if(abs(selmon->wy - ny) < snap)
+		if(abs(selmon->wy - ny) < SNAP)
 		    ny = selmon->wy;
-		else if(abs((selmon->wy + selmon->wh) - (ny + HEIGHT(c))) < snap)
+		else if(abs((selmon->wy + selmon->wh) - (ny + HEIGHT(c))) < SNAP)
 		    ny = selmon->wy + selmon->wh - HEIGHT(c);
-                if(!c->isfloating && (abs(nx - c->x) > snap || abs(ny - c->y) > snap));
+                if(!c->isfloating && (abs(nx - c->x) > SNAP || abs(ny - c->y) > SNAP));
 		    }
             if(c->isfloating)
 		resize(c, nx, ny, c->w, c->h, True);
@@ -1244,7 +1244,7 @@ void resizemouse(const Arg *arg) {
 	    if(c->mon->wx + nw >= selmon->wx && c->mon->wx + nw <= selmon->wx + selmon->ww
 	       && c->mon->wy + nh >= selmon->wy && c->mon->wy + nh <= selmon->wy + selmon->wh)
 		{
-		    if(!c->isfloating && (abs(nw - c->w) > snap || abs(nh - c->h) > snap));
+		    if(!c->isfloating && (abs(nw - c->w) > SNAP || abs(nh - c->h) > SNAP));
 		}
 	    if(c->isfloating)
 		resize(c, c->x, c->y, nw, nh, True);
@@ -1281,7 +1281,7 @@ void run(void) {
     if (!(home = getenv("HOME")))
 	return;
 
-    snprintf(path, sizeof(path), "%s/swm/autostart", home);
+    snprintf(path, sizeof(path), "%s/calavera-wm/autostart", home);
     const char* autostartcmd[] = { path, NULL };
     Arg a = {.v = autostartcmd };
     spawn(&a);
@@ -1431,14 +1431,14 @@ void setup(void) {
     /* Standard & EWMH atoms */
     ewmh_init();
 
-    /* init cursors */
+    /* cursors */
     cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
     cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
-    /* init appearance */
-    dc.norm[ColBorder] = getcolor(NORM_BORDERCOLOR);
-    dc.sel[ColBorder] = getcolor(SEL_BORDERCOLOR);
+    /* border colors */
+    dc.norm[ColBorder] = getcolor(BORDERCOLOR);
+    dc.sel[ColBorder] = getcolor(FOCUS_BORDERCOLOR);
 
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
@@ -1488,7 +1488,7 @@ void spawn(const Arg *arg) {
 	    close(ConnectionNumber(display));
 	setsid();
 	execvp(((char **)arg->v)[0], (char **)arg->v);
-	fprintf(stderr, "swm: execvp %s", ((char **)arg->v)[0]);
+	fprintf(stderr, "calavera-wm: execvp %s", ((char **)arg->v)[0]);
 	perror(" failed");
 	exit(EXIT_SUCCESS);
     }
@@ -1565,8 +1565,8 @@ void unmapnotify(XEvent *e) {
 }
 
 void set_padding(Monitor *m) {
-  m->wy += padding;
-  m->wh -= padding;
+  m->wy += PADDING_TOP;
+  m->wh -= PADDING_TOP;
 }
 
 void updateclientlist() {
@@ -1827,7 +1827,7 @@ int xerror(Display *display, XErrorEvent *ee) {
        || (ee->request_code == X_GrabKey && ee->error_code == BadAccess)
        || (ee->request_code == X_CopyArea && ee->error_code == BadDrawable))
 	return 0;
-    fprintf(stderr, "swm: fatal error: request code=%d, error code=%d\n",
+    fprintf(stderr, "calavera-wm: fatal error: request code=%d, error code=%d\n",
 	    ee->request_code, ee->error_code);
     return xerrorxlib(display, ee); /* may call exit */
 }
@@ -1839,7 +1839,7 @@ int xerrordummy(Display *display, XErrorEvent *ee) {
 /* Startup Error handler to check if another window manager
  * is already running. */
 int xerrorstart(Display *display, XErrorEvent *ee) {
-    eprint("swm: another window manager is already running\n");
+    eprint("calavera-wm: another window manager is already running\n");
     return -1;
 }
 
@@ -1901,13 +1901,13 @@ void launcher(const Arg *arg) {
 
 int main(int argc, char *argv[]) {
     if(argc == 2 && !strcmp("-v", argv[1]))
-	eprint("swm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\nCustomized and patched by Ivaylo Kuzev.\n");
+	eprint("calavera-wm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details");
     else if(argc != 1)
-	eprint("usage: swm [-v]\n");
+	eprint("usage: calavera-wm [-v]\n");
     if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 	fputs("warning: no locale support\n", stderr);
     if(!(display = XOpenDisplay(NULL)))
-	eprint("swm: cannot open display\n");
+	eprint("calavera-wm: cannot open display\n");
     cargv = argv;
     checkotherwm();
     setup();

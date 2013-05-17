@@ -1,30 +1,35 @@
-/* See LICENSE file for copyright and license details. */
+/*
+ * Calavera wm !! - minimalist stacking window manager for X.
+ * See LICENSE file for copyright and license details.
+ */
 
-#define NORM_BORDERCOLOR     "black"       /* border of inactiv window */
-#define SEL_BORDERCOLOR      "SandyBrown"  /* border of active window */
-static const unsigned int padding  = 0;    /* gap at top of screen */
-static const unsigned int snap     = 16;   /* snap pixel */
-static const unsigned int borderpx = 1;    /* windows pixel */
-static const Bool follow_mouse     = True; /* Focus the window with the mouse */
-static const Bool hide_cursor      = False;/* Pressing a key sends the cursor to the bottom right corner */
-static const Bool waitkey          = True; /* Show the cursor when waiting for a key */
+#ifndef SWM_CONFIG_H_
+#define SWM_CONFIG_H_
+
+#define BORDERCOLOR "black"     
+#define FOCUS_BORDERCOLOR  "SandyBrown" 
+#define PADDING_TOP      0  /* gap at top of screen */
+#define SNAP             16 /* pixel */
+#define BORDER_WIDTH     1  /* pixel */
+#define FOLLOW_MOUSE     1  /* Focus the window with the mouse */
+#define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
+#define WAITKEY          1  /* Show the cursor when waiting for a key */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
  */
 #define CURSOR_WAITKEY XC_icon
 
-#define N_WORKSPACES 10  /* Number of Workspaces */
+/* Number of Workspaces */
+#define N_WORKSPACES 10 
 
-/* key definitions */
-#define PREFIX_MODKEY ControlMask /* modifier prefix */
-#define PREFIX_KEYSYM XK_t  /* prefix key */
+#define PREFIX_MODKEY ControlMask  /* modifier prefix */
+#define PREFIX_KEYSYM XK_t         /* prefix key */
 
 #define WS_KEY(KEY,WS) \
         { None,                       KEY,      change_workspace,  {.ui = 1 << WS} }, \
 	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
-/* default commands */
 static const char *CMD_TERM[]    = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-n", "-c", "-a", "", NULL };
@@ -75,3 +80,5 @@ static Button buttons[] = {
 	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
         { ClkClientWin,         ControlMask,    Button2,        killfocused,    {0} },
 };
+
+#endif 
