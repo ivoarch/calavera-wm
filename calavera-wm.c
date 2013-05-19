@@ -68,6 +68,7 @@
 #define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
 #define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
+#define EVENT_MASK              (EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask)
 #define ROOT                    RootWindow(display, DefaultScreen(display))
 
 /* enums */
@@ -731,6 +732,7 @@ void ewmh_init(void) {
     int pid = getpid();
     XChangeProperty(display, root, netatom[NetWMPid], XA_CARDINAL, 32,
     		    PropModeReplace, (unsigned char*)&pid, 1);
+
 }
 
 void focus(Client *c) {
@@ -994,7 +996,7 @@ void manage(Window w, XWindowAttributes *wa) {
     updatewindowtype(c);
     updatesizehints(c);
     updatewmhints(c);
-    XSelectInput(display, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+    XSelectInput(display, w, EVENT_MASK);
     grabbuttons(c, False);
     if(!c->isfloating)
 	c->isfloating = c->oldstate = trans != None || c->isfixed;
