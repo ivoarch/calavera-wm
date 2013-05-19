@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -233,11 +234,12 @@ static void grab_pointer(void);
 static void updatenumlockmask(void);
 
 // main
+static void autorun(void);
 static void checkotherwm(void);
 static void cleanup(void);
 static void eprint(const char *errstr, ...);
 static Bool getrootptr(int *x, int *y);
-static void run(void);
+static void handle_events(void);
 static void scan(void);
 static void setup(void);
 static void sigchld(int unused);
@@ -430,6 +432,29 @@ void attachstackend(Client *c) {
 void attachstack(Client *c) {
     c->snext = c->mon->stack;
     c->mon->stack = c;
+}
+
+void autorun(){
+    struct stat st;
+    char path[PATH_MAX];
+    char *home;
+
+    /* execute autostart script */
+    if (!(home = getenv("HOME")))
+      return;
+
+    snprintf(path, sizeof(path), "%s/calavera-wm/autostart", home);
+
+
+    if (stat(path, &st) != 0)
+      return;
+
+    const char* autostartcmd[] = { path, NULL };
+    Arg a = {.v = autostartcmd };
+
+    /* Check if file is executable */
+    if (S_ISREG(st.st_mode) && (st.st_mode & S_IXUSR))
+    spawn(&a);
 }
 
 void buttonpress(XEvent *e) {
@@ -900,6 +925,16 @@ void grabkeys(int keytype) {
     }
 }
 
+void handle_events(void) {
+  XEvent ev;
+
+  /* main event loop */
+  XSync(display, False);
+  while(running && !XNextEvent(display, &ev))
+    if(handler[ev.type])
+      handler[ev.type](&ev); /* call handler */
+}
+
 #ifdef XINERAMA
 static Bool isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info) {
     while(n--)
@@ -1270,27 +1305,6 @@ void restack(Monitor *m) {
     XRaiseWindow(display, m->sel->win);
     sync_display();
     while(XCheckMaskEvent(display, EnterWindowMask, &ev));
-}
-
-void run(void) {
-    XEvent ev;
-    char path[PATH_MAX];
-    char *home;
-
-    /* execute autostart script */
-    if (!(home = getenv("HOME")))
-	return;
-
-    snprintf(path, sizeof(path), "%s/calavera-wm/autostart", home);
-    const char* autostartcmd[] = { path, NULL };
-    Arg a = {.v = autostartcmd };
-    spawn(&a);
-
-    /* main event loop */
-    XSync(display, False);
-    while(running && !XNextEvent(display, &ev))
-      if(handler[ev.type])
-        handler[ev.type](&ev); /* call handler */
 }
 
 void scan(void) {
@@ -1924,7 +1938,8 @@ int main(int argc, char *argv[]) {
     checkotherwm();
     setup();
     scan();
-    run();
+    autorun();
+    handle_events();
     cleanup();
     /* Close display */
     XCloseDisplay(display);
