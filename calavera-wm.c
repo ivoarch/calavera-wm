@@ -218,7 +218,6 @@ static void clientmessage(XEvent *e);
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
 static void destroynotify(XEvent *e);
-static void enternotify(XEvent *e);
 static void focusin(XEvent *e);
 static void keypress(XEvent *e);
 static void mappingnotify(XEvent *e);
@@ -291,7 +290,6 @@ static void (*handler[LASTEvent]) (XEvent *) = {
     [ConfigureRequest] = configurerequest,
     [ConfigureNotify] = configurenotify,
     [DestroyNotify] = destroynotify,
-    [EnterNotify] = enternotify,
     [FocusIn] = focusin,
     [KeyPress] = keypress,
     [MappingNotify] = mappingnotify,
@@ -690,25 +688,6 @@ void eprint(const char *errstr, ...) {
     vfprintf(stderr, errstr, ap);
     va_end(ap);
     exit(EXIT_FAILURE);
-}
-
-void enternotify(XEvent *e) {
-    Client *c;
-    Monitor *m;
-    XCrossingEvent *ev = &e->xcrossing;
-
-    if (!"FOLLOW_MOUSE") return;
-    if((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
-	return;
-    c = wintoclient(ev->window);
-    m = c ? c->mon : wintomon(ev->window);
-    if(m != selmon) {
-	unfocus(selmon->sel, True);
-	selmon = m;
-    }
-    else if(!c || c == selmon->sel)
-	return;
-    focus(c);
 }
 
 void ewmh_init(void) {

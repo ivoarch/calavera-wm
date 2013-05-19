@@ -14,7 +14,6 @@
 #define MOVESTEP         32 /* Pixels to move a window at a time */
 #define RESIZESTEP       32 /* Pixels to resize a window at a time.*/
 #define SNAP             16 /* Monitor edge snap distance */
-#define FOLLOW_MOUSE     1  /* Focus the window with the mouse */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
 
