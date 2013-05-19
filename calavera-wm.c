@@ -90,7 +90,7 @@ enum {
     NetWMName,
     NetWMPid,
     NetWMState,
-    NetWMStrutPartial,
+    //    NetWMStrutPartial,
     NetWMFullscreen,
     NetWMWindowType,
     NetWMWindowTypeDock,
@@ -725,7 +725,7 @@ void ewmh_init(void) {
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
     netatom[NetWMPid] = XInternAtom(display, "_NET_WM_PID", False);
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
-    netatom[NetWMStrutPartial] = XInternAtom(display, "_NET_WM_STRUT_PARTIAL", False);
+    //    netatom[NetWMStrutPartial] = XInternAtom(display, "_NET_WM_STRUT_PARTIAL", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
     netatom[NetWMWindowTypeDock] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", False);
@@ -798,9 +798,9 @@ void focusstack(const Arg *arg) {
     if(!selmon->sel)
 	return;
     if(arg->i > 0) { /* next */
-      for(c = selmon->sel->next; c && (!ISVISIBLE(c)); c = c->next);
+      for(c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
 	if(!c)
-          for(c = selmon->clients; c && (!ISVISIBLE(c)); c = c->next);
+          for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
     }
     else { /* prev */
 	for(i = selmon->clients; i != selmon->sel; i = i->next)
