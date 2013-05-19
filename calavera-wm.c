@@ -356,10 +356,10 @@ Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 	if(*y + *h + 2 * c->bw <= m->wy)
 	    *y = m->wy;
     }
-    if(*h < PADDING_TOP)
-      *h = PADDING_TOP;
-    if(*w < PADDING_TOP)
-      *w = PADDING_TOP;
+    if(*h < DOCK_SIZE)
+      *h = DOCK_SIZE;
+    if(*w < DOCK_SIZE)
+      *w = DOCK_SIZE;
     if(c->isfloating) {
 	/* see last two sentences in ICCCM 4.1.2.3 */
 	baseismin = c->basew == c->minw && c->baseh == c->minh;
@@ -1021,7 +1021,7 @@ void manage(Window w, XWindowAttributes *wa) {
     c->x = MAX(c->x, c->mon->mx);
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= c->mon->wx)
-                      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? PADDING_TOP : c->mon->my);
+                      && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? DOCK_SIZE : c->mon->my);
     c->bw = 1;
 
     wc.border_width = c->bw;
@@ -1591,8 +1591,8 @@ void unmapnotify(XEvent *e) {
 }
 
 void set_padding(Monitor *m) {
-  m->wy += PADDING_TOP;
-  m->wh -= PADDING_TOP;
+    m->wy += DOCK_SIZE;
+    m->wh -= DOCK_SIZE;
 }
 
 void updateclientlist() {

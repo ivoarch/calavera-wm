@@ -1,17 +1,19 @@
 /*
- * Calavera wm !! - minimalist stacking window manager for X.
+ * Calavera wm ☠ - minimalist stacking window manager for X.
  * See LICENSE file for copyright and license details.
  */
 
 #ifndef CONF_H
 #define CONF_H
 
+/* Colors */
 #define UNFOCUS "black"     
 #define FOCUS   "SandyBrown" 
-#define PADDING_TOP      0  /* gap at top of screen */
-#define MOVESTEP         32 /* pixels to move a window at a time */
+
+#define DOCK_SIZE        0  /* Reserved space top of the screen */
+#define MOVESTEP         32 /* Pixels to move a window at a time */
 #define RESIZESTEP       32 /* Pixels to resize a window at a time.*/
-#define SNAP             16 /* monitor edge snap distance */
+#define SNAP             16 /* Monitor edge snap distance */
 #define FOLLOW_MOUSE     1  /* Focus the window with the mouse */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
