@@ -92,6 +92,7 @@ enum {
     //    NetWMStrutPartial,
     NetWMFullscreen,
     NetWMWindowType,
+    NetWMWindowTypeNotification,
     NetWMWindowTypeDock,
     NetWMWindowTypeDialog,
     NetLast
@@ -506,7 +507,7 @@ Bool checkdock(Window *w) {
     }
     XFree(p);
     XMapWindow(display, *w);
-    return result == netatom[NetWMWindowTypeDock] ? True : False;
+    return result == netatom[NetWMWindowTypeDock] || result == netatom[NetWMWindowTypeNotification] ? True : False;
 }
 
 void checkotherwm(void) {
@@ -727,6 +728,7 @@ void ewmh_init(void) {
     //    netatom[NetWMStrutPartial] = XInternAtom(display, "_NET_WM_STRUT_PARTIAL", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
+    netatom[NetWMWindowTypeNotification] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", False);
     netatom[NetWMWindowTypeDock] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", False);
     netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
     netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
@@ -1794,7 +1796,7 @@ void updatewindowtype(Client *c) {
 	c->isfloating = True; 
     }
     /* FIXME */
-    if(wtype == netatom[NetWMWindowTypeDock]) {
+    if(wtype == netatom[NetWMWindowTypeDock] || wtype == netatom[NetWMWindowTypeNotification]) {
       //      c->isdock = True;
       c->neverfocus = True; 
       c->isfloating = True; 
