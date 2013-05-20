@@ -30,10 +30,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <X11/Xatom.h>
@@ -93,6 +93,7 @@ enum {
     NetWMFullscreen,
     NetWMWindowType,
     NetWMWindowTypeNotification,
+    NetWMWindowTypeSplash,
     NetWMWindowTypeDock,
     NetWMWindowTypeDialog,
     NetLast
@@ -507,7 +508,9 @@ Bool checkdock(Window *w) {
     }
     XFree(p);
     XMapWindow(display, *w);
-    return result == netatom[NetWMWindowTypeDock] || result == netatom[NetWMWindowTypeNotification] ? True : False;
+    return result == netatom[NetWMWindowTypeDock]  
+      || result == netatom[NetWMWindowTypeNotification]  
+      || result == netatom[NetWMWindowTypeSplash]? True : False;
 }
 
 void checkotherwm(void) {
@@ -731,6 +734,7 @@ void ewmh_init(void) {
     netatom[NetWMWindowTypeNotification] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", False);
     netatom[NetWMWindowTypeDock] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", False);
     netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+    netatom[NetWMWindowTypeSplash] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_SPLASH", False);
     netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
     netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
     netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
@@ -1792,11 +1796,12 @@ void updatewindowtype(Client *c) {
 
     if(state == netatom[NetWMFullscreen])
 	setfullscreen(c, True);
+
     if(wtype == netatom[NetWMWindowTypeDialog]) {
 	c->isfloating = True; 
-    }
-    /* FIXME */
-    if(wtype == netatom[NetWMWindowTypeDock] || wtype == netatom[NetWMWindowTypeNotification]) {
+    } else if(wtype == netatom[NetWMWindowTypeDock] 
+              || wtype == netatom[NetWMWindowTypeNotification]
+              || wtype == netatom[NetWMWindowTypeSplash]) {
       //      c->isdock = True;
       c->neverfocus = True; 
       c->isfloating = True; 
@@ -1898,7 +1903,6 @@ void launcher(const Arg *arg) {
     memset(buf, 0, sizeof(buf));
     pos = 0;
 
-    // Initial x position
     XGrabKeyboard(display, ROOT, True, GrabModeAsync, GrabModeAsync, CurrentTime);
     sync_display();
 
@@ -1923,8 +1927,6 @@ void launcher(const Arg *arg) {
 		++pos;
 		break;
 	    }
-
-	    // draw text buf
 	    sync_display();
 	}
 	XNextEvent(display, &ev);
