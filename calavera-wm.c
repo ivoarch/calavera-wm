@@ -66,7 +66,12 @@
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
+
+//#define MIX_WS 0 
+//#define MAX_WS 8
+#define N_WORKSPACES 10
 #define TAGMASK                 ((1 << N_WORKSPACES) - 1)
+
 #define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
 #define EVENT_MASK              (EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask)
 #define ROOT                    RootWindow(display, DefaultScreen(display))

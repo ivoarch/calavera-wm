@@ -22,9 +22,7 @@
  */
 #define CURSOR_WAITKEY XC_icon
 
-/* Number of Workspaces */
-#define N_WORKSPACES 10 
-
+/* Prefix keys setup default (CTRL+T) */
 #define PREFIX_MODKEY ControlMask  /* modifier prefix */
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
@@ -32,6 +30,7 @@
         { None,                       KEY,      change_workspace,  {.ui = 1 << WS} }, \
 	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
+/* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-n", "-c", "-a", "", NULL };
@@ -84,7 +83,7 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
-/* BUTTONS*/
+/* BUTTONS */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
