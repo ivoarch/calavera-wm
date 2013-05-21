@@ -94,7 +94,6 @@ enum {
     NetWMName,
     NetWMPid,
     NetWMState,
-    //    NetWMStrutPartial,
     NetWMFullscreen,
     NetWMWindowType,
     NetWMWindowTypeNotification,
@@ -270,7 +269,7 @@ static void banish(const Arg *arg);
 static void center(const Arg *arg);
 static void focusstack(const Arg *arg);
 static void killfocused(const Arg *arg);
-static void launcher(const Arg *arg);
+static void exec(const Arg *arg);
 static void maximize(const Arg *arg);
 static void horizontalmax(const Arg *arg);
 static void verticalmax(const Arg *arg);
@@ -733,7 +732,6 @@ void ewmh_init(void) {
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
     netatom[NetWMPid] = XInternAtom(display, "_NET_WM_PID", False);
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
-    //    netatom[NetWMStrutPartial] = XInternAtom(display, "_NET_WM_STRUT_PARTIAL", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
     netatom[NetWMWindowTypeNotification] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", False);
@@ -1895,7 +1893,7 @@ int xerrorstart(Display *display, XErrorEvent *ee) {
     return -1;
 }
 
-void launcher(const Arg *arg) {
+void exec(const Arg *arg) {
     int  pos;
     char tmp[32];
     char buf[BUFSIZE];
@@ -1925,7 +1923,7 @@ void launcher(const Arg *arg) {
 		if(pos) buf[--pos] = 0;
 		break;
 	    case XK_Escape:
-		grabbing = False;
+              goto out;
 		break;
 	    default:
 		strncat(buf, tmp, sizeof(tmp));
@@ -1943,8 +1941,10 @@ void launcher(const Arg *arg) {
         Arg arg = {.v = termcmd };
 	spawn (&arg);
     }
-
+  
+ out:
     XUngrabKeyboard(display, CurrentTime);
+ 
     return;
 }
 
