@@ -176,14 +176,15 @@ typedef struct {
 
 // atoms - ewmh
 static void ewmh_init(void);
-static long getstate(Window w);
-static void setclientstate(Client *c, long state);
+static long ewmh_getstate(Window w);
+static void ewmh_setclientstate(Client *c, long state);
 static Bool sendevent(Client *c, Atom proto);
-static void setnumbdesktops(void);
-static void updatecurrenddesktop(void);
-static void updateclientdesktop(Client *c);
-static void updateclientlist(void);
-static void updateclientlist_stacking(void);
+static void ewmh_setnumbdesktops(void);
+static void ewmh_updatecurrenddesktop(void);
+static void ewmh_updateclientdesktop(Client *c);
+static void ewmh_updateclientlist(void);
+static void ewmh_updateclientlist_stacking(void);
+static void ewmh_updatewindowtype(Client *c);
 
 // bar
 static void set_padding(Monitor *m);
@@ -192,7 +193,6 @@ static void set_padding(Monitor *m);
 static unsigned long getcolor(const char *colstr);
 
 // clients
-static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void attach(Client *c);
 static void attachstack(Client *c);
@@ -215,7 +215,6 @@ static void showhide(Client *c);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void updatesizehints(Client *c);
-static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static Client *wintoclient(Window w);
 
@@ -320,21 +319,6 @@ static Window root;
 struct NumTags { char limitexceeded[N_WORKSPACES > 31 ? -1 : 1]; };
 
 /* function implementations */
-void applyrules(Client *c) {
-    XClassHint ch = { NULL, NULL };
-
-    /* rule matching */
-    c->isfloating = 1;
-    c->tags = 0;
-    XGetClassHint(display, c->win, &ch);
-
-    if(ch.res_class)
-        XFree(ch.res_class);
-    if(ch.res_name)
-        XFree(ch.res_name);
-    c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
-}
-
 Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
     Bool baseismin;
     Monitor *m = c->mon;
@@ -743,6 +727,7 @@ void ewmh_init(void) {
     netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
     netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
     netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
+
     netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
 
     /* Tell which ewmh atoms are supported */
@@ -856,7 +841,7 @@ Bool getrootptr(int *x, int *y) {
     return XQueryPointer(display, root, &dummy, &dummy, x, y, &di, &di, &dui);
 }
 
-long getstate(Window w) {
+long ewmh_getstate(Window w) {
     int format;
     long result = -1;
     unsigned char *p = NULL;
@@ -1004,6 +989,7 @@ void manage(Window w, XWindowAttributes *wa) {
     Client *c, *t = NULL;
     Window trans = None;
     XWindowChanges wc;
+    XClassHint ch = { NULL, NULL };
 
     if (checkdock(&w)) {
       return;
@@ -1017,8 +1003,18 @@ void manage(Window w, XWindowAttributes *wa) {
 	c->tags = t->tags;
     }
     else {
-	c->mon = selmon;
-	applyrules(c);
+      c->mon = selmon;
+
+      /* rule matching */
+      c->isfloating = 1, c->tags = 0;
+      XGetClassHint(display, c->win, &ch);
+
+      if(ch.res_class)
+        XFree(ch.res_class);
+      if(ch.res_name)
+        XFree(ch.res_name);
+      c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+        
     }
     /* geometry */
     c->x = c->oldx = wa->x;
@@ -1043,7 +1039,7 @@ void manage(Window w, XWindowAttributes *wa) {
     XConfigureWindow(display, w, CWBorderWidth, &wc);
     XSetWindowBorder(display, w, win_focus);
     configure(c); /* propagates border_width, if size doesn't change */
-    updatewindowtype(c);
+    ewmh_updatewindowtype(c);
     updatesizehints(c);
     updatewmhints(c);
     XSelectInput(display, w, EVENT_MASK);
@@ -1060,7 +1056,7 @@ void manage(Window w, XWindowAttributes *wa) {
     XChangeProperty(display, root, netatom[NetClientListStacking], XA_WINDOW, 32, PropModeAppend,
 		    (unsigned char *) &(c->win), 1);
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
-    setclientstate(c, NormalState);
+    ewmh_setclientstate(c, NormalState);
     if (c->mon == selmon)
 	unfocus(selmon->sel, False);
     c->mon->sel = c;
@@ -1068,7 +1064,7 @@ void manage(Window w, XWindowAttributes *wa) {
     XMapWindow(display, c->win); /* maps the window */
     focus(NULL);
     /* set clients tag as current desktop (_NET_WM_DESKTOP) */
-    updateclientdesktop(c);
+    ewmh_updateclientdesktop(c);
 }
 
 /* regrab when keyboard map changes */
@@ -1215,7 +1211,7 @@ void propertynotify(XEvent *e) {
 	    break;
 	}
 	if(ev->atom == netatom[NetWMWindowType])
-	    updatewindowtype(c);
+	    ewmh_updatewindowtype(c);
     }
 }
 
@@ -1332,14 +1328,14 @@ void scan(void) {
 	    if(!XGetWindowAttributes(display, wins[i], &wa)
 	       || wa.override_redirect || XGetTransientForHint(display, wins[i], &d1))
 		continue;
-	    if(wa.map_state == IsViewable || getstate(wins[i]) == IconicState)
+	    if(wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState)
 		manage(wins[i], &wa);
 	}
 	for(i = 0; i < num; i++) { /* now the transients */
 	    if(!XGetWindowAttributes(display, wins[i], &wa))
 		continue;
 	    if(XGetTransientForHint(display, wins[i], &d1)
-	       && (wa.map_state == IsViewable || getstate(wins[i]) == IconicState))
+	       && (wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState))
 		manage(wins[i], &wa);
 	}
 	if(wins)
@@ -1355,14 +1351,14 @@ void sendmon(Client *c, Monitor *m) {
     detachstack(c);
     c->mon = m;
     c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
-    updateclientdesktop(c);
+    ewmh_updateclientdesktop(c);
     attach(c);
     attachstack(c);
     focus(NULL);
     arrange(NULL);
 }
 
-void setclientstate(Client *c, long state) {
+void ewmh_setclientstate(Client *c, long state) {
     long data[] = { state, None };
 
     XChangeProperty(display, c->win, wmatom[WMState], wmatom[WMState], 32,
@@ -1430,14 +1426,14 @@ void setfullscreen(Client *c, Bool fullscreen) {
     }
 }
 
-void setcurrentdesktop(void) {
+void ewmh_setcurrentdesktop(void) {
     long data[] = { 0 };
 
     XChangeProperty(display, root, netatom[NetCurrentDesktop], XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *)data, 1);
 }
 
-void setnumbdesktops(void) {
+void ewmh_setnumbdesktops(void) {
     long data[] = { TAGMASK };
 
     XChangeProperty(display, root, netatom[NetNumberOfDesktops], XA_CARDINAL, 32,
@@ -1472,10 +1468,10 @@ void setup(void) {
     XDeleteProperty(display, root, netatom[NetClientList]);
     XDeleteProperty(display, root, netatom[NetClientListStacking]);
     /* set EWMH NUMBER_OF_DESKTOPS */
-    setnumbdesktops();
+    ewmh_setnumbdesktops();
     /* initialize EWMH CURRENT_DESKTOP */
-    setcurrentdesktop();
-    updatecurrenddesktop();
+    ewmh_setcurrentdesktop();
+    ewmh_updatecurrenddesktop();
     /* select for events */
     wa.cursor = cursor[CurNormal];
     wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask
@@ -1531,11 +1527,11 @@ void sync_display(void) {
 void moveto_workspace(const Arg *arg) {
     if(selmon->sel && arg->ui & TAGMASK) {
 	selmon->sel->tags = arg->ui & TAGMASK;
-        updateclientdesktop(selmon->sel);
+        ewmh_updateclientdesktop(selmon->sel);
 	focus(NULL);
 	arrange(selmon);
     }
-    updatecurrenddesktop();
+    ewmh_updatecurrenddesktop();
 }
 
 void moveresize(const Arg *arg) {
@@ -1582,15 +1578,15 @@ void unmanage(Client *c, Bool destroyed) {
 	XSetErrorHandler(xerrordummy);
 	XConfigureWindow(display, c->win, CWBorderWidth, &wc); /* restore border */
 	XUngrabButton(display, AnyButton, AnyModifier, c->win);
-	setclientstate(c, WithdrawnState);
+	ewmh_setclientstate(c, WithdrawnState);
 	sync_display();
 	XSetErrorHandler(xerror);
 	XUngrabServer(display);
     }
     free(c);
     focus(NULL);
-    updateclientlist();
-    updateclientlist_stacking();
+    ewmh_updateclientlist();
+    ewmh_updateclientlist_stacking();
     arrange(m);
 }
 
@@ -1600,7 +1596,7 @@ void unmapnotify(XEvent *e) {
 
     if((c = wintoclient(ev->window))) {
 	if(ev->send_event)
-	    setclientstate(c, WithdrawnState);
+	    ewmh_setclientstate(c, WithdrawnState);
 	else
 	    unmanage(c, False);
     }
@@ -1611,7 +1607,7 @@ void set_padding(Monitor *m) {
     m->wh -= DOCK_SIZE;
 }
 
-void updateclientlist() {
+void ewmh_updateclientlist() {
     Client *c;
     Monitor *m;
 
@@ -1623,7 +1619,7 @@ void updateclientlist() {
 			    (unsigned char *) &(c->win), 1);
 }
 
-void updateclientlist_stacking() {
+void ewmh_updateclientlist_stacking() {
     Client *c;
     Monitor *m;
 
@@ -1635,14 +1631,14 @@ void updateclientlist_stacking() {
                             (unsigned char *) &(c->win), 1);
 }
 
-void updateclientdesktop(Client *c) {
+void ewmh_updateclientdesktop(Client *c) {
      long data[] = { c->tags };
 
      XChangeProperty(display, c->win, netatom[NetWMDesktop], XA_CARDINAL, 32,
 		     PropModeReplace, (unsigned char *)data, 1);
 }
 
-void updatecurrenddesktop() {
+void ewmh_updatecurrenddesktop() {
     long data[] = { selmon->tagset[selmon->seltags] };
 
     XChangeProperty(display, root, netatom[NetCurrentDesktop], XA_CARDINAL, 32,
@@ -1793,7 +1789,7 @@ void updatesizehints(Client *c) {
 		  && c->maxw == c->minw && c->maxh == c->minh);
 }
 
-void updatewindowtype(Client *c) {
+void ewmh_updatewindowtype(Client *c) {
     Atom state = getatomprop(c, netatom[NetWMState]);
     Atom wtype = getatomprop(c, netatom[NetWMWindowType]);
 
@@ -1838,7 +1834,7 @@ void change_workspace(const Arg *arg) {
 	selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
     focus(NULL);
     arrange(selmon);
-    updatecurrenddesktop();
+    ewmh_updatecurrenddesktop();
 }
 
 Client *wintoclient(Window w) {
