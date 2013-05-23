@@ -92,7 +92,6 @@ enum {
     NetSupportingCheck,
     NetWMDesktop,
     NetWMName,
-    NetWMPid,
     NetWMState,
     NetWMFullscreen,
     NetWMWindowType,
@@ -705,29 +704,38 @@ void ewmh_init(void) {
     XSetWindowAttributes wa;
     Window win;
 
-    /* init atoms */
+    /* ICCCM */
     wmatom[WMProtocols] = XInternAtom(display, "WM_PROTOCOLS", False);
     wmatom[WMDelete] = XInternAtom(display, "WM_DELETE_WINDOW", False);
     wmatom[WMState] = XInternAtom(display, "WM_STATE", False);
     wmatom[WMTakeFocus] = XInternAtom(display, "WM_TAKE_FOCUS", False);
+ 
+    /* EWMH */
     netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
     netatom[NetSupportingCheck] = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
-    netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
-    netatom[NetWMPid] = XInternAtom(display, "_NET_WM_PID", False);
+    netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
+    netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
+    netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
+    netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
+
+    /* STATES */
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
+
+    /* TYPES */
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
     netatom[NetWMWindowTypeNotification] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", False);
     netatom[NetWMWindowTypeDock] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", False);
     netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
     netatom[NetWMWindowTypeSplash] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_SPLASH", False);
-    netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
-    netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
-    netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
-    netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
+ 
+    /* CLIENTS */
+    netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
     netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
 
+
+    /* OTHER */
     netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
 
     /* Tell which ewmh atoms are supported */
@@ -746,11 +754,6 @@ void ewmh_init(void) {
     /* Set WM name */
     XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
 		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
-
-    /* Set WM pid */
-    int pid = getpid();
-    XChangeProperty(display, root, netatom[NetWMPid], XA_CARDINAL, 32,
-    		    PropModeReplace, (unsigned char*)&pid, 1);
 
 }
 
@@ -1865,13 +1868,10 @@ Monitor *wintomon(Window w) {
 int xerror(Display *display, XErrorEvent *ee) {
     if(ee->error_code == BadWindow
        || (ee->request_code == X_SetInputFocus && ee->error_code == BadMatch)
-       || (ee->request_code == X_PolyText8 && ee->error_code == BadDrawable)
-       || (ee->request_code == X_PolyFillRectangle && ee->error_code == BadDrawable)
        || (ee->request_code == X_PolySegment && ee->error_code == BadDrawable)
        || (ee->request_code == X_ConfigureWindow && ee->error_code == BadMatch)
        || (ee->request_code == X_GrabButton && ee->error_code == BadAccess)
-       || (ee->request_code == X_GrabKey && ee->error_code == BadAccess)
-       || (ee->request_code == X_CopyArea && ee->error_code == BadDrawable))
+       || (ee->request_code == X_GrabKey && ee->error_code == BadAccess))
 	return 0;
     fprintf(stderr, "calavera-wm: fatal error: request code=%d, error code=%d\n",
 	    ee->request_code, ee->error_code);
@@ -1946,7 +1946,7 @@ void exec(const Arg *arg) {
 
 int main(int argc, char *argv[]) {
     if(argc == 2 && !strcmp("-v", argv[1]))
-	eprint("calavera-wm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details");
+	eprint("calavera-wm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\n");
     else if(argc != 1)
 	eprint("usage: calavera-wm [-v]\n");
     if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
