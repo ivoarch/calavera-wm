@@ -27,8 +27,8 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 #define WS_KEY(KEY,WS) \
-        { None,                       KEY,      change_workspace,  {.ui = 1 << WS} }, \
-	{ ShiftMask,                  KEY,      moveto_workspace,  {.ui = 1 << WS} },
+        { None,            KEY,      change_workspace,  {.ui = 1 << WS} }, \
+	{ ShiftMask,       KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL };
@@ -38,43 +38,43 @@ static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
-	/* modifier                   key        function        argument */
-        { None,                       XK_a,      exec,           {0} },
-	{ None,                       XK_c,      spawn,          {.v = CMD_TERM } },
-        { None,                       XK_e,      spawn,          {.v = CMD_EDITOR } },
-	{ None,                       XK_w,      spawn,          {.v = CMD_BROWSER } },
-	{ None,                       XK_l,      spawn,          {.v = CMD_LOCK } },
-        { None,                       XK_b,      banish,         {0} },
-	{ None,                       XK_f,      fullscreen,     {0} },
-	{ None,                       XK_m,      maximize,       {0} },
-	{ None,                       XK_h,      horizontalmax,  {0} },
-        { None,                       XK_v,      verticalmax,    {0} },
-	{ None,                       XK_period, center,         {0} },
-	{ None,                       XK_n,      focusstack,     {.i = +1 } },
-	{ None,                       XK_p,      focusstack,     {.i = -1 } },
-	{ None,                       XK_k,      killfocused,    {0} },
-	WS_KEY(                        XK_1,                      0)
-	WS_KEY(                        XK_2,                      1)
-	WS_KEY(                        XK_3,                      2)
-	WS_KEY(                        XK_4,                      3)
-        WS_KEY(                        XK_5,                      4)
-        WS_KEY(                        XK_6,                      5)
-        WS_KEY(                        XK_7,                      6)
-        WS_KEY(                        XK_8,                      7)
-        WS_KEY(                        XK_9,                      8)
-        WS_KEY(                        XK_0,                      9)
-        { None,                       XK_Down,   moveresize,     {.v = (int []){ 0, MOVESTEP, 0, 0 }}},
-        { None,                       XK_Up,     moveresize,     {.v = (int []){ 0, -MOVESTEP, 0, 0 }}},
-        { None,                       XK_Right,  moveresize,     {.v = (int []){ MOVESTEP, 0, 0, 0 }}},
-        { None,                       XK_Left,   moveresize,     {.v = (int []){ -MOVESTEP, 0, 0, 0 }}},
-        { ShiftMask,                  XK_Down,   moveresize,     {.v = (int []){ 0, 0, 0, RESIZESTEP }}},
-        { ShiftMask,                  XK_Up,     moveresize,     {.v = (int []){ 0, 0, 0, -RESIZESTEP }}},
-        { ShiftMask,                  XK_Right,  moveresize,     {.v = (int []){ 0, 0, RESIZESTEP, 0 }}},
-        { ShiftMask,                  XK_Left,   moveresize,     {.v = (int []){ 0, 0, -RESIZESTEP, 0 }}},
-        { ShiftMask,                  XK_r,      reload,         {0} }, 
-        { ShiftMask,                  XK_q,      quit,           {0} },
+	/* modifier     key        function        argument */
+        { None,         XK_a,      exec,           {0} },
+	{ None,         XK_c,      spawn,          {.v = CMD_TERM } },
+        { None,         XK_e,      spawn,          {.v = CMD_EDITOR } },
+	{ None,         XK_w,      spawn,          {.v = CMD_BROWSER } },
+	{ None,         XK_l,      spawn,          {.v = CMD_LOCK } },
+        { None,         XK_b,      banish,         {0} },
+	{ None,         XK_f,      fullscreen,     {0} },
+	{ None,         XK_m,      maximize,       {0} },
+	{ None,         XK_h,      horizontalmax,  {0} },
+        { None,         XK_v,      verticalmax,    {0} },
+	{ None,         XK_period, center,         {0} },
+	{ None,         XK_n,      focusstack,     {.i = +1 } },
+	{ None,         XK_p,      focusstack,     {.i = -1 } },
+	{ None,         XK_k,      killfocused,    {0} },
+	WS_KEY(          XK_1,                      0)
+	WS_KEY(          XK_2,                      1)
+	WS_KEY(          XK_3,                      2)
+	WS_KEY(          XK_4,                      3)
+        WS_KEY(          XK_5,                      4)
+        WS_KEY(          XK_6,                      5)
+        WS_KEY(          XK_7,                      6)
+        WS_KEY(          XK_8,                      7)
+        WS_KEY(          XK_9,                      8)
+        WS_KEY(          XK_0,                      9)
+        { None,         XK_Down,   moveresize,     {.v = (int []){ 0, MOVESTEP, 0, 0 }}},
+        { None,         XK_Up,     moveresize,     {.v = (int []){ 0, -MOVESTEP, 0, 0 }}},
+        { None,         XK_Right,  moveresize,     {.v = (int []){ MOVESTEP, 0, 0, 0 }}},
+        { None,         XK_Left,   moveresize,     {.v = (int []){ -MOVESTEP, 0, 0, 0 }}},
+        { ShiftMask,    XK_Down,   moveresize,     {.v = (int []){ 0, 0, 0, RESIZESTEP }}},
+        { ShiftMask,    XK_Up,     moveresize,     {.v = (int []){ 0, 0, 0, -RESIZESTEP }}},
+        { ShiftMask,    XK_Right,  moveresize,     {.v = (int []){ 0, 0, RESIZESTEP, 0 }}},
+        { ShiftMask,    XK_Left,   moveresize,     {.v = (int []){ 0, 0, -RESIZESTEP, 0 }}},
+        { ShiftMask,    XK_r,      reload,         {0} }, 
+        { ShiftMask,    XK_q,      quit,           {0} },
 
-    /* Multimedia keys */
+    /* For Multimedia keys */
     {0, XF86XK_AudioLowerVolume,
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
     {0, XF86XK_AudioRaiseVolume,
@@ -83,12 +83,12 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
-/* BUTTONS */
+/* MOUSE BUTTONS */
 static Button buttons[] = {
-	/* click                event mask      button          function        argument */
-	{ ClkClientWin,         ControlMask,    Button1,        movemouse,      {0} },
-	{ ClkClientWin,         ControlMask,    Button3,        resizemouse,    {0} },
-        { ClkClientWin,         ControlMask,    Button2,        killfocused,    {0} },
+	/* event mask     button       function     argument */
+        { ControlMask,    Button1,     movemouse,      {0} },
+        { ControlMask,    Button3,     resizemouse,    {0} },
+        { ControlMask,    Button2,     killfocused,    {0} },
 };
 
 #endif 
