@@ -1,25 +1,4 @@
-/* See LICENSE file for copyright and license details.
- *
- * dynamic window manager is designed like any other X client as well. It is
- * driven through handling X events. In contrast to other X clients, a window
- * manager selects for SubstructureRedirectMask on the root window, to receive
- * events about window (dis-)appearance.  Only one X connection at a time is
- * allowed to select for this event mask.
- *
- * The event handlers of dwm are organized in an array which is accessed
- * whenever a new event has been fetched. This allows event dispatching
- * in O(1) time.
- *
- * Each child of the root window is called a client, except windows which have
- * set the override_redirect flag.  Clients are organized in a linked client
- * list on each monitor, the focus history is remembered through a stack list
- * on each monitor. Each client contains a bit array to indicate the tags of a
- * client.
- *
- * Keys and tagging rules are organized as arrays and defined in config.h.
- *
- * To understand everything else, start reading main().
- */
+/* See LICENSE file for copyright and license details. */
 
 /* headers */
 #include <limits.h>
@@ -237,7 +216,7 @@ static int xerrordummy(Display *display, XErrorEvent *ee);
 static int xerrorstart(Display *display, XErrorEvent *ee);
 
 // monitor
-static void arrange(void);
+static void arrange_windows(void);
 static Monitor *createmon(void);
 static void restack(void);
 static Bool updategeom(void);
@@ -361,7 +340,7 @@ Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
     return *x != c->x || *y != c->y || *w != c->w || *h != c->h;
 }
 
-void arrange() {
+void arrange_windows() {
     if(themon)
       showhide(themon->thestack);
     restack();
@@ -410,7 +389,6 @@ void autorun(){
 
     snprintf(path, sizeof(path), "%s/calavera-wm/autostart", home);
 
-
     if (stat(path, &st) != 0)
       return;
 
@@ -446,7 +424,7 @@ void center(const Arg *arg) {
 	return;
     resize(themon->thesel, themon->wx + 0.5 * (themon->ww - themon->thesel->w), themon->wy + 0.5 *  
            (themon->wh - themon->thesel->h), themon->thesel->w, themon->thesel->h, False);
-    arrange();
+    arrange_windows();
 }
 
 /* FIXME */
@@ -553,7 +531,7 @@ void configurenotify(XEvent *e) {
 	screen_h = ev->height;
 	if(updategeom() || dirty) {
 	    focus(NULL);
-	    arrange();
+	    arrange_windows();
 	}
     }
 }
@@ -689,7 +667,6 @@ void ewmh_init(void) {
     /* CLIENTS */
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
     netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
-
 
     /* OTHER */
     netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
@@ -884,16 +861,6 @@ void handle_events(void) {
       handler[ev.type](&ev); /* call handler */
 }
 
-#ifdef XINERAMA
-static Bool isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info) {
-    while(n--)
-	if(unique[n].x_org == info->x_org && unique[n].y_org == info->y_org
-	   && unique[n].width == info->width && unique[n].height == info->height)
-	    return False;
-    return True;
-}
-#endif /* XINERAMA */
-
 void keypress(XEvent *e) {
     unsigned int i;
     KeySym keysym;
@@ -1013,7 +980,7 @@ void manage(Window w, XWindowAttributes *wa) {
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
     ewmh_setclientstate(c, NormalState);
     themon->thesel = c;
-    arrange();
+    arrange_windows();
     XMapWindow(display, c->win); /* maps the window */
     focus(NULL);
     /* set clients tag as current desktop (_NET_WM_DESKTOP) */
@@ -1048,21 +1015,21 @@ void maximize(const Arg *arg) {
 	return;
     resize(themon->thesel, themon->wx, themon->wy, themon->ww - 2 * themon->thesel->bw,  
            themon->wh - 2 * themon->thesel->bw, False);
-    arrange();
+    arrange_windows();
 }
 
 void horizontalmax(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
 	return;
     resize(themon->thesel, themon->wx, themon->thesel->y, themon->ww - 2 * themon->thesel->bw, themon->thesel->h, False);
-    arrange();
+    arrange_windows();
 }
 
 void verticalmax(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
 	return;
     resize(themon->thesel, themon->thesel->x, themon->wy, themon->thesel->w, themon->wh - 2 * themon->thesel->bw, False);
-    arrange();
+    arrange_windows();
 }
 
 void movemouse(const Arg *arg) {
@@ -1119,7 +1086,7 @@ void pop(Client *c) {
     detach(c);
     attach(c);
     focus(c);
-    arrange();
+    arrange_windows();
 }
 
 void propertynotify(XEvent *e) {
@@ -1135,7 +1102,7 @@ void propertynotify(XEvent *e) {
 	case XA_WM_TRANSIENT_FOR:
 	    if(!c->isfloating && (XGetTransientForHint(display, c->win, &trans)) &&
 	       (c->isfloating = (wintoclient(trans)) != NULL))
-		arrange();
+		arrange_windows();
 	    break;
 	case XA_WM_NORMAL_HINTS:
 	    updatesizehints(c);
@@ -1323,7 +1290,7 @@ void setfullscreen(Client *c, Bool fullscreen) {
 	c->w = c->oldw;
 	c->h = c->oldh;
 	resizeclient(c, c->x, c->y, c->w, c->h);
-	arrange();
+	arrange_windows();
     }
 }
 
@@ -1430,7 +1397,7 @@ void moveto_workspace(const Arg *arg) {
 	themon->thesel->tags = arg->ui & TAGMASK;
         ewmh_updateclientdesktop(themon->thesel);
 	focus(NULL);
-	arrange();
+	arrange_windows();
     }
     ewmh_updatecurrenddesktop();
 }
@@ -1453,10 +1420,12 @@ void fullscreen(const Arg *arg) {
     setfullscreen(themon->thesel, !themon->thesel->isfullscreen);
 }
 
+/* mark window win as unfocused. */
 void unfocus(Client *c, Bool setfocus) {
     if(!c)
 	return;
     grabbuttons(c, False);
+    /* set new border unfocus colour. */ 
     XSetWindowBorder(display, c->win, win_unfocus);
     if(setfocus) {
 	XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
@@ -1486,8 +1455,9 @@ void unmanage(Client *c, Bool destroyed) {
     focus(NULL);
     ewmh_updateclientlist();
     ewmh_updateclientlist_stacking();
-    arrange();
+    arrange_windows();
 }
+
 
 void unmapnotify(XEvent *e) {
     Client *c;
@@ -1661,7 +1631,7 @@ void change_workspace(const Arg *arg) {
     if(arg->ui & TAGMASK)
 	themon->tagset[themon->seltags] = arg->ui & TAGMASK;
     focus(NULL);
-    arrange();
+    arrange_windows();
     ewmh_updatecurrenddesktop();
 }
 
