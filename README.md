@@ -13,7 +13,7 @@ FEATURES
 - Good keyboard control (Emacs keybindings).
 - Reasonable EWMH support (though not yet fully compliant).
 - Autostart file read on startup.
-- (Optional) Xinerama support.
+- Does not have Xinerama support.
 - Few dependencies :)
 
 Commands
@@ -57,7 +57,6 @@ Clone with Git by doing:
 Requirements
 ------------
 - Libx11
-- Libxinerama
 
 Installation
 ------------
@@ -68,9 +67,6 @@ Afterwards enter the following command to build and install Calavera-wm (if
 necessary as root):
 
     make clean install
-
-**Note:** By default Calavera-wm will not be compiled with Xinerama support.
-Uncomment the respective lines in the Makefile to change this.
 
 Running Calavera-wm
 -----------
@@ -89,14 +85,10 @@ Configuration
 The configuration of Calavera-wm is done by creating a custom conf.h
 and (re)compiling the source code.
 
-About
------
-This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/calavera-wm/master/LICENSE) file.
-
 Inspiration
 -------------
 Thanks to the authors of `DWM`, `Ratpoison`, `Stumpwm`, `Evilwm`.
 
-Licensing
-----------
-This project is distributed under the MIT/X Consortium License.
+About/Licensing
+----------------
+This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/calavera-wm/master/LICENSE) file.

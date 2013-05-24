@@ -7,21 +7,13 @@ PREFIX = /usr/local
 X11INC=/usr/include/X11
 X11LIB=/usr/lib/X11
 
-# OPTIONAL XINERAMA
-
-# Xinerama, uncomment if you want it
-#XINERAMALIBS = -lXinerama
-#XINERAMAFLAGS = -DXINERAMA
-
 # includes and libs
 INCS = -I${X11INC}
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} 
+LIBS = -L${X11LIB} -lX11 
 
 # flags
-CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} 
+CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" 
 CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
-#CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-#CFLAGS = -std=c99 -pedantic -Wall -Werror -O2 -fomit-frame-pointer -s ${INCS} ${CPPFLAGS}
 LDFLAGS = -s ${LIBS}
 
 # compiler and linker
