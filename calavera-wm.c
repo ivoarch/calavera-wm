@@ -464,10 +464,6 @@ void buttonpress(XEvent *e) {
       if(click && buttons[i].func && buttons[i].button == ev->button
          && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
         buttons[i].func(&buttons[i].arg);
-
-    //      if(click && buttons[i].func && buttons[i].button == ev->button
-    //         && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-    //        buttons[i].func(&buttons[i].arg);
 }
 
 void banish(const Arg *arg) {
