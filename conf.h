@@ -11,7 +11,7 @@
 #define FOCUS   "SandyBrown" 
 
 #define DOCK_SIZE        0  /* Reserved space top of the screen */
-#define MOVESTEP         32 /* Pixels to move a window at a time */
+#define MOVESTEP         72 /* Pixels to move a window at a time */
 #define RESIZESTEP       32 /* Pixels to resize a window at a time.*/
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
