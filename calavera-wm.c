@@ -512,12 +512,13 @@ void cleanup(void) {
 
     moveto_workspace(&a);
     for(m = mons; m; m = m->next)
-	while(m->stack)
-	    unmanage(m->stack, False);
+      while(m->stack)
+        unmanage(m->stack, False);
     XUngrabKey(display, AnyKey, AnyModifier, root);
     XFreeCursor(display, cursor[CurNormal]);
     XFreeCursor(display, cursor[CurResize]);
     XFreeCursor(display, cursor[CurMove]);
+    XFreeCursor(display, cursor[CurCmd]); 
     cleanupmon(mons);
 }
 
