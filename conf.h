@@ -83,12 +83,17 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
+/* Setup mouse buttons */
+#define LEFT_BUTTON   Button1
+#define MIDDLE_BUTTON Button2
+#define RIGHT_BUTTON  Button3
+
 /* MOUSE BUTTONS */
 static Button buttons[] = {
-	/* event mask     button       function     argument */
-        { ControlMask,    Button1,     movemouse,      {0} },
-        { ControlMask,    Button3,     resizemouse,    {0} },
-        { ControlMask,    Button2,     killfocused,    {0} },
+	/* event mask     button          function     argument */
+        { ControlMask,    LEFT_BUTTON,    movemouse,      {0} },
+        { ControlMask,    MIDDLE_BUTTON,  killfocused,    {0} },
+        { ControlMask,    RIGHT_BUTTON,   resizemouse,    {0} },
 };
 
 #endif 
