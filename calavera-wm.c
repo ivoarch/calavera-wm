@@ -206,6 +206,7 @@ static Bool checkdock(Window *w);
 static void cleanup(void);
 static void eprint(const char *errstr, ...);
 static Bool getrootptr(int *x, int *y);
+static void init_cursors(void);
 static void handle_events(void);
 static void scan(void);
 static void setup(void);
@@ -850,6 +851,13 @@ void grabkeys(int keytype) {
 	XUngrabPointer(display, CurrentTime);
     }
 }
+ 
+void init_cursors() { 
+   cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
+   cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
+   cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
+   cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
+}
 
 void handle_events(void) {
   XEvent ev;
@@ -1324,11 +1332,9 @@ void setup(void) {
     /* Standard & EWMH atoms */
     ewmh_init();
 
-    /* cursors */
-    cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
-    cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
-    cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
-    cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
+    /* cursors */ 
+    init_cursors();    
+
     /* border colors */
     win_unfocus = getcolor(UNFOCUS);
     win_focus = getcolor(FOCUS);
@@ -1727,12 +1733,6 @@ void exec(const Arg *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    if(argc == 2 && !strcmp("-v", argv[1]))
-	eprint("calavera-wm-"VERSION", © 2006-2012 dwm engineers, see LICENSE for details\n");
-    else if(argc != 1)
-	eprint("usage: calavera-wm [-v]\n");
-    if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
-	fputs("warning: no locale support\n", stderr);
     if(!(display = XOpenDisplay(NULL)))
 	eprint("calavera-wm: cannot open display\n");
     cargv = argv;
