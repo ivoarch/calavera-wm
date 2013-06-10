@@ -161,6 +161,7 @@ static void attach(Client *c);
 static void attachstack(Client *c);
 static void attachend(Client *c);
 static void attachstackend(Client *c);
+static void border_init(Client *c);
 static void clearurgent(Client *c);
 static void configure(Client *c);
 static void detach(Client *c);
@@ -233,7 +234,6 @@ static void horizontalmax(const Arg *arg);
 static void verticalmax(const Arg *arg);
 static void movemouse(const Arg *arg);
 static void moveto_workspace(const Arg *arg);
-static void moveresize(const Arg *arg);
 static void quit(const Arg *arg);
 static void reload(const Arg *arg);
 static void resizemouse(const Arg *arg);
@@ -242,7 +242,7 @@ static void fullscreen(const Arg *arg);
 static void change_workspace(const Arg *arg);
 
 /* variables */
-static unsigned int win_focus;                                                                                                
+static unsigned int win_focus;                                                                      
 static unsigned int win_unfocus;
 static char *wm_name = WMNAME;
 static char **cargv;
@@ -420,6 +420,14 @@ void banish(const Arg *arg) {
   XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 }
 
+void border_init(Client *c) { 
+  XWindowChanges wc;
+
+  wc.border_width = c->bw;
+  XConfigureWindow(display, c->win, CWBorderWidth, &wc);
+  XSetWindowBorder(display, c->win, win_focus);
+}
+
 void center(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
 	return;
@@ -440,7 +448,7 @@ Bool checkdock(Window *w) {
       if (n != 0)
         result = * (Atom *) p;
     }
-    XFree(p);
+    XFree(p); 
     XMapWindow(display, *w);
     return result == netatom[NetWMWindowTypeDock]  
       || result == netatom[NetWMWindowTypeNotification]  
@@ -918,7 +926,6 @@ void killfocused(const Arg *arg) {
 void manage(Window w, XWindowAttributes *wa) {
     Client *c, *t = NULL;
     Window trans = None;
-    XWindowChanges wc;
     XClassHint ch = { NULL, NULL };
 
     if (checkdock(&w)) {
@@ -965,9 +972,7 @@ void manage(Window w, XWindowAttributes *wa) {
                       && (c->x + (c->w / 2) < themon->wx + themon->ww)) ? DOCK_SIZE : themon->my);
     c->bw = 1;
 
-    wc.border_width = c->bw;
-    XConfigureWindow(display, w, CWBorderWidth, &wc);
-    XSetWindowBorder(display, w, win_focus);
+    border_init(c); 
     configure(c); /* propagates border_width, if size doesn't change */
     ewmh_updatewindowtype(c);
     updatesizehints(c);
@@ -988,8 +993,8 @@ void manage(Window w, XWindowAttributes *wa) {
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
     ewmh_setclientstate(c, NormalState);
     themon->thesel = c;
+    XMapWindow(display, c->win); /* maps the window */ 
     arrange_windows();
-    XMapWindow(display, c->win); /* maps the window */
     focus(NULL);
     /* set clients tag as current desktop (_NET_WM_DESKTOP) */
     ewmh_updateclientdesktop(c);
@@ -1406,17 +1411,6 @@ void moveto_workspace(const Arg *arg) {
 	arrange_windows();
     }
     ewmh_updatecurrenddesktop();
-}
-
-void moveresize(const Arg *arg) {
-  XEvent ev;
-
-  if(!(themon->thesel && arg && arg->v && themon->thesel->isfloating)) 
-    return;
-  resize(themon->thesel, themon->thesel->x + ((int *)arg->v)[0], themon->thesel->y + ((int *)arg->v)[1],  
-         themon->thesel->w + ((int *)arg->v)[2], themon->thesel->h + ((int *)arg->v)[3], True);
-
-  while(XCheckMaskEvent(display, EnterWindowMask, &ev));
 }
 
 void fullscreen(const Arg *arg) {

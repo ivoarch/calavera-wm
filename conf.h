@@ -9,10 +9,7 @@
 /* Colors */
 #define UNFOCUS "black"     
 #define FOCUS   "SandyBrown" 
-
 #define DOCK_SIZE        0  /* Reserved space top of the screen */
-#define MOVESTEP         72 /* Pixels to move a window at a time */
-#define RESIZESTEP       32 /* Pixels to resize a window at a time.*/
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
@@ -63,14 +60,6 @@ static Key keys[] = {
         WS_KEY(          XK_8,                      7)
         WS_KEY(          XK_9,                      8)
         WS_KEY(          XK_0,                      9)
-        { None,         XK_Down,   moveresize,     {.v = (int []){ 0, MOVESTEP, 0, 0 }}},
-        { None,         XK_Up,     moveresize,     {.v = (int []){ 0, -MOVESTEP, 0, 0 }}},
-        { None,         XK_Right,  moveresize,     {.v = (int []){ MOVESTEP, 0, 0, 0 }}},
-        { None,         XK_Left,   moveresize,     {.v = (int []){ -MOVESTEP, 0, 0, 0 }}},
-        { ShiftMask,    XK_Down,   moveresize,     {.v = (int []){ 0, 0, 0, RESIZESTEP }}},
-        { ShiftMask,    XK_Up,     moveresize,     {.v = (int []){ 0, 0, 0, -RESIZESTEP }}},
-        { ShiftMask,    XK_Right,  moveresize,     {.v = (int []){ 0, 0, RESIZESTEP, 0 }}},
-        { ShiftMask,    XK_Left,   moveresize,     {.v = (int []){ 0, 0, -RESIZESTEP, 0 }}},
         { ShiftMask,    XK_r,      reload,         {0} }, 
         { ShiftMask,    XK_q,      quit,           {0} },
 
@@ -83,17 +72,12 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
 };
 
-/* Setup mouse buttons */
-#define LEFT_BUTTON   Button1
-#define MIDDLE_BUTTON Button2
-#define RIGHT_BUTTON  Button3
-
 /* MOUSE BUTTONS */
 static Button buttons[] = {
-	/* event mask     button          function     argument */
-        { ControlMask,    LEFT_BUTTON,    movemouse,      {0} },
-        { ControlMask,    MIDDLE_BUTTON,  killfocused,    {0} },
-        { ControlMask,    RIGHT_BUTTON,   resizemouse,    {0} },
+	/* event mask     button      function     argument */
+        { ControlMask,    Button1,    movemouse,      {0} },
+        { ControlMask,    Button2,    killfocused,    {0} },
+        { ControlMask,    Button3,    resizemouse,    {0} },
 };
 
 #endif 
