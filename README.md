@@ -37,8 +37,6 @@ Commands
 - <kbd>C-t k</kbd> Close focused window.
 - <kbd>C-t-Shift 1,2,3</kbd> Move focused window to another workspace.
 - <kbd>C-t 1,2,3</kbd> Switch to workspace number 1|2|...
-- <kbd>C-t Up|Down|Left|Right</kbd> Move a window at a time.
-- <kbd>C-t-Shift Up|Down|Left|Right</kbd> Resize a window at a time. 
 - <kbd>C-t-Shift r</kbd> Reload calavera-wm configuration.
 - <kbd>C-t-Shift q</kbd> Quit calavera-wm
 
