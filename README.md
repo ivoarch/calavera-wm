@@ -4,14 +4,13 @@ is a minimalist stacking window manager, using prefix key style, à la ratpoison
 
 SCREENSHOTS
 -------------
-[![swm-2013-05-11](http://3image.com/images/2013/05/17/2013-05-17-1115521024x768scrot.th.png)](http://3image.com/images/2013/05/17/2013-05-17-1115521024x768scrot.png)
+
 
 FEATURES
 --------
 - Floating window manager.
 - Toggling windows to `center`, `maximize`, `vertical`, `horizontal`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
-- Reasonable EWMH support (though not yet fully compliant).
 - Autostart file read on startup.
 - Does not have Xinerama support.
 - Few dependencies :)

@@ -24,9 +24,6 @@
 /* for multimedia keys, etc. */
 #include <X11/XF86keysym.h>
 
-/* windows manager name */
-#define WMNAME "calavera-wm"
-
 #define BUFSIZE 256
 
 /* macros */
@@ -53,20 +50,12 @@ enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
 enum {
     NetActiveWindow,
     NetClientList,
-    NetClientListStacking,
-    NetCurrentDesktop,
-    NetNumberOfDesktops,
     NetSupported,
-    NetSupportingCheck,
-    NetWMDesktop,
     NetWMName,
     NetWMState,
     NetWMFullscreen,
     NetWMWindowType,
-    NetWMWindowTypeNotification,
-    NetWMWindowTypeSplash,
-    NetWMWindowTypeDock,
-    NetWMWindowTypeDialog,
+	NetWMWindowTypeDialog,
     NetLast
 };
 
@@ -77,7 +66,6 @@ enum {
     WMState,
     WMTakeFocus,
     WMLast,
-    Utf8String,
 };
 
 typedef union {
@@ -142,11 +130,7 @@ static void ewmh_init(void);
 static long ewmh_getstate(Window w);
 static void ewmh_setclientstate(Client *c, long state);
 static Bool sendevent(Client *c, Atom proto);
-static void ewmh_setnumbdesktops(void);
-static void ewmh_updatecurrenddesktop(void);
-static void ewmh_updateclientdesktop(Client *c);
 static void ewmh_updateclientlist(void);
-static void ewmh_updateclientlist_stacking(void);
 static void ewmh_updatewindowtype(Client *c);
 
 // bar
@@ -203,7 +187,6 @@ static void updatenumlockmask(void);
 // main
 static void autorun(void);
 static void checkotherwm(void);
-static Bool checkdock(Client *c);
 static void cleanup(void);
 static void eprint(const char *errstr, ...);
 static Bool getrootptr(int *x, int *y);
@@ -244,7 +227,6 @@ static void change_workspace(const Arg *arg);
 /* variables */
 static unsigned int win_focus;
 static unsigned int win_unfocus;
-static char *wm_name = WMNAME;
 static char **cargv;
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
@@ -303,10 +285,10 @@ Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 	if(*y + *h + 2 * c->bw <= themon->wy)
 	    *y = themon->wy;
     }
-    if(*h < DOCK_SIZE)
-      *h = DOCK_SIZE;
-    if(*w < DOCK_SIZE)
-      *w = DOCK_SIZE;
+    if(*h < TOP_SIZE)
+      *h = TOP_SIZE;
+    if(*w < TOP_SIZE)
+      *w = TOP_SIZE;
     if(c->isfloating) {
 	/* see last two sentences in ICCCM 4.1.2.3 */
 	baseismin = c->basew == c->minw && c->baseh == c->minh;
@@ -448,15 +430,6 @@ Atom getatomprop(Client *c, Atom prop) {
 		XFree(p);
 	}
 	return atom;
-}
-
-Bool checkdock(Client *c) {
-	Atom wtype = getatomprop(c, netatom[NetWMWindowType]);
-
-	XMapWindow(display, c->win);
-	return wtype == netatom[NetWMWindowTypeDock]
-		|| wtype == netatom[NetWMWindowTypeNotification]
-		|| wtype == netatom[NetWMWindowTypeSplash]? True : False;
 }
 
 void checkotherwm(void) {
@@ -648,8 +621,6 @@ void eprint(const char *errstr, ...) {
 }
 
 void ewmh_init(void) {
-    XSetWindowAttributes wa;
-    Window win;
 
     /* ICCCM */
     wmatom[WMProtocols] = XInternAtom(display, "WM_PROTOCOLS", False);
@@ -660,11 +631,7 @@ void ewmh_init(void) {
     /* EWMH */
     netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
-    netatom[NetSupportingCheck] = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
     netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
-    netatom[NetClientListStacking] = XInternAtom(display, "_NET_CLIENT_LIST_STACKING", False);
-    netatom[NetNumberOfDesktops] = XInternAtom(display, "_NET_NUMBER_OF_DESKTOPS", False);
-    netatom[NetCurrentDesktop] = XInternAtom(display, "_NET_CURRENT_DESKTOP", False);
 
     /* STATES */
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
@@ -672,35 +639,10 @@ void ewmh_init(void) {
 
     /* TYPES */
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
-    netatom[NetWMWindowTypeNotification] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_NOTIFICATION", False);
-    netatom[NetWMWindowTypeDock] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DOCK", False);
-    netatom[NetWMWindowTypeDialog] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
-    netatom[NetWMWindowTypeSplash] = XInternAtom(display, "_NET_WM_WINDOW_TYPE_SPLASH", False);
+	netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_TYPE_DIALOG", False);
 
     /* CLIENTS */
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
-    netatom[NetWMDesktop] = XInternAtom(display, "_NET_WM_DESKTOP", False);
-
-    /* OTHER */
-    netatom[Utf8String] = XInternAtom(display, "UTF8_STRING", False);
-
-    /* Tell which ewmh atoms are supported */
-    XChangeProperty(display, root, netatom[NetSupported], XA_ATOM, 32,
-		    PropModeReplace, (unsigned char *) netatom, NetLast);
-
-    /* Create our own window! */
-    wa.override_redirect = True;
-    win = XCreateWindow(display, root, -100, 0, 1, 1,
-			0, DefaultDepth(display, screen), CopyFromParent,
-			DefaultVisual(display, screen), CWOverrideRedirect, &wa);
-
-    XChangeProperty(display, root, netatom[NetSupportingCheck], XA_WINDOW, 32,
-		    PropModeReplace, (unsigned char*)&win, 1);
-
-    /* Set WM name */
-    XChangeProperty(display, win, netatom[NetWMName], netatom[Utf8String], 8,
-		    PropModeReplace, (unsigned char*)wm_name, strlen(wm_name));
-
 }
 
 void focus(Client *c) {
@@ -922,10 +864,6 @@ void manage(Window w, XWindowAttributes *wa) {
 		eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
     c->win = w;
 
-	if (checkdock(c)) {
-		return;
-	}
-
     if(XGetTransientForHint(display, w, &trans))
 		t = wintoclient(trans);
     if(t)
@@ -950,8 +888,6 @@ void manage(Window w, XWindowAttributes *wa) {
     c->h = c->oldh = wa->height;
     c->oldbw = wa->border_width;
 
-    //    c->isdock = False;
-
     if(c->x + WIDTH(c) > themon->mx + themon->mw)
 		c->x = themon->mx + themon->mw - WIDTH(c);
     if(c->y + HEIGHT(c) > themon->my + themon->mh)
@@ -959,7 +895,7 @@ void manage(Window w, XWindowAttributes *wa) {
     c->x = MAX(c->x, themon->mx);
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= themon->wx)
-                      && (c->x + (c->w / 2) < themon->wx + themon->ww)) ? DOCK_SIZE : themon->my);
+                      && (c->x + (c->w / 2) < themon->wx + themon->ww)) ? TOP_SIZE : themon->my);
     c->bw = 1;
 
     border_init(c);
@@ -978,16 +914,12 @@ void manage(Window w, XWindowAttributes *wa) {
     focus(c);
     XChangeProperty(display, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
 					(unsigned char *) &(c->win), 1);
-    XChangeProperty(display, root, netatom[NetClientListStacking], XA_WINDOW, 32, PropModeAppend,
-					(unsigned char *) &(c->win), 1);
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
     ewmh_setclientstate(c, NormalState);
     themon->thesel = c;
     XMapWindow(display, c->win); /* maps the window */
     arrange_windows();
     focus(NULL);
-    /* set clients tag as current desktop (_NET_WM_DESKTOP) */
-    ewmh_updateclientdesktop(c);
 }
 
 /* regrab when keyboard map changes */
@@ -1297,20 +1229,6 @@ void setfullscreen(Client *c, Bool fullscreen) {
     }
 }
 
-void ewmh_setcurrentdesktop(void) {
-    long data[] = { 0 };
-
-    XChangeProperty(display, root, netatom[NetCurrentDesktop], XA_CARDINAL, 32,
-					PropModeReplace, (unsigned char *)data, 1);
-}
-
-void ewmh_setnumbdesktops(void) {
-    long data[] = { TAGMASK };
-
-    XChangeProperty(display, root, netatom[NetNumberOfDesktops], XA_CARDINAL, 32,
-					PropModeReplace, (unsigned char *)data, 1);
-}
-
 void setup(void) {
     XSetWindowAttributes wa;
 
@@ -1335,12 +1253,6 @@ void setup(void) {
     win_focus = getcolor(FOCUS);
 
     XDeleteProperty(display, root, netatom[NetClientList]);
-    XDeleteProperty(display, root, netatom[NetClientListStacking]);
-    /* set EWMH NUMBER_OF_DESKTOPS */
-    ewmh_setnumbdesktops();
-    /* initialize EWMH CURRENT_DESKTOP */
-    ewmh_setcurrentdesktop();
-    ewmh_updatecurrenddesktop();
     /* select for events */
     wa.cursor = cursor[CurNormal];
     wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask
@@ -1396,11 +1308,9 @@ void sync_display(void) {
 void moveto_workspace(const Arg *arg) {
     if(themon->thesel && arg->ui & TAGMASK) {
 		themon->thesel->tags = arg->ui & TAGMASK;
-        ewmh_updateclientdesktop(themon->thesel);
 		focus(NULL);
 		arrange_windows();
     }
-    ewmh_updatecurrenddesktop();
 }
 
 void fullscreen(const Arg *arg) {
@@ -1444,7 +1354,6 @@ void unmanage(Client *c, Bool destroyed) {
     free(c);
     focus(NULL);
     ewmh_updateclientlist();
-    ewmh_updateclientlist_stacking();
     arrange_windows();
 }
 
@@ -1462,8 +1371,8 @@ void unmapnotify(XEvent *e) {
 }
 
 void set_padding() {
-    themon->wy += DOCK_SIZE;
-    themon->wh -= DOCK_SIZE;
+    themon->wy += TOP_SIZE;
+    themon->wh -= TOP_SIZE;
 }
 
 void ewmh_updateclientlist() {
@@ -1474,30 +1383,6 @@ void ewmh_updateclientlist() {
 	    XChangeProperty(display, root, netatom[NetClientList],
 						XA_WINDOW, 32, PropModeAppend,
 						(unsigned char *) &(c->win), 1);
-}
-
-void ewmh_updateclientlist_stacking() {
-    Client *c;
-
-    XDeleteProperty(display, root, netatom[NetClientListStacking]);
-	for(c = themon->thestack; c; c = c->snext)
-		XChangeProperty(display, root, netatom[NetClientListStacking],
-						XA_WINDOW, 32, PropModeAppend,
-                            (unsigned char *) &(c->win), 1);
-}
-
-void ewmh_updateclientdesktop(Client *c) {
-     long data[] = { c->tags };
-
-     XChangeProperty(display, c->win, netatom[NetWMDesktop], XA_CARDINAL, 32,
-		     PropModeReplace, (unsigned char *)data, 1);
-}
-
-void ewmh_updatecurrenddesktop() {
-    long data[] = { themon->tagset[themon->seltags] };
-
-    XChangeProperty(display, root, netatom[NetCurrentDesktop], XA_CARDINAL, 32,
-		    PropModeReplace, (unsigned char *)data, 1);
 }
 
 Bool updategeom(void) {
@@ -1586,12 +1471,6 @@ void ewmh_updatewindowtype(Client *c) {
 
     if(wtype == netatom[NetWMWindowTypeDialog]) {
 		c->isfloating = True;
-    } else if(wtype == netatom[NetWMWindowTypeDock]
-              || wtype == netatom[NetWMWindowTypeNotification]
-              || wtype == netatom[NetWMWindowTypeSplash]) {
-      //      c->isdock = True;
-		c->neverfocus = True;
-		c->isfloating = True;
     }
 }
 
@@ -1622,7 +1501,6 @@ void change_workspace(const Arg *arg) {
 		themon->tagset[themon->seltags] = arg->ui & TAGMASK;
     focus(NULL);
     arrange_windows();
-    ewmh_updatecurrenddesktop();
 }
 
 Client *wintoclient(Window w) {
