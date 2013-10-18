@@ -6,10 +6,11 @@
 #ifndef CONF_H
 #define CONF_H
 
-/* Colors */
+/* Options */
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
 #define TOP_SIZE         0  /* Reserved space top of the screen */
+#define BOTTOM_SIZE      0  /* Reserved space bottom of the screen */
 #define BORDER_SIZE      1  /* Border pixel around windows */
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
@@ -25,8 +26,8 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 #define WS_KEY(KEY,WS) \
-    { None,            KEY,      change_workspace,  {.ui = 1 << WS} },  \
-    { ShiftMask,       KEY,      moveto_workspace,  {.ui = 1 << WS} },
+     { None,            KEY,      change_workspace,  {.ui = 1 << WS} },  \
+     { ShiftMask,       KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL };

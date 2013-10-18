@@ -1371,7 +1371,7 @@ void unmapnotify(XEvent *e) {
 
 void set_padding() {
     themon->wy += TOP_SIZE;
-    themon->wh -= TOP_SIZE;
+    themon->wh -= TOP_SIZE + BOTTOM_SIZE;
 }
 
 void ewmh_updateclientlist() {
