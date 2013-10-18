@@ -10,6 +10,7 @@
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
 #define TOP_SIZE         0  /* Reserved space top of the screen */
+#define BORDER_SIZE      1  /* Border pixel around windows */
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */

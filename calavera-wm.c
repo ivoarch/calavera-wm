@@ -896,7 +896,7 @@ void manage(Window w, XWindowAttributes *wa) {
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= themon->wx)
                       && (c->x + (c->w / 2) < themon->wx + themon->ww)) ? TOP_SIZE : themon->my);
-    c->bw = 1;
+    c->bw = BORDER_SIZE;
 
     border_init(c);
     configure(c); /* propagates border_width, if size doesn't change */
