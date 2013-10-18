@@ -55,7 +55,7 @@ enum {
     NetWMState,
     NetWMFullscreen,
     NetWMWindowType,
-	NetWMWindowTypeDialog,
+    NetWMWindowTypeDialog,
     NetLast
 };
 
@@ -92,7 +92,7 @@ struct Client {
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
     unsigned int tags;
-    Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, needresize; // isdock;
+    Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, needresize;
     Client *next;
     Client *snext;
     Window win; /* The window */
@@ -266,66 +266,66 @@ Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
     *w = MAX(1, *w);
     *h = MAX(1, *h);
     if(interact) {
-	if(*x > screen_w)
-	    *x = screen_w - WIDTH(c);
-	if(*y > screen_h)
-	    *y = screen_h - HEIGHT(c);
-	if(*x + *w + 2 * c->bw < 0)
-	    *x = 0;
-	if(*y + *h + 2 * c->bw < 0)
-	    *y = 0;
+        if(*x > screen_w)
+            *x = screen_w - WIDTH(c);
+        if(*y > screen_h)
+            *y = screen_h - HEIGHT(c);
+        if(*x + *w + 2 * c->bw < 0)
+            *x = 0;
+        if(*y + *h + 2 * c->bw < 0)
+            *y = 0;
     }
     else {
-	if(*x >= themon->wx + themon->ww)
-	    *x = themon->wx + themon->ww - WIDTH(c);
-	if(*y >= themon->wy + themon->wh)
-	    *y = themon->wy + themon->wh - HEIGHT(c);
-	if(*x + *w + 2 * c->bw <= themon->wx)
-	    *x = themon->wx;
-	if(*y + *h + 2 * c->bw <= themon->wy)
-	    *y = themon->wy;
+        if(*x >= themon->wx + themon->ww)
+            *x = themon->wx + themon->ww - WIDTH(c);
+        if(*y >= themon->wy + themon->wh)
+            *y = themon->wy + themon->wh - HEIGHT(c);
+        if(*x + *w + 2 * c->bw <= themon->wx)
+            *x = themon->wx;
+        if(*y + *h + 2 * c->bw <= themon->wy)
+            *y = themon->wy;
     }
     if(*h < TOP_SIZE)
-      *h = TOP_SIZE;
+        *h = TOP_SIZE;
     if(*w < TOP_SIZE)
-      *w = TOP_SIZE;
+        *w = TOP_SIZE;
     if(c->isfloating) {
-	/* see last two sentences in ICCCM 4.1.2.3 */
-	baseismin = c->basew == c->minw && c->baseh == c->minh;
-	if(!baseismin) { /* temporarily remove base dimensions */
-	    *w -= c->basew;
-	    *h -= c->baseh;
-	}
-	/* adjust for aspect limits */
-	if(c->mina > 0 && c->maxa > 0) {
-	    if(c->maxa < (float)*w / *h)
-		*w = *h * c->maxa + 0.5;
-	    else if(c->mina < (float)*h / *w)
-		*h = *w * c->mina + 0.5;
-	}
-	if(baseismin) { /* increment calculation requires this */
-	    *w -= c->basew;
-	    *h -= c->baseh;
-	}
-	/* adjust for increment value */
-	if(c->incw)
-	    *w -= *w % c->incw;
-	if(c->inch)
-	    *h -= *h % c->inch;
-	/* restore base dimensions */
-	*w = MAX(*w + c->basew, c->minw);
-	*h = MAX(*h + c->baseh, c->minh);
-	if(c->maxw)
-	    *w = MIN(*w, c->maxw);
-	if(c->maxh)
-	    *h = MIN(*h, c->maxh);
+        /* see last two sentences in ICCCM 4.1.2.3 */
+        baseismin = c->basew == c->minw && c->baseh == c->minh;
+        if(!baseismin) { /* temporarily remove base dimensions */
+            *w -= c->basew;
+            *h -= c->baseh;
+        }
+        /* adjust for aspect limits */
+        if(c->mina > 0 && c->maxa > 0) {
+            if(c->maxa < (float)*w / *h)
+                *w = *h * c->maxa + 0.5;
+            else if(c->mina < (float)*h / *w)
+                *h = *w * c->mina + 0.5;
+        }
+        if(baseismin) { /* increment calculation requires this */
+            *w -= c->basew;
+            *h -= c->baseh;
+        }
+        /* adjust for increment value */
+        if(c->incw)
+            *w -= *w % c->incw;
+        if(c->inch)
+            *h -= *h % c->inch;
+        /* restore base dimensions */
+        *w = MAX(*w + c->basew, c->minw);
+        *h = MAX(*h + c->baseh, c->minh);
+        if(c->maxw)
+            *w = MIN(*w, c->maxw);
+        if(c->maxh)
+            *h = MIN(*h, c->maxh);
     }
     return *x != c->x || *y != c->y || *w != c->w || *h != c->h;
 }
 
 void arrange_windows() {
     if(themon)
-      showhide(themon->thestack);
+        showhide(themon->thestack);
     restack();
 }
 
@@ -333,10 +333,10 @@ void attachend(Client *c) {
     Client *p = themon->clients;
 
     if(p) {
-	for(; p->next; p = p->next);
+        for(; p->next; p = p->next);
         p->next = c;
     }  else {
-	attach(c);
+        attach(c);
     }
 }
 
@@ -349,10 +349,10 @@ void attachstackend(Client *c) {
     Client *p = themon->thestack;
 
     if(p) {
-		for(; p->snext; p = p->snext);
-		p->snext = c;
+        for(; p->snext; p = p->snext);
+        p->snext = c;
     } else {
-		attachstack(c);
+        attachstack(c);
     }
 }
 
@@ -368,19 +368,19 @@ void autorun(){
 
     /* execute autostart script */
     if (!(home = getenv("HOME")))
-		return;
+        return;
 
     snprintf(path, sizeof(path), "%s/calavera-wm/autostart", home);
 
     if (stat(path, &st) != 0)
-		return;
+        return;
 
     const char* autostartcmd[] = { path, NULL };
     Arg a = {.v = autostartcmd };
 
     /* Check if file is executable */
     if (S_ISREG(st.st_mode) && (st.st_mode & S_IXUSR))
-		spawn(&a);
+        spawn(&a);
 }
 
 void buttonpress(XEvent *e) {
@@ -389,17 +389,17 @@ void buttonpress(XEvent *e) {
     XButtonPressedEvent *ev = &e->xbutton;
 
     if((c = wintoclient(ev->window))) {
-		focus(c);
-		click = 1;
+        focus(c);
+        click = 1;
     }
     for(i = 0; i < LENGTH(buttons); i++)
-		if(click && buttons[i].func && buttons[i].button == ev->button
-		   && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-			buttons[i].func(&buttons[i].arg);
+        if(click && buttons[i].func && buttons[i].button == ev->button
+           && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
+            buttons[i].func(&buttons[i].arg);
 }
 
 void banish(const Arg *arg) {
-	XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
+    XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
 }
 
 void border_init(Client *c) {
@@ -412,24 +412,24 @@ void border_init(Client *c) {
 
 void center(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-		return;
+        return;
     resize(themon->thesel, themon->wx + 0.5 * (themon->ww - themon->thesel->w), themon->wy + 0.5 *
            (themon->wh - themon->thesel->h), themon->thesel->w, themon->thesel->h, False);
     arrange_windows();
 }
 
 Atom getatomprop(Client *c, Atom prop) {
-	int di;
-	unsigned long dl;
-	unsigned char *p = NULL;
-	Atom da, atom = None;
+    int di;
+    unsigned long dl;
+    unsigned char *p = NULL;
+    Atom da, atom = None;
 
-	if(XGetWindowProperty(display, c->win, prop, 0L, sizeof atom, False, XA_ATOM,
-						  &da, &di, &dl, &dl, &p) == Success && p) {
-		atom = *(Atom *)p;
-		XFree(p);
-	}
-	return atom;
+    if(XGetWindowProperty(display, c->win, prop, 0L, sizeof atom, False, XA_ATOM,
+                          &da, &di, &dl, &dl, &p) == Success && p) {
+        atom = *(Atom *)p;
+        XFree(p);
+    }
+    return atom;
 }
 
 void checkotherwm(void) {
@@ -446,7 +446,7 @@ void cleanup(void) {
 
     moveto_workspace(&a);
     while(themon->thestack)
-		unmanage(themon->thestack, False);
+        unmanage(themon->thestack, False);
     XUngrabKey(display, AnyKey, AnyModifier, root);
     XFreeCursor(display, cursor[CurNormal]);
     XFreeCursor(display, cursor[CurResize]);
@@ -463,7 +463,7 @@ void clearurgent(Client *c) {
 
     c->isurgent = False;
     if(!(wmh = XGetWMHints(display, c->win)))
-		return;
+        return;
     wmh->flags &= ~XUrgencyHint;
     XSetWMHints(display, c->win, wmh);
     XFree(wmh);
@@ -474,18 +474,18 @@ void clientmessage(XEvent *e) {
     Client *c = wintoclient(cme->window);
 
     if(!c)
-		return;
+        return;
     if(cme->message_type == netatom[NetWMState]) {
-		if(cme->data.l[1] == netatom[NetWMFullscreen] || cme->data.l[2] == netatom[NetWMFullscreen])
-			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
-							  || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
+        if(cme->data.l[1] == netatom[NetWMFullscreen] || cme->data.l[2] == netatom[NetWMFullscreen])
+            setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
+                              || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
     }
     else if(cme->message_type == netatom[NetActiveWindow]) {
-		if(!ISVISIBLE(c)) {
-			themon->seltags ^= 1;
-			themon->tagset[themon->seltags] = c->tags;
-		}
-		pop(c);
+        if(!ISVISIBLE(c)) {
+            themon->seltags ^= 1;
+            themon->tagset[themon->seltags] = c->tags;
+        }
+        pop(c);
     }
 }
 
@@ -512,13 +512,13 @@ void configurenotify(XEvent *e) {
 
     // TODO: updategeom handling sucks, needs to be simplified
     if(ev->window == root) {
-		dirty = (screen_w != ev->width || screen_h != ev->height);
-		screen_w = ev->width;
-		screen_h = ev->height;
-		if(updategeom() || dirty) {
-			focus(NULL);
-			arrange_windows();
-		}
+        dirty = (screen_w != ev->width || screen_h != ev->height);
+        screen_w = ev->width;
+        screen_h = ev->height;
+        if(updategeom() || dirty) {
+            focus(NULL);
+            arrange_windows();
+        }
     }
 }
 
@@ -528,48 +528,48 @@ void configurerequest(XEvent *e) {
     XWindowChanges wc;
 
     if((c = wintoclient(ev->window))) {
-		if(ev->value_mask & CWBorderWidth)
-			c->bw = ev->border_width;
-		else if(c->isfloating) {
-			if(ev->value_mask & CWX) {
-				c->oldx = c->x;
-				c->x = themon->mx + ev->x;
-			}
-			if(ev->value_mask & CWY) {
-				c->oldy = c->y;
-				c->y = themon->my + ev->y;
-			}
-			if(ev->value_mask & CWWidth) {
-				c->oldw = c->w;
-				c->w = ev->width;
-			}
-			if(ev->value_mask & CWHeight) {
-				c->oldh = c->h;
-				c->h = ev->height;
-			}
-			if((c->x + c->w) > themon->mx + themon->mw && c->isfloating)
-				c->x = themon->mx + (themon->mw / 2 - WIDTH(c) / 2); /* center in x direction */
-			if((c->y + c->h) > themon->my + themon->mh && c->isfloating)
-				c->y = themon->my + (themon->mh / 2 - HEIGHT(c) / 2); /* center in y direction */
-			if((ev->value_mask & (CWX|CWY)) && !(ev->value_mask & (CWWidth|CWHeight)))
-				configure(c);
-			if(ISVISIBLE(c))
-				XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
-			else
-				c->needresize = True;
-		}
-		else
-			configure(c);
+        if(ev->value_mask & CWBorderWidth)
+            c->bw = ev->border_width;
+        else if(c->isfloating) {
+            if(ev->value_mask & CWX) {
+                c->oldx = c->x;
+                c->x = themon->mx + ev->x;
+            }
+            if(ev->value_mask & CWY) {
+                c->oldy = c->y;
+                c->y = themon->my + ev->y;
+            }
+            if(ev->value_mask & CWWidth) {
+                c->oldw = c->w;
+                c->w = ev->width;
+            }
+            if(ev->value_mask & CWHeight) {
+                c->oldh = c->h;
+                c->h = ev->height;
+            }
+            if((c->x + c->w) > themon->mx + themon->mw && c->isfloating)
+                c->x = themon->mx + (themon->mw / 2 - WIDTH(c) / 2); /* center in x direction */
+            if((c->y + c->h) > themon->my + themon->mh && c->isfloating)
+                c->y = themon->my + (themon->mh / 2 - HEIGHT(c) / 2); /* center in y direction */
+            if((ev->value_mask & (CWX|CWY)) && !(ev->value_mask & (CWWidth|CWHeight)))
+                configure(c);
+            if(ISVISIBLE(c))
+                XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
+            else
+                c->needresize = True;
+        }
+        else
+            configure(c);
     }
     else {
-		wc.x = ev->x;
-		wc.y = ev->y;
-		wc.width = ev->width;
-		wc.height = ev->height;
-		wc.border_width = ev->border_width;
-		wc.sibling = ev->above;
-		wc.stack_mode = ev->detail;
-		XConfigureWindow(display, ev->window, ev->value_mask, &wc);
+        wc.x = ev->x;
+        wc.y = ev->y;
+        wc.width = ev->width;
+        wc.height = ev->height;
+        wc.border_width = ev->border_width;
+        wc.sibling = ev->above;
+        wc.stack_mode = ev->detail;
+        XConfigureWindow(display, ev->window, ev->value_mask, &wc);
     }
     sync_display();
 }
@@ -578,7 +578,7 @@ Monitor *createmon(void) {
     Monitor *m;
 
     if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
-		eprint("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
+        eprint("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
 
     m->tagset[0] = m->tagset[1] = 1;
     return m;
@@ -589,7 +589,7 @@ void destroynotify(XEvent *e) {
     XDestroyWindowEvent *ev = &e->xdestroywindow;
 
     if((c = wintoclient(ev->window)))
-		unmanage(c, True);
+        unmanage(c, True);
 }
 
 void detach(Client *c) {
@@ -606,8 +606,8 @@ void detachstack(Client *c) {
     *tc = c->snext;
 
     if(c == themon->thesel) {
-		for(t = themon->thestack; t && !ISVISIBLE(t); t = t->snext);
-		themon->thesel = t;
+        for(t = themon->thestack; t && !ISVISIBLE(t); t = t->snext);
+        themon->thesel = t;
     }
 }
 
@@ -639,7 +639,7 @@ void ewmh_init(void) {
 
     /* TYPES */
     netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
-	netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_TYPE_DIALOG", False);
+    netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_TYPE_DIALOG", False);
 
     /* CLIENTS */
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
@@ -647,21 +647,21 @@ void ewmh_init(void) {
 
 void focus(Client *c) {
     if(!c || !ISVISIBLE(c))
-		for(c = themon->thestack; c && !ISVISIBLE(c); c = c->snext);
+        for(c = themon->thestack; c && !ISVISIBLE(c); c = c->snext);
     if(themon->thesel && themon->thesel != c)
-		unfocus(themon->thesel, False);
+        unfocus(themon->thesel, False);
     if(c) {
-		if(c->isurgent)
-			clearurgent(c);
+        if(c->isurgent)
+            clearurgent(c);
         detachstack(c);
         attachstack(c);
-		grabbuttons(c, True);
+        grabbuttons(c, True);
         XSetWindowBorder(display, c->win, win_focus);
-		setfocus(c);
+        setfocus(c);
     }
     else {
-		XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
-		XDeleteProperty(display, root, netatom[NetActiveWindow]);
+        XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
+        XDeleteProperty(display, root, netatom[NetActiveWindow]);
     }
     themon->thesel = c;
 }
@@ -670,31 +670,31 @@ void focusin(XEvent *e) { /* there are some broken focus acquiring clients */
     XFocusChangeEvent *ev = &e->xfocus;
 
     if(themon->thesel && ev->window != themon->thesel->win)
-		setfocus(themon->thesel);
+        setfocus(themon->thesel);
 }
 
 void focusstack(const Arg *arg) {
     Client *c = NULL, *i;
 
     if(!themon->thesel)
-		return;
+        return;
     if(arg->i > 0) { /* next */
-		for(c = themon->thesel->next; c && !ISVISIBLE(c); c = c->next);
-		if(!c)
-			for(c = themon->clients; c && !ISVISIBLE(c); c = c->next);
+        for(c = themon->thesel->next; c && !ISVISIBLE(c); c = c->next);
+        if(!c)
+            for(c = themon->clients; c && !ISVISIBLE(c); c = c->next);
     }
     else { /* prev */
-		for(i = themon->clients; i != themon->thesel; i = i->next)
-			if(ISVISIBLE(i))
-				c = i;
-		if(!c)
-			for(; i; i = i->next)
-				if(ISVISIBLE(i))
-					c = i;
+        for(i = themon->clients; i != themon->thesel; i = i->next)
+            if(ISVISIBLE(i))
+                c = i;
+        if(!c)
+            for(; i; i = i->next)
+                if(ISVISIBLE(i))
+                    c = i;
     }
     if(c) {
-		focus(c);
-		restack();
+        focus(c);
+        restack();
     }
 }
 
@@ -703,7 +703,7 @@ unsigned long getcolor(const char *colstr) {
     XColor color;
 
     if(!XAllocNamedColor(display, cmap, colstr, &color, &color))
-	eprint("error, cannot allocate color '%s'\n", colstr);
+        eprint("error, cannot allocate color '%s'\n", colstr);
     return color.pixel;
 }
 
@@ -723,37 +723,37 @@ long ewmh_getstate(Window w) {
     Atom real;
 
     if(XGetWindowProperty(display, w, wmatom[WMState], 0L, 2L, False, wmatom[WMState],
-						  &real, &format, &n, &extra, (unsigned char **)&p) != Success)
-		return -1;
+                          &real, &format, &n, &extra, (unsigned char **)&p) != Success)
+        return -1;
     if(n != 0)
-		result = *p;
+        result = *p;
     XFree(p);
     return result;
 }
 
 void grab_pointer() {
     XGrabPointer (display, root, True, 0,
-				  GrabModeAsync, GrabModeAsync,
-				  None, cursor[CurCmd], CurrentTime);
+                  GrabModeAsync, GrabModeAsync,
+                  None, cursor[CurCmd], CurrentTime);
 }
 
 void grabbuttons(Client *c, Bool focused) {
     updatenumlockmask();
     {
-		unsigned int i, j;
-		unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
-		XUngrabButton(display, AnyButton, AnyModifier, c->win);
-		if(focused) {
-			for(i = 0; i < LENGTH(buttons); i++)
-				for(j = 0; j < LENGTH(modifiers); j++)
-					XGrabButton(display, buttons[i].button,
-								buttons[i].mask | modifiers[j],
-								c->win, False, BUTTONMASK,
-								GrabModeAsync, GrabModeSync, None, None);
-		}
-		else
-			XGrabButton(display, AnyButton, AnyModifier, c->win, False,
-						BUTTONMASK, GrabModeAsync, GrabModeSync, None, None);
+        unsigned int i, j;
+        unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
+        XUngrabButton(display, AnyButton, AnyModifier, c->win);
+        if(focused) {
+            for(i = 0; i < LENGTH(buttons); i++)
+                for(j = 0; j < LENGTH(modifiers); j++)
+                    XGrabButton(display, buttons[i].button,
+                                buttons[i].mask | modifiers[j],
+                                c->win, False, BUTTONMASK,
+                                GrabModeAsync, GrabModeSync, None, None);
+        }
+        else
+            XGrabButton(display, AnyButton, AnyModifier, c->win, False,
+                        BUTTONMASK, GrabModeAsync, GrabModeSync, None, None);
     }
 }
 
@@ -763,50 +763,50 @@ void grabkeys(int keytype) {
         0,
         LockMask,
         numlockmask,
-		LockMask | numlockmask
+        LockMask | numlockmask
     };
     KeyCode code;
 
     if(keytype == CmdKey) {
-		XGrabKey(display, AnyKey, AnyModifier, root, True, GrabModeAsync,
-				 GrabModeAsync);
+        XGrabKey(display, AnyKey, AnyModifier, root, True, GrabModeAsync,
+                 GrabModeAsync);
 
         if (WAITKEY) {
-			grab_pointer();
-		}
+            grab_pointer();
+        }
     }
     else {
-		XUngrabKey(display, AnyKey, AnyModifier, root);
+        XUngrabKey(display, AnyKey, AnyModifier, root);
 
         if(HIDE_CURSOR) {
-			XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
-		}
+            XWarpPointer(display, None, root, 0, 0, 0, 0, screen_w, screen_h);
+        }
 
-		if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))
-			for(i = 0; i < LENGTH(modifiers); i++)
-				XGrabKey(display, code, PREFIX_MODKEY | modifiers[i],
-						 root, True, GrabModeAsync,
-						 GrabModeAsync);
+        if((code = XKeysymToKeycode(display, PREFIX_KEYSYM)))
+            for(i = 0; i < LENGTH(modifiers); i++)
+                XGrabKey(display, code, PREFIX_MODKEY | modifiers[i],
+                         root, True, GrabModeAsync,
+                         GrabModeAsync);
 
-		XUngrabPointer(display, CurrentTime);
+        XUngrabPointer(display, CurrentTime);
     }
 }
 
 void init_cursors() {
-	cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
-	cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
-	cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
-	cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
+    cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
+    cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
+    cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
+    cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
 }
 
 void handle_events(void) {
-	XEvent ev;
+    XEvent ev;
 
-	/* main event loop */
-	XSync(display, False);
-	while(running && !XNextEvent(display, &ev))
-		if(handler[ev.type])
-			handler[ev.type](&ev); /* call handler */
+    /* main event loop */
+    XSync(display, False);
+    while(running && !XNextEvent(display, &ev))
+        if(handler[ev.type])
+            handler[ev.type](&ev); /* call handler */
 }
 
 void keypress(XEvent *e) {
@@ -820,37 +820,37 @@ void keypress(XEvent *e) {
 
     if(!prefixset && keysym == PREFIX_KEYSYM
        && CLEANMASK(ev->state) == PREFIX_MODKEY) {
-		prefixset = 1;
-		grabkeys(CmdKey);
+        prefixset = 1;
+        grabkeys(CmdKey);
     }
     else {
-		for(i = 0; i < LENGTH(keys); i++)
-			if(keysym == keys[i].keysym
-			   && CLEANMASK(ev->state) == keys[i].mod && keys[i].func)
-				keys[i].func(&(keys[i].arg));
+        for(i = 0; i < LENGTH(keys); i++)
+            if(keysym == keys[i].keysym
+               && CLEANMASK(ev->state) == keys[i].mod && keys[i].func)
+                keys[i].func(&(keys[i].arg));
 
-		prefixset = 0;
-		grabkeys(PrefixKey);
+        prefixset = 0;
+        grabkeys(PrefixKey);
     }
 }
 
 void killclient(Client *c) {
     if(!themon->thesel)
-		return;
+        return;
     if(!sendevent(themon->thesel, wmatom[WMDelete])) {
-		XGrabServer(display);
-		XSetErrorHandler(xerrordummy);
-		XSetCloseDownMode(display, DestroyAll);
-		XKillClient(display, themon->thesel->win);
-		sync_display();
-		XSetErrorHandler(xerror);
-		XUngrabServer(display);
+        XGrabServer(display);
+        XSetErrorHandler(xerrordummy);
+        XSetCloseDownMode(display, DestroyAll);
+        XKillClient(display, themon->thesel->win);
+        sync_display();
+        XSetErrorHandler(xerror);
+        XUngrabServer(display);
     }
 }
 
 void killfocused(const Arg *arg) {
     if(!themon->thesel)
-		return;
+        return;
     killclient(themon->thesel);
 }
 
@@ -861,24 +861,24 @@ void manage(Window w, XWindowAttributes *wa) {
     XClassHint ch = { NULL, NULL };
 
     if(!(c = calloc(1, sizeof(Client))))
-		eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
+        eprint("fatal: could not malloc() %u bytes\n", sizeof(Client));
     c->win = w;
 
     if(XGetTransientForHint(display, w, &trans))
-		t = wintoclient(trans);
+        t = wintoclient(trans);
     if(t)
-		c->tags = t->tags;
+        c->tags = t->tags;
     else {
-		themon = themon;
+        themon = themon;
     }
     /* rule matching */
     c->isfloating = 1, c->tags = 0;
     XGetClassHint(display, c->win, &ch);
 
     if(ch.res_class)
-		XFree(ch.res_class);
+        XFree(ch.res_class);
     if(ch.res_name)
-		XFree(ch.res_name);
+        XFree(ch.res_name);
     c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : themon->tagset[themon->seltags];
 
     /* geometry */
@@ -889,9 +889,9 @@ void manage(Window w, XWindowAttributes *wa) {
     c->oldbw = wa->border_width;
 
     if(c->x + WIDTH(c) > themon->mx + themon->mw)
-		c->x = themon->mx + themon->mw - WIDTH(c);
+        c->x = themon->mx + themon->mw - WIDTH(c);
     if(c->y + HEIGHT(c) > themon->my + themon->mh)
-		c->y = themon->my + themon->mh - HEIGHT(c);
+        c->y = themon->my + themon->mh - HEIGHT(c);
     c->x = MAX(c->x, themon->mx);
     /* only fix client y-offset, if the client center might cover the bar */
     c->y = MAX(c->y, ((c->x + (c->w / 2) >= themon->wx)
@@ -906,14 +906,14 @@ void manage(Window w, XWindowAttributes *wa) {
     XSelectInput(display, w, EVENT_MASK);
     grabbuttons(c, False);
     if(!c->isfloating)
-		c->isfloating = c->oldstate = trans != None || c->isfixed;
+        c->isfloating = c->oldstate = trans != None || c->isfixed;
     if(c->isfloating)
-		XRaiseWindow(display, c->win);
+        XRaiseWindow(display, c->win);
     attachend(c);
     attachstackend(c);
     focus(c);
     XChangeProperty(display, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
-					(unsigned char *) &(c->win), 1);
+                    (unsigned char *) &(c->win), 1);
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
     ewmh_setclientstate(c, NormalState);
     themon->thesel = c;
@@ -928,26 +928,26 @@ void mappingnotify(XEvent *e) {
 
     XRefreshKeyboardMapping(ev);
     if(ev->request == MappingKeyboard) {
-		updatenumlockmask();
-		grabkeys(PrefixKey);
+        updatenumlockmask();
+        grabkeys(PrefixKey);
     }
 }
 
 void maprequest(XEvent *e) {
     static XWindowAttributes wa;
-	XMapRequestEvent *ev = &e->xmaprequest;
+    XMapRequestEvent *ev = &e->xmaprequest;
 
     if(!XGetWindowAttributes(display, ev->window, &wa))
-		return;
+        return;
     if(wa.override_redirect)
-		return;
+        return;
     if(!wintoclient(ev->window))
-		manage(ev->window, &wa);
+        manage(ev->window, &wa);
 }
 
 void maximize(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-		return;
+        return;
     resize(themon->thesel, themon->wx, themon->wy, themon->ww - 2 * themon->thesel->bw,
            themon->wh - 2 * themon->thesel->bw, False);
     arrange_windows();
@@ -955,14 +955,14 @@ void maximize(const Arg *arg) {
 
 void horizontalmax(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-		return;
+        return;
     resize(themon->thesel, themon->wx, themon->thesel->y, themon->ww - 2 * themon->thesel->bw, themon->thesel->h, False);
     arrange_windows();
 }
 
 void verticalmax(const Arg *arg) {
     if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-		return;
+        return;
     resize(themon->thesel, themon->thesel->x, themon->wy, themon->thesel->w, themon->wh - 2 * themon->thesel->bw, False);
     arrange_windows();
 }
@@ -973,46 +973,46 @@ void movemouse(const Arg *arg) {
     XEvent ev;
 
     if(!(c = themon->thesel))
-		return;
+        return;
     if(c->isfullscreen) /* no support moving fullscreen windows by mouse */
-		return;
+        return;
     restack();
     ocx = c->x;
     ocy = c->y;
     /* Warp pointer to center on move */
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w / 2, c->h / 2);
     if(XGrabPointer(display, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
-					None, cursor[CurMove], CurrentTime) != GrabSuccess)
-		return;
+                    None, cursor[CurMove], CurrentTime) != GrabSuccess)
+        return;
     if(!getrootptr(&x, &y))
-		return;
+        return;
     do {
-		XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
-		switch(ev.type) {
-		case ConfigureRequest:
-		case Expose:
-		case MapRequest:
-			handler[ev.type](&ev);
-			break;
-		case MotionNotify:
-			nx = ocx + (ev.xmotion.x - x);
-			ny = ocy + (ev.xmotion.y - y);
-			if(nx >= themon->wx && nx <= themon->wx + themon->ww
-			   && ny >= themon->wy && ny <= themon->wy + themon->wh) {
-				if(abs(themon->wx - nx) < SNAP)
-					nx = themon->wx;
-				else if(abs((themon->wx + themon->ww) - (nx + WIDTH(c))) < SNAP)
-					nx = themon->wx + themon->ww - WIDTH(c);
-				if(abs(themon->wy - ny) < SNAP)
-					ny = themon->wy;
-				else if(abs((themon->wy + themon->wh) - (ny + HEIGHT(c))) < SNAP)
-					ny = themon->wy + themon->wh - HEIGHT(c);
+        XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
+        switch(ev.type) {
+        case ConfigureRequest:
+        case Expose:
+        case MapRequest:
+            handler[ev.type](&ev);
+            break;
+        case MotionNotify:
+            nx = ocx + (ev.xmotion.x - x);
+            ny = ocy + (ev.xmotion.y - y);
+            if(nx >= themon->wx && nx <= themon->wx + themon->ww
+               && ny >= themon->wy && ny <= themon->wy + themon->wh) {
+                if(abs(themon->wx - nx) < SNAP)
+                    nx = themon->wx;
+                else if(abs((themon->wx + themon->ww) - (nx + WIDTH(c))) < SNAP)
+                    nx = themon->wx + themon->ww - WIDTH(c);
+                if(abs(themon->wy - ny) < SNAP)
+                    ny = themon->wy;
+                else if(abs((themon->wy + themon->wh) - (ny + HEIGHT(c))) < SNAP)
+                    ny = themon->wy + themon->wh - HEIGHT(c);
                 if(!c->isfloating && (abs(nx - c->x) > SNAP || abs(ny - c->y) > SNAP));
-		    }
+            }
             if(c->isfloating)
-				resize(c, nx, ny, c->w, c->h, True);
-			break;
-		}
+                resize(c, nx, ny, c->w, c->h, True);
+            break;
+        }
     } while(ev.type != ButtonRelease);
     XUngrabPointer(display, CurrentTime);
 }
@@ -1030,24 +1030,24 @@ void propertynotify(XEvent *e) {
     XPropertyEvent *ev = &e->xproperty;
 
     if(ev->state == PropertyDelete)
-		return; /* ignore */
+        return; /* ignore */
     else if((c = wintoclient(ev->window))) {
-		switch(ev->atom) {
-		default: break;
-		case XA_WM_TRANSIENT_FOR:
-			if(!c->isfloating && (XGetTransientForHint(display, c->win, &trans)) &&
-			   (c->isfloating = (wintoclient(trans)) != NULL))
-				arrange_windows();
-			break;
-		case XA_WM_NORMAL_HINTS:
-			updatesizehints(c);
-			break;
-		case XA_WM_HINTS:
-			updatewmhints(c);
-			break;
-		}
-		if(ev->atom == netatom[NetWMWindowType])
-			ewmh_updatewindowtype(c);
+        switch(ev->atom) {
+        default: break;
+        case XA_WM_TRANSIENT_FOR:
+            if(!c->isfloating && (XGetTransientForHint(display, c->win, &trans)) &&
+               (c->isfloating = (wintoclient(trans)) != NULL))
+                arrange_windows();
+            break;
+        case XA_WM_NORMAL_HINTS:
+            updatesizehints(c);
+            break;
+        case XA_WM_HINTS:
+            updatewmhints(c);
+            break;
+        }
+        if(ev->atom == netatom[NetWMWindowType])
+            ewmh_updatewindowtype(c);
     }
 }
 
@@ -1058,15 +1058,15 @@ void quit(const Arg *arg) {
 void reload(const Arg *arg) {
     running = False;
     if (arg) {
-		cleanup();
-		execvp(cargv[0], cargv);
-		eprint("Can't exec: %s\n", strerror(errno));
+        cleanup();
+        execvp(cargv[0], cargv);
+        eprint("Can't exec: %s\n", strerror(errno));
     }
 }
 
 void resize(Client *c, int x, int y, int w, int h, Bool interact) {
     if(applysizehints(c, &x, &y, &w, &h, interact))
-		resizeclient(c, x, y, w, h);
+        resizeclient(c, x, y, w, h);
 }
 
 void resizeclient(Client *c, int x, int y, int w, int h) {
@@ -1089,36 +1089,36 @@ void resizemouse(const Arg *arg) {
     XEvent ev;
 
     if(!(c = themon->thesel))
-		return;
+        return;
     if(c->isfullscreen) /* no support resizing fullscreen windows by mouse */
-		return;
+        return;
     restack();
     ocx = c->x;
     ocy = c->y;
     if(XGrabPointer(display, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
-					None, cursor[CurResize], CurrentTime) != GrabSuccess)
-		return;
+                    None, cursor[CurResize], CurrentTime) != GrabSuccess)
+        return;
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
     do {
-		XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
-		switch(ev.type) {
-		case ConfigureRequest:
-		case Expose:
-		case MapRequest:
-			handler[ev.type](&ev);
-			break;
-		case MotionNotify:
-			nw = MAX(ev.xmotion.x - ocx - 2 * c->bw + 1, 1);
-			nh = MAX(ev.xmotion.y - ocy - 2 * c->bw + 1, 1);
-			if(themon->wx + nw >= themon->wx && themon->wx + nw <= themon->wx + themon->ww
-			   && themon->wy + nh >= themon->wy && themon->wy + nh <= themon->wy + themon->wh)
-			{
-				if(!c->isfloating && (abs(nw - c->w) > SNAP || abs(nh - c->h) > SNAP));
-			}
-			if(c->isfloating)
-				resize(c, c->x, c->y, nw, nh, True);
-			break;
-		}
+        XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
+        switch(ev.type) {
+        case ConfigureRequest:
+        case Expose:
+        case MapRequest:
+            handler[ev.type](&ev);
+            break;
+        case MotionNotify:
+            nw = MAX(ev.xmotion.x - ocx - 2 * c->bw + 1, 1);
+            nh = MAX(ev.xmotion.y - ocy - 2 * c->bw + 1, 1);
+            if(themon->wx + nw >= themon->wx && themon->wx + nw <= themon->wx + themon->ww
+               && themon->wy + nh >= themon->wy && themon->wy + nh <= themon->wy + themon->wh)
+                {
+                    if(!c->isfloating && (abs(nw - c->w) > SNAP || abs(nh - c->h) > SNAP));
+                }
+            if(c->isfloating)
+                resize(c, c->x, c->y, nw, nh, True);
+            break;
+        }
     } while(ev.type != ButtonRelease);
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
     XUngrabPointer(display, CurrentTime);
@@ -1130,7 +1130,7 @@ void restack() {
     XEvent ev;
 
     if(!themon->thesel)
-		return;
+        return;
     XRaiseWindow(display, themon->thesel->win);
     sync_display();
     while(XCheckMaskEvent(display, EnterWindowMask, &ev));
@@ -1142,22 +1142,22 @@ void scan(void) {
     XWindowAttributes wa;
 
     if(XQueryTree(display, root, &d1, &d2, &wins, &num)) {
-		for(i = 0; i < num; i++) {
-			if(!XGetWindowAttributes(display, wins[i], &wa)
-			   || wa.override_redirect || XGetTransientForHint(display, wins[i], &d1))
-				continue;
-			if(wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState)
-				manage(wins[i], &wa);
-		}
-		for(i = 0; i < num; i++) { /* now the transients */
-			if(!XGetWindowAttributes(display, wins[i], &wa))
-				continue;
-			if(XGetTransientForHint(display, wins[i], &d1)
-			   && (wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState))
-				manage(wins[i], &wa);
-		}
-		if(wins)
-			XFree(wins);
+        for(i = 0; i < num; i++) {
+            if(!XGetWindowAttributes(display, wins[i], &wa)
+               || wa.override_redirect || XGetTransientForHint(display, wins[i], &d1))
+                continue;
+            if(wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState)
+                manage(wins[i], &wa);
+        }
+        for(i = 0; i < num; i++) { /* now the transients */
+            if(!XGetWindowAttributes(display, wins[i], &wa))
+                continue;
+            if(XGetTransientForHint(display, wins[i], &d1)
+               && (wa.map_state == IsViewable || ewmh_getstate(wins[i]) == IconicState))
+                manage(wins[i], &wa);
+        }
+        if(wins)
+            XFree(wins);
     }
 }
 
@@ -1165,7 +1165,7 @@ void ewmh_setclientstate(Client *c, long state) {
     long data[] = { state, None };
 
     XChangeProperty(display, c->win, wmatom[WMState], wmatom[WMState], 32,
-		    PropModeReplace, (unsigned char *)data, 2);
+                    PropModeReplace, (unsigned char *)data, 2);
 }
 
 static Bool sendevent(Client *c, Atom proto){
@@ -1175,57 +1175,57 @@ static Bool sendevent(Client *c, Atom proto){
     XEvent ev;
 
     if(XGetWMProtocols(display, c->win, &protocols, &n)) {
-		while(!exists && n--)
-			exists = protocols[n] == proto;
-		XFree(protocols);
+        while(!exists && n--)
+            exists = protocols[n] == proto;
+        XFree(protocols);
 
     }
     if(exists) {
-		ev.type = ClientMessage;
-		ev.xclient.window = c->win;
-		ev.xclient.message_type = wmatom[WMProtocols];
-		ev.xclient.format = 32;
-		ev.xclient.data.l[0] = proto;
-		ev.xclient.data.l[1] = CurrentTime;
-		XSendEvent(display, c->win, False, NoEventMask, &ev);
+        ev.type = ClientMessage;
+        ev.xclient.window = c->win;
+        ev.xclient.message_type = wmatom[WMProtocols];
+        ev.xclient.format = 32;
+        ev.xclient.data.l[0] = proto;
+        ev.xclient.data.l[1] = CurrentTime;
+        XSendEvent(display, c->win, False, NoEventMask, &ev);
     }
     return exists;
 }
 
 void setfocus(Client *c) {
     if(!c->neverfocus) {
-		XSetInputFocus(display, c->win, RevertToPointerRoot, CurrentTime);
-		XChangeProperty(display, root, netatom[NetActiveWindow],
-						XA_WINDOW, 32, PropModeReplace,
-						(unsigned char *) &(c->win), 1);
+        XSetInputFocus(display, c->win, RevertToPointerRoot, CurrentTime);
+        XChangeProperty(display, root, netatom[NetActiveWindow],
+                        XA_WINDOW, 32, PropModeReplace,
+                        (unsigned char *) &(c->win), 1);
     }
     sendevent(c, wmatom[WMTakeFocus]);
 }
 
 void setfullscreen(Client *c, Bool fullscreen) {
     if(fullscreen) {
-		XChangeProperty(display, c->win, netatom[NetWMState], XA_ATOM, 32,
-						PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
-		c->isfullscreen = True;
-		c->oldstate = c->isfloating;
-		c->oldbw = c->bw;
-		c->bw = 0;
-		c->isfloating = True;
-		resizeclient(c, themon->mx, themon->my, themon->mw, themon->mh);
-		XRaiseWindow(display, c->win);
+        XChangeProperty(display, c->win, netatom[NetWMState], XA_ATOM, 32,
+                        PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
+        c->isfullscreen = True;
+        c->oldstate = c->isfloating;
+        c->oldbw = c->bw;
+        c->bw = 0;
+        c->isfloating = True;
+        resizeclient(c, themon->mx, themon->my, themon->mw, themon->mh);
+        XRaiseWindow(display, c->win);
     }
     else {
-		XChangeProperty(display, c->win, netatom[NetWMState], XA_ATOM, 32,
-						PropModeReplace, (unsigned char*)0, 0);
-		c->isfullscreen = False;
-		c->isfloating = c->oldstate;
-		c->bw = c->oldbw;
-		c->x = c->oldx;
-		c->y = c->oldy;
-		c->w = c->oldw;
-		c->h = c->oldh;
-		resizeclient(c, c->x, c->y, c->w, c->h);
-		arrange_windows();
+        XChangeProperty(display, c->win, netatom[NetWMState], XA_ATOM, 32,
+                        PropModeReplace, (unsigned char*)0, 0);
+        c->isfullscreen = False;
+        c->isfloating = c->oldstate;
+        c->bw = c->oldbw;
+        c->x = c->oldx;
+        c->y = c->oldy;
+        c->w = c->oldw;
+        c->h = c->oldh;
+        resizeclient(c, c->x, c->y, c->w, c->h);
+        arrange_windows();
     }
 }
 
@@ -1256,7 +1256,7 @@ void setup(void) {
     /* select for events */
     wa.cursor = cursor[CurNormal];
     wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask
-	|EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
+        |EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
     XChangeWindowAttributes(display, root, CWEventMask|CWCursor, &wa);
     XSelectInput(display, root, wa.event_mask);
     updatenumlockmask();
@@ -1265,39 +1265,39 @@ void setup(void) {
 
 void showhide(Client *c) {
     if(!c)
-		return;
+        return;
     if(ISVISIBLE(c)) { /* show clients top down */
-		if(c->needresize) {
-			c->needresize = False;
-			XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
-		} else {
-			XMoveWindow(display, c->win, c->x, c->y);
-		}
-		if(c->isfloating && !c->isfullscreen)
-			resize(c, c->x, c->y, c->w, c->h, False);
-		showhide(c->snext);
+        if(c->needresize) {
+            c->needresize = False;
+            XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
+        } else {
+            XMoveWindow(display, c->win, c->x, c->y);
+        }
+        if(c->isfloating && !c->isfullscreen)
+            resize(c, c->x, c->y, c->w, c->h, False);
+        showhide(c->snext);
     }
     else { /* hide clients bottom up */
-		showhide(c->snext);
-		XMoveWindow(display, c->win, WIDTH(c) * -2, c->y);
+        showhide(c->snext);
+        XMoveWindow(display, c->win, WIDTH(c) * -2, c->y);
     }
 }
 
 void sigchld(int unused) {
     if(signal(SIGCHLD, sigchld) == SIG_ERR)
-		eprint("Can't install SIGCHLD handler");
+        eprint("Can't install SIGCHLD handler");
     while(0 < waitpid(-1, NULL, WNOHANG));
 }
 
 void spawn(const Arg *arg) {
     if(fork() == 0) {
-		if(display)
-			close(ConnectionNumber(display));
-		setsid();
-		execvp(((char **)arg->v)[0], (char **)arg->v);
-		fprintf(stderr, "calavera-wm: execvp %s", ((char **)arg->v)[0]);
-		perror(" failed");
-		exit(EXIT_SUCCESS);
+        if(display)
+            close(ConnectionNumber(display));
+        setsid();
+        execvp(((char **)arg->v)[0], (char **)arg->v);
+        fprintf(stderr, "calavera-wm: execvp %s", ((char **)arg->v)[0]);
+        perror(" failed");
+        exit(EXIT_SUCCESS);
     }
 }
 
@@ -1307,29 +1307,28 @@ void sync_display(void) {
 
 void moveto_workspace(const Arg *arg) {
     if(themon->thesel && arg->ui & TAGMASK) {
-		themon->thesel->tags = arg->ui & TAGMASK;
-		focus(NULL);
-		arrange_windows();
+        themon->thesel->tags = arg->ui & TAGMASK;
+        focus(NULL);
+        arrange_windows();
     }
 }
 
 void fullscreen(const Arg *arg) {
-
     if(!themon->thesel)
-		return;
+        return;
     setfullscreen(themon->thesel, !themon->thesel->isfullscreen);
 }
 
 /* mark window win as unfocused. */
 void unfocus(Client *c, Bool setfocus) {
     if(!c)
-		return;
+        return;
     grabbuttons(c, False);
     /* set new border unfocus colour. */
     XSetWindowBorder(display, c->win, win_unfocus);
     if(setfocus) {
-		XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
-		XDeleteProperty(display, root, netatom[NetActiveWindow]);
+        XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
+        XDeleteProperty(display, root, netatom[NetActiveWindow]);
     }
 }
 
@@ -1341,15 +1340,15 @@ void unmanage(Client *c, Bool destroyed) {
     detach(c);
     detachstack(c);
     if(!destroyed) {
-		wc.border_width = c->oldbw;
-		XGrabServer(display);
-		XSetErrorHandler(xerrordummy);
-		XConfigureWindow(display, c->win, CWBorderWidth, &wc); /* restore border */
-		XUngrabButton(display, AnyButton, AnyModifier, c->win);
-		ewmh_setclientstate(c, WithdrawnState);
-		sync_display();
-		XSetErrorHandler(xerror);
-		XUngrabServer(display);
+        wc.border_width = c->oldbw;
+        XGrabServer(display);
+        XSetErrorHandler(xerrordummy);
+        XConfigureWindow(display, c->win, CWBorderWidth, &wc); /* restore border */
+        XUngrabButton(display, AnyButton, AnyModifier, c->win);
+        ewmh_setclientstate(c, WithdrawnState);
+        sync_display();
+        XSetErrorHandler(xerror);
+        XUngrabServer(display);
     }
     free(c);
     focus(NULL);
@@ -1363,10 +1362,10 @@ void unmapnotify(XEvent *e) {
     XUnmapEvent *ev = &e->xunmap;
 
     if((c = wintoclient(ev->window))) {
-		if(ev->send_event)
-			ewmh_setclientstate(c, WithdrawnState);
-		else
-			unmanage(c, False);
+        if(ev->send_event)
+            ewmh_setclientstate(c, WithdrawnState);
+        else
+            unmanage(c, False);
     }
 }
 
@@ -1379,22 +1378,22 @@ void ewmh_updateclientlist() {
     Client *c;
 
     XDeleteProperty(display, root, netatom[NetClientList]);
-	for(c = themon->clients; c; c = c->next)
-	    XChangeProperty(display, root, netatom[NetClientList],
-						XA_WINDOW, 32, PropModeAppend,
-						(unsigned char *) &(c->win), 1);
+    for(c = themon->clients; c; c = c->next)
+        XChangeProperty(display, root, netatom[NetClientList],
+                        XA_WINDOW, 32, PropModeAppend,
+                        (unsigned char *) &(c->win), 1);
 }
 
 Bool updategeom(void) {
     Bool dirty = False;
 
     if(!themon)
-		themon = createmon();
+        themon = createmon();
     if(themon->mw != screen_w || themon->mh != screen_h) {
-		dirty = True;
-		themon->mw = themon->ww = screen_w;
-		themon->mh = themon->wh = screen_h;
-		set_padding();
+        dirty = True;
+        themon->mw = themon->ww = screen_w;
+        themon->mh = themon->wh = screen_h;
+        set_padding();
     }
     return dirty;
 }
@@ -1406,10 +1405,10 @@ void updatenumlockmask(void) {
     numlockmask = 0;
     modmap = XGetModifierMapping(display);
     for(i = 0; i < 8; i++)
-		for(j = 0; j < modmap->max_keypermod; j++)
-			if(modmap->modifiermap[i * modmap->max_keypermod + j]
-			   == XKeysymToKeycode(display, XK_Num_Lock))
-				numlockmask = (1 << i);
+        for(j = 0; j < modmap->max_keypermod; j++)
+            if(modmap->modifiermap[i * modmap->max_keypermod + j]
+               == XKeysymToKeycode(display, XK_Num_Lock))
+                numlockmask = (1 << i);
     XFreeModifiermap(modmap);
 }
 
@@ -1418,48 +1417,48 @@ void updatesizehints(Client *c) {
     XSizeHints size;
 
     if(!XGetWMNormalHints(display, c->win, &size, &msize))
-	/* size is uninitialized, ensure that size.flags aren't used */
-		size.flags = PSize;
+        /* size is uninitialized, ensure that size.flags aren't used */
+        size.flags = PSize;
     if(size.flags & PBaseSize) {
-		c->basew = size.base_width;
-		c->baseh = size.base_height;
+        c->basew = size.base_width;
+        c->baseh = size.base_height;
     }
     else if(size.flags & PMinSize) {
-		c->basew = size.min_width;
-		c->baseh = size.min_height;
+        c->basew = size.min_width;
+        c->baseh = size.min_height;
     }
     else
-		c->basew = c->baseh = 0;
+        c->basew = c->baseh = 0;
     if(size.flags & PResizeInc) {
-		c->incw = size.width_inc;
-		c->inch = size.height_inc;
+        c->incw = size.width_inc;
+        c->inch = size.height_inc;
     }
     else
-		c->incw = c->inch = 0;
+        c->incw = c->inch = 0;
     if(size.flags & PMaxSize) {
-		c->maxw = size.max_width;
-		c->maxh = size.max_height;
+        c->maxw = size.max_width;
+        c->maxh = size.max_height;
     }
     else
-		c->maxw = c->maxh = 0;
+        c->maxw = c->maxh = 0;
     if(size.flags & PMinSize) {
-		c->minw = size.min_width;
-		c->minh = size.min_height;
+        c->minw = size.min_width;
+        c->minh = size.min_height;
     }
     else if(size.flags & PBaseSize) {
-		c->minw = size.base_width;
-		c->minh = size.base_height;
+        c->minw = size.base_width;
+        c->minh = size.base_height;
     }
     else
-		c->minw = c->minh = 0;
+        c->minw = c->minh = 0;
     if(size.flags & PAspect) {
-		c->mina = (float)size.min_aspect.y / size.min_aspect.x;
-		c->maxa = (float)size.max_aspect.x / size.max_aspect.y;
+        c->mina = (float)size.min_aspect.y / size.min_aspect.x;
+        c->maxa = (float)size.max_aspect.x / size.max_aspect.y;
     }
     else
-		c->maxa = c->mina = 0.0;
+        c->maxa = c->mina = 0.0;
     c->isfixed = (c->maxw && c->minw && c->maxh && c->minh
-				  && c->maxw == c->minw && c->maxh == c->minh);
+                  && c->maxw == c->minw && c->maxh == c->minh);
 }
 
 void ewmh_updatewindowtype(Client *c) {
@@ -1467,10 +1466,10 @@ void ewmh_updatewindowtype(Client *c) {
     Atom wtype = getatomprop(c, netatom[NetWMWindowType]);
 
     if(state == netatom[NetWMFullscreen])
-		setfullscreen(c, True);
+        setfullscreen(c, True);
 
     if(wtype == netatom[NetWMWindowTypeDialog]) {
-		c->isfloating = True;
+        c->isfloating = True;
     }
 }
 
@@ -1478,27 +1477,27 @@ void updatewmhints(Client *c) {
     XWMHints *wmh;
 
     if((wmh = XGetWMHints(display, c->win))) {
-		if(c == themon->thesel && wmh->flags & XUrgencyHint) {
-			wmh->flags &= ~XUrgencyHint;
-			XSetWMHints(display, c->win, wmh);
-		}
-		else
-			c->isurgent = (wmh->flags & XUrgencyHint) ? True : False;
-		if(wmh->flags & InputHint)
-			c->neverfocus = !wmh->input;
-		else
-			c->neverfocus = False;
-		XFree(wmh);
+        if(c == themon->thesel && wmh->flags & XUrgencyHint) {
+            wmh->flags &= ~XUrgencyHint;
+            XSetWMHints(display, c->win, wmh);
+        }
+        else
+            c->isurgent = (wmh->flags & XUrgencyHint) ? True : False;
+        if(wmh->flags & InputHint)
+            c->neverfocus = !wmh->input;
+        else
+            c->neverfocus = False;
+        XFree(wmh);
     }
 }
 
 void change_workspace(const Arg *arg) {
 
     if((arg->ui & TAGMASK) == themon->tagset[themon->seltags])
-		return;
+        return;
     themon->seltags ^= 1; /* toggle sel tagset */
     if(arg->ui & TAGMASK)
-		themon->tagset[themon->seltags] = arg->ui & TAGMASK;
+        themon->tagset[themon->seltags] = arg->ui & TAGMASK;
     focus(NULL);
     arrange_windows();
 }
@@ -1507,8 +1506,8 @@ Client *wintoclient(Window w) {
     Client *c;
 
     for(c = themon->clients; c; c = c->next)
-		if(c->win == w)
-			return c;
+        if(c->win == w)
+            return c;
     return NULL;
 }
 
@@ -1522,9 +1521,9 @@ int xerror(Display *display, XErrorEvent *ee) {
        || (ee->request_code == X_ConfigureWindow && ee->error_code == BadMatch)
        || (ee->request_code == X_GrabButton && ee->error_code == BadAccess)
        || (ee->request_code == X_GrabKey && ee->error_code == BadAccess))
-	return 0;
+        return 0;
     fprintf(stderr, "calavera-wm: fatal error: request code=%d, error code=%d\n",
-	    ee->request_code, ee->error_code);
+            ee->request_code, ee->error_code);
     return xerrorxlib(display, ee); /* may call exit */
 }
 
@@ -1557,35 +1556,35 @@ void exec(const Arg *arg) {
 
     // grab keys
     while(grabbing){
-		if(ev.type == KeyPress) {
-			XLookupString(&ev.xkey, tmp, sizeof(tmp), &ks, 0);
+        if(ev.type == KeyPress) {
+            XLookupString(&ev.xkey, tmp, sizeof(tmp), &ks, 0);
 
-			switch(ks){
-			case XK_Return:
-				goto launch;
-				grabbing = False;
-				break;
-			case XK_BackSpace:
-				if(pos) buf[--pos] = 0;
-				break;
-			case XK_Escape:
-				goto out;
-				break;
-			default:
-				strncat(buf, tmp, sizeof(tmp));
-				++pos;
-				break;
-			}
-			sync_display();
-		}
-		XNextEvent(display, &ev);
+            switch(ks){
+            case XK_Return:
+                goto launch;
+                grabbing = False;
+                break;
+            case XK_BackSpace:
+                if(pos) buf[--pos] = 0;
+                break;
+            case XK_Escape:
+                goto out;
+                break;
+            default:
+                strncat(buf, tmp, sizeof(tmp));
+                ++pos;
+                break;
+            }
+            sync_display();
+        }
+        XNextEvent(display, &ev);
     }
 
  launch:
     if (pos) {
-		char *termcmd[]  = { buf, NULL };
+        char *termcmd[]  = { buf, NULL };
         Arg arg = {.v = termcmd };
-		spawn (&arg);
+        spawn (&arg);
     }
 
  out:
@@ -1596,7 +1595,7 @@ void exec(const Arg *arg) {
 
 int main(int argc, char *argv[]) {
     if(!(display = XOpenDisplay(NULL)))
-		eprint("calavera-wm: cannot open display\n");
+        eprint("calavera-wm: cannot open display\n");
     cargv = argv;
     checkotherwm();
     setup();
