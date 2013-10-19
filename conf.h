@@ -32,7 +32,7 @@
      { ShiftMask,       KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* COMMANDS */
-static const char *CMD_TERM[]    = { "urxvt", NULL };
+static const char *CMD_TERM[]    = { "urxvt", NULL, "URxvt" };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacs", NULL, "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
@@ -41,7 +41,7 @@ static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 static Key keys[] = {
     /* modifier     key        function        argument */
     { None,         XK_a,      exec,           {0} }, // App launcher
-    { None,         XK_c,      spawn,          {.v = CMD_TERM } },
+    { None,         XK_c,      runorraise,     {.v = CMD_TERM } },
     { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
     { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },
