@@ -49,7 +49,6 @@ enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
 /* EWMH atoms */
 enum {
     NetActiveWindow,
-    NetClientList,
     NetSupported,
     NetWMName,
     NetWMState,
@@ -130,7 +129,6 @@ static void ewmh_init(void);
 static long ewmh_getstate(Window w);
 static void ewmh_setclientstate(Client *c, long state);
 static Bool sendevent(Client *c, Atom proto);
-static void ewmh_updateclientlist(void);
 static void ewmh_updatewindowtype(Client *c);
 
 // bar
@@ -632,7 +630,6 @@ void ewmh_init(void) {
     /* EWMH */
     netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
-    netatom[NetClientList] = XInternAtom(display, "_NET_CLIENT_LIST", False);
 
     /* STATES */
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
@@ -913,8 +910,6 @@ void manage(Window w, XWindowAttributes *wa) {
     attachend(c);
     attachstackend(c);
     focus(c);
-    XChangeProperty(display, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
-                    (unsigned char *) &(c->win), 1);
     XMoveResizeWindow(display, c->win, c->x + 2 * screen_w, c->y, c->w, c->h); /* some windows require this */
     ewmh_setclientstate(c, NormalState);
     themon->thesel = c;
@@ -1274,7 +1269,6 @@ void setup(void) {
     win_unfocus = getcolor(UNFOCUS);
     win_focus = getcolor(FOCUS);
 
-    XDeleteProperty(display, root, netatom[NetClientList]);
     /* select for events */
     wa.cursor = cursor[CurNormal];
     wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask
@@ -1374,7 +1368,6 @@ void unmanage(Client *c, Bool destroyed) {
     }
     free(c);
     focus(NULL);
-    ewmh_updateclientlist();
     arrange_windows();
 }
 
@@ -1394,16 +1387,6 @@ void unmapnotify(XEvent *e) {
 void set_padding() {
     themon->wy += TOP_SIZE;
     themon->wh -= TOP_SIZE + BOTTOM_SIZE;
-}
-
-void ewmh_updateclientlist() {
-    Client *c;
-
-    XDeleteProperty(display, root, netatom[NetClientList]);
-    for(c = themon->clients; c; c = c->next)
-        XChangeProperty(display, root, netatom[NetClientList],
-                        XA_WINDOW, 32, PropModeAppend,
-                        (unsigned char *) &(c->win), 1);
 }
 
 Bool updategeom(void) {
