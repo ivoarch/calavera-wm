@@ -9,7 +9,7 @@
 /* Options */
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
-#define TOP_SIZE         0  /* Reserved space top of the screen */
+#define TOP_SIZE         16  /* Reserved space top of the screen */
 #define BOTTOM_SIZE      0  /* Reserved space bottom of the screen */
 #define BORDER_SIZE      1  /* Border pixel around windows */
 #define SNAP             16 /* Monitor edge snap distance */
@@ -31,8 +31,8 @@
 
 /* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL };
-static const char *CMD_BROWSER[] = { "conkeror", NULL };
-static const char *CMD_EDITOR[]  = { "emacsclient", "-n", "-c", "-a", "", NULL };
+static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
+static const char *CMD_EDITOR[]  = { "emacs", NULL, "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 
 /* KEY BINDINGS */
@@ -40,8 +40,8 @@ static Key keys[] = {
     /* modifier     key        function        argument */
     { None,         XK_a,      exec,           {0} }, // App launcher
     { None,         XK_c,      spawn,          {.v = CMD_TERM } },
-    { None,         XK_e,      spawn,          {.v = CMD_EDITOR } },
-    { None,         XK_w,      spawn,          {.v = CMD_BROWSER } },
+    { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
+    { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },
     { None,         XK_b,      banish,         {0} },
     { None,         XK_f,      fullscreen,     {0} },

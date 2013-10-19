@@ -22,8 +22,8 @@ Commands
 
 - <kbd>C-t c</kbd> Start `Urxvt`.
 - <kbd>C-t a</kbd> Start app launcher.
-- <kbd>C-t e</kbd> Start `Emacs`.
-- <kbd>C-t w</kbd> Start `Conkeror`.
+- <kbd>C-t e</kbd> RunOrRaise `Emacs`.
+- <kbd>C-t w</kbd> RunOrRaise `Conkeror`.
 - <kbd>C-t l</kbd> Locks the screen with `Xlock`.
 - <kbd>C-t b</kbd> Banish the mouse cursor.
 - <kbd>C-t f</kbd> Toggles fullscreen.

@@ -220,6 +220,7 @@ static void moveto_workspace(const Arg *arg);
 static void quit(const Arg *arg);
 static void reload(const Arg *arg);
 static void resizemouse(const Arg *arg);
+static void runorraise(const Arg *arg);
 static void spawn(const Arg *arg);
 static void fullscreen(const Arg *arg);
 static void change_workspace(const Arg *arg);
@@ -1134,6 +1135,27 @@ void restack() {
     XRaiseWindow(display, themon->thesel->win);
     sync_display();
     while(XCheckMaskEvent(display, EnterWindowMask, &ev));
+}
+
+void runorraise(const Arg *arg) {
+    const char **app = (const char **)arg->v;
+    Arg a = { .ui = ~0 };
+    Client *c;
+    XClassHint hint = { NULL, NULL };
+
+    /* Tries to find the client */
+    for (c = themon->clients; c; c = c->next) {
+        XGetClassHint(display, c->win, &hint);
+        if (hint.res_class && strcmp(app[2], hint.res_class) == 0) {
+            a.ui = c->tags;
+            change_workspace(&a);
+            focus(c);
+            XRaiseWindow(display, c->win);
+            return;
+        }
+    }
+    /* Client not found: spawn it */
+    spawn(arg);
 }
 
 void scan(void) {
