@@ -9,7 +9,7 @@
 /* Options */
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
-#define TOP_SIZE         16  /* Reserved space top of the screen */
+#define TOP_SIZE         0  /* Reserved space top of the screen */
 #define BOTTOM_SIZE      0  /* Reserved space bottom of the screen */
 #define BORDER_SIZE      1  /* Border pixel around windows */
 #define SNAP             16 /* Monitor edge snap distance */
