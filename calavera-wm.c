@@ -1599,7 +1599,8 @@ void exec(const Arg *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    if(!(display = XOpenDisplay(NULL)))
+    char *default_display = getenv(DISPLAY);
+    if(!(display = XOpenDisplay(default_display)))
         eprint("calavera-wm: cannot open display\n");
     cargv = argv;
     checkotherwm();

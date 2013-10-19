@@ -2,10 +2,6 @@
 
 is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
-SCREENSHOTS
--------------
-
-
 FEATURES
 --------
 - Floating window manager.
@@ -70,12 +66,6 @@ Running Calavera-wm
 Add the following line to your .xinitrc to start calavera-wm using startx:
 
     exec calavera-wm
-
-In order to connect calavera-wm to a specific display, make sure that
-the DISPLAY environment variable is set correctly, e.g.:
-
-    DISPLAY=foo.bar:1 exec calavera-wm
-    (This will start calavera-wm on display :1 of the host foo.bar.)
 
 Configuration
 -------------

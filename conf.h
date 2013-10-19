@@ -6,6 +6,8 @@
 #ifndef CONF_H
 #define CONF_H
 
+#define DISPLAY ":0"        /* connect calavera-wm to a specific display */
+
 /* Options */
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
