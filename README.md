@@ -11,10 +11,12 @@ FEATURES
 - Does not have Xinerama support.
 - Few dependencies :)
 
-Commands
+COMMANDS
 -----------------
 
 ### keyboard shortcuts
+
+<kbd>Control-t</kbd> is the default prefix keys.
 
 - <kbd>C-t c</kbd> Start `Urxvt`.
 - <kbd>C-t a</kbd> Start app launcher.
@@ -35,11 +37,13 @@ Commands
 - <kbd>C-t-Shift r</kbd> Reload calavera-wm configuration.
 - <kbd>C-t-Shift q</kbd> Quit calavera-wm
 
-### Mouse
+### mouse
 
-- <kbd>ControlMask\-Button1</kbd> Move focused window.
-- <kbd>ControlMask\-Button3</kbd> Resize focused window.
-- <kbd>ControlMask\-Button2</kbd> Kill focused window.
+<kbd>Control</kbd> is the default prefix key for the mouse
+
+- <kbd>Left button</kbd> Move the window.
+- <kbd>Right button</kbd> Resize the window.
+- <kbd>Middle button</kbd> Close the window.
 
 Download
 --------
