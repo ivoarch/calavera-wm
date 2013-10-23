@@ -18,24 +18,24 @@ COMMANDS
 
 <kbd>Control-t</kbd> is the default prefix keys.
 
-- <kbd>C-t c</kbd> Start `Urxvt`.
-- <kbd>C-t a</kbd> Start app launcher.
-- <kbd>C-t e</kbd> RunOrRaise `Emacs`.
-- <kbd>C-t w</kbd> RunOrRaise `Conkeror`.
-- <kbd>C-t l</kbd> Locks the screen with `Xlock`.
-- <kbd>C-t b</kbd> Banish the mouse cursor.
-- <kbd>C-t f</kbd> Toggles fullscreen.
-- <kbd>C-t m</kbd> Maximise focused window.
-- <kbd>C-t v</kbd> Vertical maximise.
-- <kbd>C-t h</kbd> Horizontal maximise.
-- <kbd>C-t .</kbd> Center focused window.
-- <kbd>C-t n</kbd> Focus next window.
-- <kbd>C-t p</kbd> Focus previous window.
-- <kbd>C-t k</kbd> Close focused window.
-- <kbd>C-t-Shift 1,2,3</kbd> Move focused window to another workspace.
-- <kbd>C-t 1,2,3</kbd> Switch to workspace number 1|2|...
-- <kbd>C-t-Shift r</kbd> Reload calavera-wm configuration.
-- <kbd>C-t-Shift q</kbd> Quit calavera-wm
+- <kbd>c</kbd> Start `Urxvt`.
+- <kbd>a</kbd> Start app launcher.
+- <kbd>e</kbd> RunOrRaise `Emacs`.
+- <kbd>w</kbd> RunOrRaise `Conkeror`.
+- <kbd>l</kbd> Locks the screen with `Xlock`.
+- <kbd>b</kbd> Banish the mouse cursor.
+- <kbd>f</kbd> Toggles fullscreen.
+- <kbd>m</kbd> Maximise focused window.
+- <kbd>v</kbd> Vertical maximise.
+- <kbd>h</kbd> Horizontal maximise.
+- <kbd>.</kbd> Center focused window.
+- <kbd>n</kbd> Focus next window.
+- <kbd>p</kbd> Focus previous window.
+- <kbd>k</kbd> Close focused window.
+- <kbd>Shift 1,2,3</kbd> Move focused window to another workspace.
+- <kbd>1,2,3</kbd> Switch to workspace number 1|2|...
+- <kbd>Shift r</kbd> Reload calavera-wm configuration.
+- <kbd>Shift q</kbd> Quit calavera-wm
 
 ### mouse
 
