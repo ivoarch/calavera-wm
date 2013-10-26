@@ -35,7 +35,7 @@ COMMANDS
 - <kbd>n</kbd> Focus next window.
 - <kbd>p</kbd> Focus previous window.
 - <kbd>k</kbd> Close focused window.
-- <kbd>1,2,3</kbd> Switch to windows number 0|1|2|...
+- <kbd>0,1,2</kbd> Switch to windows number 0|1|2|...
 - <kbd>Shift r</kbd> Reload calavera-wm configuration.
 - <kbd>Shift q</kbd> Quit calavera-wm
 

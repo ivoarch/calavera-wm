@@ -629,7 +629,6 @@ void ewmh_init(void) {
 void focus(Client *c) {
     if(!c)
         c = themon->thestack;
-//        for(c = themon->thestack; c && c = c->snext);
     if(themon->thesel && themon->thesel != c);
         unfocus(themon->thesel, False);
     if(c) {

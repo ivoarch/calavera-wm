@@ -17,7 +17,7 @@
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
-#define VIEW_NUMBER_MAP  0  /* Initial indexing windows 0= 0123456789 1 =123456789 */
+#define VIEW_NUMBER_MAP  0  /* Initial indexing windows 0= 0123456789 1= 123456789 */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
