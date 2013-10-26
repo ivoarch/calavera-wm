@@ -211,8 +211,6 @@ static void focusstack(const Arg *arg);
 static void killfocused(const Arg *arg);
 static void exec(const Arg *arg);
 static void maximize(const Arg *arg);
-static void horizontalmax(const Arg *arg);
-static void verticalmax(const Arg *arg);
 static void movemouse(const Arg *arg);
 static void moveto_workspace(const Arg *arg);
 static void quit(const Arg *arg);
@@ -946,20 +944,6 @@ void maximize(const Arg *arg) {
         return;
     resize(themon->thesel, themon->wx, themon->wy, themon->ww - 2 * themon->thesel->bw,
            themon->wh - 2 * themon->thesel->bw, False);
-    arrange_windows();
-}
-
-void horizontalmax(const Arg *arg) {
-    if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-        return;
-    resize(themon->thesel, themon->wx, themon->thesel->y, themon->ww - 2 * themon->thesel->bw, themon->thesel->h, False);
-    arrange_windows();
-}
-
-void verticalmax(const Arg *arg) {
-    if(!themon->thesel || themon->thesel->isfullscreen || !(themon->thesel->isfloating))
-        return;
-    resize(themon->thesel, themon->thesel->x, themon->wy, themon->thesel->w, themon->wh - 2 * themon->thesel->bw, False);
     arrange_windows();
 }
 

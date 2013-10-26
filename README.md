@@ -1,14 +1,14 @@
 # Calavera-wm ☠
 
-is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
+is a minimalist window manager, using prefix key style, à la ratpoison and stumpwm.
 
 FEATURES
 ---------
-
+y
 > TODO
 
 - Floating window manager.
-- Toggling windows to `center`, `maximize`, `vertical`, `horizontal`, and `full screen maximizing`.
+- Toggling windows to `center`, `maximize`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
 - Autostart file read on startup.
 - Multimedia keys (working)
@@ -30,8 +30,6 @@ COMMANDS
 - <kbd>b</kbd> Banish the mouse cursor.
 - <kbd>f</kbd> Toggles fullscreen.
 - <kbd>m</kbd> Maximise focused window.
-- <kbd>v</kbd> Vertical maximise.
-- <kbd>h</kbd> Horizontal maximise.
 - <kbd>.</kbd> Center focused window.
 - <kbd>n</kbd> Focus next window.
 - <kbd>p</kbd> Focus previous window.
