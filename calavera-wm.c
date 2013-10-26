@@ -159,7 +159,6 @@ static void unmanage(Client *c, Bool destroyed);
 static void updatesizehints(Client *c);
 static void updatewmhints(Client *c);
 static Client *wintoclient(Window w);
-int num_clients(void);
 
 // events
 static void buttonpress(XEvent *e);
@@ -1481,22 +1480,11 @@ void view(const Arg *arg) {
     int i;
     Client *c;
 
-    if(arg->ui > num_clients())
-        return;
-
     for(c = themon->clients, i = VIEW_NUMBER_MAP; c && i < arg->ui; c = c->next, i++);
     if(c)
         themon->thesel = c;
     focus(c);
     restack();
-}
-
-int num_clients(void) {
-    int i;
-    Client *c;
-
-    for(c = themon->clients, i = 0; c; c = c->next, i++);
-    return i;
 }
 
 void exec(const Arg *arg) {
