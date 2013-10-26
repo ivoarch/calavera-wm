@@ -17,6 +17,7 @@
 #define SNAP             16 /* Monitor edge snap distance */
 #define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
 #define WAITKEY          1  /* Show the cursor when waiting for a key */
+#define VIEW_NUMBER_MAP  0  /* Initial indexing windows 0= 0123456789 1 =123456789 */
 
 /* X Font cursor theme for command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
@@ -26,10 +27,6 @@
 /* Prefix keys setup default (CTRL+T) */
 #define PREFIX_MODKEY ControlMask  /* modifier prefix */
 #define PREFIX_KEYSYM XK_t         /* prefix key */
-
-#define WS_KEY(KEY,WS) \
-     { None,            KEY,      change_workspace,  {.ui = 1 << WS} },  \
-     { ShiftMask,       KEY,      moveto_workspace,  {.ui = 1 << WS} },
 
 /* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL, "URxvt" };
@@ -52,16 +49,16 @@ static Key keys[] = {
     { None,         XK_n,      focusstack,     {.i = +1 } },
     { None,         XK_p,      focusstack,     {.i = -1 } },
     { None,         XK_k,      killfocused,    {0} },
-    WS_KEY(          XK_1,                      0)
-    WS_KEY(          XK_2,                      1)
-    WS_KEY(          XK_3,                      2)
-    WS_KEY(          XK_4,                      3)
-    WS_KEY(          XK_5,                      4)
-    WS_KEY(          XK_6,                      5)
-    WS_KEY(          XK_7,                      6)
-    WS_KEY(          XK_8,                      7)
-    WS_KEY(          XK_9,                      8)
-    WS_KEY(          XK_0,                      9)
+    { None,         XK_0,      view,           {0} },
+    { None,         XK_1,      view,           {1} },
+    { None,         XK_2,      view,           {2} },
+    { None,         XK_3,      view,           {3} },
+    { None,         XK_4,      view,           {4} },
+    { None,         XK_5,      view,           {5} },
+    { None,         XK_6,      view,           {6} },
+    { None,         XK_7,      view,           {7} },
+    { None,         XK_8,      view,           {8} },
+    { None,         XK_9,      view,           {9} },
     { ShiftMask,    XK_r,      reload,         {0} },
     { ShiftMask,    XK_q,      quit,           {0} },
 

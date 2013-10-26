@@ -8,6 +8,7 @@ FEATURES
 > TODO
 
 - Floating window manager.
+- Does not have tags/virtual workspaces, just one view.
 - Toggling windows to `center`, `maximize`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
 - Autostart file read on startup.
@@ -34,8 +35,7 @@ COMMANDS
 - <kbd>n</kbd> Focus next window.
 - <kbd>p</kbd> Focus previous window.
 - <kbd>k</kbd> Close focused window.
-- <kbd>Shift 1,2,3</kbd> Move focused window to another workspace.
-- <kbd>1,2,3</kbd> Switch to workspace number 1|2|...
+- <kbd>1,2,3</kbd> Switch to windows number 0|1|2|...
 - <kbd>Shift r</kbd> Reload calavera-wm configuration.
 - <kbd>Shift q</kbd> Quit calavera-wm
 

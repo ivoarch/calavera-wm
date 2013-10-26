@@ -29,15 +29,12 @@
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define ISVISIBLE(C)            ((C->tags & themon->tagset[themon->seltags]))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define N_WORKSPACES 10
-#define TAGMASK                 ((1 << N_WORKSPACES) - 1)
 #define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
 #define EVENT_MASK              (EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask)
 #define ROOT                    RootWindow(display, DefaultScreen(display))
@@ -91,7 +88,7 @@ struct Client {
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
     unsigned int tags;
-    Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, needresize;
+    Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
     Client *next;
     Client *snext;
     Window win; /* The window */
@@ -162,6 +159,7 @@ static void unmanage(Client *c, Bool destroyed);
 static void updatesizehints(Client *c);
 static void updatewmhints(Client *c);
 static Client *wintoclient(Window w);
+int num_clients(void);
 
 // events
 static void buttonpress(XEvent *e);
@@ -212,14 +210,13 @@ static void killfocused(const Arg *arg);
 static void exec(const Arg *arg);
 static void maximize(const Arg *arg);
 static void movemouse(const Arg *arg);
-static void moveto_workspace(const Arg *arg);
 static void quit(const Arg *arg);
 static void reload(const Arg *arg);
 static void resizemouse(const Arg *arg);
 static void runorraise(const Arg *arg);
 static void spawn(const Arg *arg);
 static void fullscreen(const Arg *arg);
-static void change_workspace(const Arg *arg);
+static void view(const Arg *arg);
 
 /* variables */
 static unsigned int win_focus;
@@ -251,9 +248,6 @@ static Window root;
 
 /* configuration, allows nested code to access above variables */
 #include "conf.h"
-
-/* compile-time check if all tags fit into an unsigned int bit array. */
-struct NumTags { char limitexceeded[N_WORKSPACES > 31 ? -1 : 1]; };
 
 /* function implementations */
 Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
@@ -439,9 +433,7 @@ void checkotherwm(void) {
 }
 
 void cleanup(void) {
-    Arg a = {.ui = ~0};
 
-    moveto_workspace(&a);
     while(themon->thestack)
         unmanage(themon->thestack, False);
     XUngrabKey(display, AnyKey, AnyModifier, root);
@@ -478,7 +470,7 @@ void clientmessage(XEvent *e) {
                               || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
     }
     else if(cme->message_type == netatom[NetActiveWindow]) {
-        if(!ISVISIBLE(c)) {
+        if(!c){
             themon->seltags ^= 1;
             themon->tagset[themon->seltags] = c->tags;
         }
@@ -550,10 +542,8 @@ void configurerequest(XEvent *e) {
                 c->y = themon->my + (themon->mh / 2 - HEIGHT(c) / 2); /* center in y direction */
             if((ev->value_mask & (CWX|CWY)) && !(ev->value_mask & (CWWidth|CWHeight)))
                 configure(c);
-            if(ISVISIBLE(c))
+            if(c)
                 XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
-            else
-                c->needresize = True;
         }
         else
             configure(c);
@@ -597,15 +587,10 @@ void detach(Client *c) {
 }
 
 void detachstack(Client *c) {
-    Client **tc, *t;
+    Client **tc;
 
     for(tc = &themon->thestack; *tc && *tc != c; tc = &(*tc)->snext);
     *tc = c->snext;
-
-    if(c == themon->thesel) {
-        for(t = themon->thestack; t && !ISVISIBLE(t); t = t->snext);
-        themon->thesel = t;
-    }
 }
 
 void eprint(const char *errstr, ...) {
@@ -642,9 +627,10 @@ void ewmh_init(void) {
 }
 
 void focus(Client *c) {
-    if(!c || !ISVISIBLE(c))
-        for(c = themon->thestack; c && !ISVISIBLE(c); c = c->snext);
-    if(themon->thesel && themon->thesel != c)
+    if(!c)
+        c = themon->thestack;
+//        for(c = themon->thestack; c && c = c->snext);
+    if(themon->thesel && themon->thesel != c);
         unfocus(themon->thesel, False);
     if(c) {
         if(c->isurgent)
@@ -674,19 +660,16 @@ void focusstack(const Arg *arg) {
 
     if(!themon->thesel)
         return;
-    if(arg->i > 0) { /* next */
-        for(c = themon->thesel->next; c && !ISVISIBLE(c); c = c->next);
-        if(!c)
-            for(c = themon->clients; c && !ISVISIBLE(c); c = c->next);
+    if (arg->i > 0) {
+        if(!(c = themon->thesel->next))
+            c = themon->clients;
     }
-    else { /* prev */
+    else {
         for(i = themon->clients; i != themon->thesel; i = i->next)
-            if(ISVISIBLE(i))
-                c = i;
+            c = i;
         if(!c)
             for(; i; i = i->next)
-                if(ISVISIBLE(i))
-                    c = i;
+                c = i;
     }
     if(c) {
         focus(c);
@@ -875,7 +858,6 @@ void manage(Window w, XWindowAttributes *wa) {
         XFree(ch.res_class);
     if(ch.res_name)
         XFree(ch.res_name);
-    c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : themon->tagset[themon->seltags];
 
     /* geometry */
     c->x = c->oldx = wa->x;
@@ -1118,7 +1100,6 @@ void restack() {
 
 void runorraise(const Arg *arg) {
     const char **app = (const char **)arg->v;
-    Arg a = { .ui = ~0 };
     Client *c;
     XClassHint hint = { NULL, NULL };
 
@@ -1126,8 +1107,6 @@ void runorraise(const Arg *arg) {
     for (c = themon->clients; c; c = c->next) {
         XGetClassHint(display, c->win, &hint);
         if (hint.res_class && strcmp(app[2], hint.res_class) == 0) {
-            a.ui = c->tags;
-            change_workspace(&a);
             focus(c);
             XRaiseWindow(display, c->win);
             return;
@@ -1261,26 +1240,17 @@ void setup(void) {
     XSelectInput(display, root, wa.event_mask);
     updatenumlockmask();
     grabkeys(PrefixKey);
+    focus(NULL);
 }
 
 void showhide(Client *c) {
     if(!c)
         return;
-    if(ISVISIBLE(c)) { /* show clients top down */
-        if(c->needresize) {
-            c->needresize = False;
-            XMoveResizeWindow(display, c->win, c->x, c->y, c->w, c->h);
-        } else {
-            XMoveWindow(display, c->win, c->x, c->y);
-        }
-        if(c->isfloating && !c->isfullscreen)
-            resize(c, c->x, c->y, c->w, c->h, False);
-        showhide(c->snext);
-    }
-    else { /* hide clients bottom up */
-        showhide(c->snext);
-        XMoveWindow(display, c->win, WIDTH(c) * -2, c->y);
-    }
+    XMoveWindow(display, c->win, c->x, c->y);
+
+    if(c->isfloating && !c->isfullscreen)
+        resize(c, c->x, c->y, c->w, c->h, False);
+    showhide(c->snext);
 }
 
 void sigchld(int unused) {
@@ -1303,14 +1273,6 @@ void spawn(const Arg *arg) {
 
 void sync_display(void) {
     XSync(display, False);
-}
-
-void moveto_workspace(const Arg *arg) {
-    if(themon->thesel && arg->ui & TAGMASK) {
-        themon->thesel->tags = arg->ui & TAGMASK;
-        focus(NULL);
-        arrange_windows();
-    }
 }
 
 void fullscreen(const Arg *arg) {
@@ -1480,17 +1442,6 @@ void updatewmhints(Client *c) {
     }
 }
 
-void change_workspace(const Arg *arg) {
-
-    if((arg->ui & TAGMASK) == themon->tagset[themon->seltags])
-        return;
-    themon->seltags ^= 1; /* toggle sel tagset */
-    if(arg->ui & TAGMASK)
-        themon->tagset[themon->seltags] = arg->ui & TAGMASK;
-    focus(NULL);
-    arrange_windows();
-}
-
 Client *wintoclient(Window w) {
     Client *c;
 
@@ -1525,6 +1476,28 @@ int xerrordummy(Display *display, XErrorEvent *ee) {
 int xerrorstart(Display *display, XErrorEvent *ee) {
     eprint("calavera-wm: another window manager is already running\n");
     return -1;
+}
+
+void view(const Arg *arg) {
+    int i;
+    Client *c;
+
+    if(arg->ui > num_clients())
+        return;
+
+    for(c = themon->clients, i = VIEW_NUMBER_MAP; c && i < arg->ui; c = c->next, i++);
+    if(c)
+        themon->thesel = c;
+    focus(c);
+    restack();
+}
+
+int num_clients(void) {
+    int i;
+    Client *c;
+
+    for(c = themon->clients, i = 0; c; c = c->next, i++);
+    return i;
 }
 
 void exec(const Arg *arg) {
