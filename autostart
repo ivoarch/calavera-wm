@@ -1,5 +1,5 @@
 #!/bin/bash
+# Startup programs
 
-#xsetroot -solid white
+emacs --daemon
 urxvt -e screen -RD
-#xclock -digital -fg black -bg white -geometry -0-0 &

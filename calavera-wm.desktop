@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calavera-wm
-Comment=Stacking window manager
+Comment=Minimalist window manager
 Exec=/usr/local/bin/calavera-wm
 Icon=calavera-wm
 Type=XSession

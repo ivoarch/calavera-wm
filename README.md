@@ -4,7 +4,7 @@ is a minimalist window manager, using prefix key style, à la ratpoison and stum
 
 FEATURES
 ---------
-y
+
 > TODO
 
 - Floating window manager.
