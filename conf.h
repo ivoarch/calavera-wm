@@ -74,6 +74,12 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL}}},
     {0, XF86XK_AudioMute,
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
+    {0, XF86XK_AudioPlay,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-pause)", NULL}}},
+    {0, XF86XK_AudioPrev,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-previous)", NULL}}},
+    {0, XF86XK_AudioNext,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-next)", NULL}}},
 };
 
 /* MOUSE BUTTONS */

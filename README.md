@@ -3,11 +3,15 @@
 is a minimalist stacking window manager, using prefix key style, à la ratpoison and stumpwm.
 
 FEATURES
---------
+---------
+
+> TODO
+
 - Floating window manager.
 - Toggling windows to `center`, `maximize`, `vertical`, `horizontal`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
 - Autostart file read on startup.
+- Multimedia keys (working)
 - Does not have Xinerama support.
 - Few dependencies :)
 
