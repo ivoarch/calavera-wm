@@ -32,8 +32,8 @@ COMMANDS
 - <kbd>f</kbd> Toggles fullscreen.
 - <kbd>m</kbd> Maximise focused window.
 - <kbd>.</kbd> Center focused window.
-- <kbd>n</kbd> Focus next window.
-- <kbd>p</kbd> Focus previous window.
+- <kbd>Tab</kbd> Window switcher.
+- <kbd>Shift Tab</kbd> Reverse direction in the window switcher.
 - <kbd>k</kbd> Close focused window.
 - <kbd>0,1,2</kbd> Switch to windows number 0|1|2|...
 - <kbd>Shift r</kbd> Reload calavera-wm configuration.

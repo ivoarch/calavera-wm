@@ -195,7 +195,7 @@ static Bool updategeom(void);
 // actions
 static void banish(const Arg *arg);
 static void center(const Arg *arg);
-static void focusstack(const Arg *arg);
+static void switcher(const Arg *arg);
 static void killfocused(const Arg *arg);
 static void exec(const Arg *arg);
 static void maximize(const Arg *arg);
@@ -628,7 +628,7 @@ void focusin(XEvent *e) { /* there are some broken focus acquiring clients */
         setfocus(themon->thesel);
 }
 
-void focusstack(const Arg *arg) {
+void switcher(const Arg *arg) {
     Client *c = NULL, *i;
 
     if(!themon->thesel)
