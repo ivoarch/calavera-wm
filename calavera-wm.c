@@ -45,7 +45,6 @@ enum { CurNormal, CurResize, CurMove, CurCmd, CurLast }; /* cursor */
 
 /* EWMH atoms */
 enum {
-    NetActiveWindow,
     NetSupported,
     NetWMName,
     NetWMState,
@@ -87,7 +86,6 @@ struct Client {
     int oldx, oldy, oldw, oldh;
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
-    unsigned int tags;
     Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
     Client *next;
     Client *snext;
@@ -106,8 +104,6 @@ struct Monitor {
     int num;
     int mx, my, mw, mh;   /* screen size */
     int wx, wy, ww, wh;   /* window area  */
-    unsigned int seltags;
-    unsigned int tagset[2];
     Client *clients;
     Client *thesel;
     Client *thestack;
@@ -115,7 +111,6 @@ struct Monitor {
 
 typedef struct {
     const char *class;
-    unsigned int tags;
     Bool isfloating;
 } Rule;
 
@@ -148,7 +143,6 @@ static void detachstack(Client *c);
 static void focus(Client *c);
 static void killclient(Client *c);
 static void grabbuttons(Client *c, Bool focused);
-static void pop(Client *);
 static void resize(Client *c, int x, int y, int w, int h, Bool interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void setfocus(Client *c);
@@ -442,7 +436,6 @@ void cleanup(void) {
     XFreeCursor(display, cursor[CurCmd]);
     sync_display();
     XSetInputFocus(display, PointerRoot, RevertToPointerRoot, CurrentTime);
-    XDeleteProperty(display, root, netatom[NetActiveWindow]);
     free(themon);
 }
 
@@ -467,13 +460,6 @@ void clientmessage(XEvent *e) {
         if(cme->data.l[1] == netatom[NetWMFullscreen] || cme->data.l[2] == netatom[NetWMFullscreen])
             setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
                               || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
-    }
-    else if(cme->message_type == netatom[NetActiveWindow]) {
-        if(!c){
-            themon->seltags ^= 1;
-            themon->tagset[themon->seltags] = c->tags;
-        }
-        pop(c);
     }
 }
 
@@ -565,8 +551,6 @@ Monitor *createmon(void) {
 
     if(!(m = (Monitor *)calloc(1, sizeof(Monitor))))
         eprint("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
-
-    m->tagset[0] = m->tagset[1] = 1;
     return m;
 }
 
@@ -610,7 +594,6 @@ void ewmh_init(void) {
     wmatom[WMTakeFocus] = XInternAtom(display, "WM_TAKE_FOCUS", False);
 
     /* EWMH */
-    netatom[NetActiveWindow] = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     netatom[NetSupported] = XInternAtom(display, "_NET_SUPPORTED", False);
 
     /* STATES */
@@ -641,7 +624,6 @@ void focus(Client *c) {
     }
     else {
         XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
-        XDeleteProperty(display, root, netatom[NetActiveWindow]);
     }
     themon->thesel = c;
 }
@@ -844,12 +826,9 @@ void manage(Window w, XWindowAttributes *wa) {
     if(XGetTransientForHint(display, w, &trans))
         t = wintoclient(trans);
     if(t)
-        c->tags = t->tags;
-    else {
         themon = themon;
-    }
     /* rule matching */
-    c->isfloating = 1, c->tags = 0;
+    c->isfloating = 1;
     XGetClassHint(display, c->win, &ch);
 
     if(ch.res_class)
@@ -975,13 +954,6 @@ void movemouse(const Arg *arg) {
         }
     } while(ev.type != ButtonRelease);
     XUngrabPointer(display, CurrentTime);
-}
-
-void pop(Client *c) {
-    detach(c);
-    attach(c);
-    focus(c);
-    arrange_windows();
 }
 
 void propertynotify(XEvent *e) {
@@ -1173,9 +1145,6 @@ static Bool sendevent(Client *c, Atom proto){
 void setfocus(Client *c) {
     if(!c->neverfocus) {
         XSetInputFocus(display, c->win, RevertToPointerRoot, CurrentTime);
-        XChangeProperty(display, root, netatom[NetActiveWindow],
-                        XA_WINDOW, 32, PropModeReplace,
-                        (unsigned char *) &(c->win), 1);
     }
     sendevent(c, wmatom[WMTakeFocus]);
 }
@@ -1288,7 +1257,6 @@ void unfocus(Client *c, Bool setfocus) {
     XSetWindowBorder(display, c->win, win_unfocus);
     if(setfocus) {
         XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
-        XDeleteProperty(display, root, netatom[NetActiveWindow]);
     }
 }
 
