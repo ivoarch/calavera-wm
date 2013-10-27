@@ -9,6 +9,7 @@ FEATURES
 
 - Floating window manager.
 - Does not have tags/virtual workspaces, just one view.
+- Determine the `class`, `title`, `instance`, etc of an open window via *xprop*
 - Toggling windows to `center`, `maximize`, and `full screen maximizing`.
 - Good keyboard control (Emacs keybindings).
 - Autostart file read on startup.

@@ -633,11 +633,11 @@ void switcher(const Arg *arg) {
 
     if(!themon->thesel)
         return;
-    if (arg->i > 0) {
+    if (arg->i > 0) { /* next */
         if(!(c = themon->thesel->next))
             c = themon->clients;
     }
-    else {
+    else {  /* prev */
         for(i = themon->clients; i != themon->thesel; i = i->next)
             c = i;
         if(!c)
@@ -1020,6 +1020,7 @@ void resizemouse(const Arg *arg) {
     if(XGrabPointer(display, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
                     None, cursor[CurResize], CurrentTime) != GrabSuccess)
         return;
+    /* When resizing warp pointer to left-right corner */
     XWarpPointer(display, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
     do {
         XMaskEvent(display, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
