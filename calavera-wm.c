@@ -49,8 +49,6 @@ enum {
     NetWMName,
     NetWMState,
     NetWMFullscreen,
-    NetWMWindowType,
-    NetWMWindowTypeDialog,
     NetLast
 };
 
@@ -121,7 +119,6 @@ static void ewmh_init(void);
 static long ewmh_getstate(Window w);
 static void ewmh_setclientstate(Client *c, long state);
 static Bool sendevent(Client *c, Atom proto);
-static void ewmh_updatewindowtype(Client *c);
 
 // bar
 static void set_padding(void);
@@ -600,10 +597,6 @@ void ewmh_init(void) {
     netatom[NetWMState] = XInternAtom(display, "_NET_WM_STATE", False);
     netatom[NetWMFullscreen] = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
 
-    /* TYPES */
-    netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_WINDOW_TYPE", False);
-    netatom[NetWMWindowType] = XInternAtom(display, "_NET_WM_TYPE_DIALOG", False);
-
     /* CLIENTS */
     netatom[NetWMName] = XInternAtom(display, "_NET_WM_NAME", False);
 }
@@ -855,7 +848,6 @@ void manage(Window w, XWindowAttributes *wa) {
 
     border_init(c);
     configure(c); /* propagates border_width, if size doesn't change */
-    ewmh_updatewindowtype(c);
     updatesizehints(c);
     updatewmhints(c);
     XSelectInput(display, w, EVENT_MASK);
@@ -978,8 +970,6 @@ void propertynotify(XEvent *e) {
             updatewmhints(c);
             break;
         }
-        if(ev->atom == netatom[NetWMWindowType])
-            ewmh_updatewindowtype(c);
     }
 }
 
@@ -1378,18 +1368,6 @@ void updatesizehints(Client *c) {
                   && c->maxw == c->minw && c->maxh == c->minh);
 }
 
-void ewmh_updatewindowtype(Client *c) {
-    Atom state = getatomprop(c, netatom[NetWMState]);
-    Atom wtype = getatomprop(c, netatom[NetWMWindowType]);
-
-    if(state == netatom[NetWMFullscreen])
-        setfullscreen(c, True);
-
-    if(wtype == netatom[NetWMWindowTypeDialog]) {
-        c->isfloating = True;
-    }
-}
-
 void updatewmhints(Client *c) {
     XWMHints *wmh;
 
@@ -1506,7 +1484,6 @@ void exec(const Arg *arg) {
 
  out:
     XUngrabKeyboard(display, CurrentTime);
-
     return;
 }
 
