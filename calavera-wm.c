@@ -37,6 +37,7 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define RESIZE_MASK             (CWX|CWY|CWWidth|CWHeight|CWBorderWidth)
 #define EVENT_MASK              (EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask)
+#define WA_EVENT_MASK           SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask |EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask
 #define ROOT                    RootWindow(display, DefaultScreen(display))
 
 /* enums */
@@ -384,11 +385,11 @@ void banish(const Arg *arg) {
 }
 
 void border_init(Client *c) {
-  XWindowChanges wc;
+    XWindowChanges wc;
 
-  wc.border_width = c->bw;
-  XConfigureWindow(display, c->win, CWBorderWidth, &wc);
-  XSetWindowBorder(display, c->win, win_focus);
+    wc.border_width = c->bw;
+    XConfigureWindow(display, c->win, CWBorderWidth, &wc);
+    XSetWindowBorder(display, c->win, win_focus);
 }
 
 void center(const Arg *arg) {
@@ -745,7 +746,7 @@ void grabkeys(int keytype) {
 }
 
 void init_cursors() {
-    cursor[CurNormal] = XCreateFontCursor(display, XC_top_left_arrow);
+    cursor[CurNormal] = XCreateFontCursor(display, CURSOR);
     cursor[CurResize] = XCreateFontCursor(display, XC_bottom_right_corner);
     cursor[CurMove] = XCreateFontCursor(display, XC_fleur);
     cursor[CurCmd] = XCreateFontCursor(display, CURSOR_WAITKEY);
@@ -1192,8 +1193,7 @@ void setup(void) {
 
     /* select for events */
     wa.cursor = cursor[CurNormal];
-    wa.event_mask = SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|PointerMotionMask
-        |EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
+    wa.event_mask = WA_EVENT_MASK;
     XChangeWindowAttributes(display, root, CWEventMask|CWCursor, &wa);
     XSelectInput(display, root, wa.event_mask);
     updatenumlockmask();

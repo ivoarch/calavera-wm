@@ -6,23 +6,39 @@
 #ifndef CONF_H
 #define CONF_H
 
-#define DISPLAY ":0"        /* connect calavera-wm to a specific display */
+/* OPTIONS */
 
-/* Options */
+/* Connect to a specific display */
+#define DISPLAY ":0"
+
+/* Focused/Unfocused border color */
 #define UNFOCUS "Gray60"
 #define FOCUS   "red"
-#define TOP_SIZE         0  /* Reserved space top of the screen */
-#define BOTTOM_SIZE      0  /* Reserved space bottom of the screen */
-#define BORDER_SIZE      1  /* Border pixel around windows */
-#define SNAP             16 /* Monitor edge snap distance */
-#define HIDE_CURSOR      0  /* Pressing a key sends the cursor to the bottom right corner */
-#define WAITKEY          1  /* Show the cursor when waiting for a key */
-#define VIEW_NUMBER_MAP  0  /* Initial indexing windows 0= 0123456789 1= 123456789 */
 
-/* X Font cursor theme for command mode
+/* Border pixel around windows */
+#define BORDER_SIZE 1
+
+/* Snap distance */
+#define SNAP 16
+
+/* Reserved space Top/Bottom of the screen */
+#define TOP_SIZE 0
+#define BOTTOM_SIZE 0
+
+/* Initial indexing windows 0= 0123456789 1= 123456789 */
+#define VIEW_NUMBER_MAP 0
+
+/* X Font cursor theme for normal and command mode
  * see http://tronche.com/gui/x/xlib/appendix/b/
  */
+#define CURSOR XC_X_cursor
 #define CURSOR_WAITKEY XC_icon
+
+/* Pressing a key sends the cursor to the bottom right corner */
+#define HIDE_CURSOR 0
+
+/* Show the cursor when waiting for a key */
+#define WAITKEY 1
 
 /* Prefix keys setup default (CTRL+T) */
 #define PREFIX_MODKEY ControlMask  /* modifier prefix */
