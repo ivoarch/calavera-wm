@@ -47,7 +47,7 @@
 /* COMMANDS */
 static const char *CMD_TERM[]    = { "urxvt", NULL, "URxvt" };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
-static const char *CMD_EDITOR[]  = { "emacs", NULL, "Emacs" };
+static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 
 /* KEY BINDINGS */
