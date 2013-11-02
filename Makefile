@@ -1,5 +1,6 @@
 # Calavera-wm version
-VERSION = `git rev-parse HEAD`
+#VERSION = `git rev-parse HEAD`
+VERSION = 1.0
 
 # paths
 PREFIX = /usr/local
@@ -9,10 +10,10 @@ X11LIB=/usr/lib/X11
 
 # includes and libs
 INCS = -I${X11INC}
-LIBS = -L${X11LIB} -lX11 
+LIBS = -L${X11LIB} -lX11
 
 # flags
-CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" 
+CPPFLAGS += -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\"
 CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
 LDFLAGS = -s ${LIBS}
 
@@ -32,7 +33,7 @@ options:
 .c.o:
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: conf.h 
+${OBJ}: conf.h
 
 calavera-wm: ${OBJ}
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
