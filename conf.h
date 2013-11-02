@@ -13,7 +13,7 @@
 
 /* Focused/Unfocused border color */
 #define UNFOCUS "Gray60"
-#define FOCUS   "red"
+#define FOCUS   "brown"
 
 /* Border pixel around windows */
 #define BORDER_SIZE 1
@@ -45,7 +45,7 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 /* COMMANDS */
-static const char *CMD_TERM[]    = { "urxvt", NULL, "URxvt" };
+static const char *CMD_TERM[]    = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
@@ -54,7 +54,7 @@ static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 static Key keys[] = {
     /* modifier     key        function        argument */
     { None,         XK_a,      exec,           {0} }, // App launcher
-    { None,         XK_c,      runorraise,     {.v = CMD_TERM } },
+    { None,         XK_c,      spawn,          {.v = CMD_TERM } },
     { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
     { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },

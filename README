@@ -1,0 +1,32 @@
+# Calavera-wm ☠
+
+is a minimalist window manager, using prefix key style, à la ratpoison and stumpwm.
+
+Requirements
+------------
+- Libx11
+
+Installation
+------------
+Calavera-wm is installed into the /usr/local namespace by default,
+change the path indicated in the Makefile.
+
+Afterwards enter the following command to build and install Calavera-wm (if
+necessary as root):
+
+    make clean install
+
+Running Calavera-wm
+-----------
+Add the following line to your .xinitrc to start calavera-wm using startx:
+
+    exec calavera-wm
+
+Configuration
+-------------
+The configuration of Calavera-wm is done by creating a custom conf.h
+and (re)compiling the source code.
+
+About/Licensing
+----------------
+This project is a fork of [dwm](http://dwm.suckless.org/), which was created by see [LICENSE](https://raw.github.com/ivoarch/calavera-wm/master/LICENSE) file.
