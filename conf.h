@@ -45,7 +45,7 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 /* COMMANDS */
-static const char *CMD_TERM[]    = { "urxvt", NULL };
+static const char *CMD_TERM[]    = { "urxvt", NULL, };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
@@ -99,6 +99,8 @@ static Button buttons[] = {
     { ControlMask,    Button1,    movemouse,      {0} },
     { ControlMask,    Button2,    killfocused,    {0} },
     { ControlMask,    Button3,    resizemouse,    {0} },
+    { ControlMask,    Button4,    switcher,       {.i = +1 }},
+    { ControlMask,    Button5,    switcher,       {.i = -1 }},
 };
 
 #endif
