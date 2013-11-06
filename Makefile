@@ -1,6 +1,5 @@
 # Calavera-wm version
-#VERSION = `git rev-parse HEAD`
-VERSION = 1.0
+VERSION = 1.0.$(shell git rev-parse --short HEAD)
 
 # paths
 PREFIX = /usr/local

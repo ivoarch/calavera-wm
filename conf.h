@@ -45,7 +45,7 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 /* COMMANDS */
-static const char *CMD_TERM[]    = { "urxvt", NULL, };
+static const char *CMD_TERM[]    = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
