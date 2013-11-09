@@ -49,15 +49,17 @@ static const char *CMD_TERM[]    = { "urxvt", NULL };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
+static const char *CMD_SNAPSHOT[] = { "import", "screenshot.png", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
     /* modifier     key        function        argument */
-    { None,         XK_a,      exec,           {0} }, // App launcher
+    { None,         XK_a,      exec,           {0} },
     { None,         XK_c,      spawn,          {.v = CMD_TERM } },
     { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
     { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },
+    { None,         XK_Print,  spawn,          {.v = CMD_SNAPSHOT } },
     { None,         XK_b,      banish,         {0} },
     { None,         XK_f,      fullscreen,     {0} },
     { None,         XK_m,      maximize,       {0} },
