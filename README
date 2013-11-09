@@ -1,6 +1,47 @@
 # Calavera-wm ☠
 
-is a minimalist window manager, using prefix key style, à la ratpoison and stumpwm.
+is a minimalist window manager for X11/Linux, using prefix key style, à la ratpoison and stumpwm.
+It is based on Dwm code and is written entirely in C.
+
+Features
+-------------
+
+- Floating window manager.
+- Does not have tags/virtual workspaces, just one view.
+- Toggling windows to center, maximize, and full screen maximizing.
+- Good keyboard control (Emacs keybindings).
+- Autostart file read on startup.
+- Multimedia keys.
+- Does not have Xinerama support.
+- Mouse support.
+
+Keyboard controls
+------------------
+
+- [Ctl t + c] - Start Urxvt
+- [Ctl t + a] - Start app launcher.
+- [Ctl t + e] - RunOrRaise Emacs.
+- [Ctl t + w] - RunOrRaise Conkeror.
+- [Ctl t + l] - Locks the screen with Xlock.
+- [Ctl t + Print] - Take a screenshot.
+- [Ctl t + b] - Banish the mouse cursor.
+- [Ctl t + f] - Toggles fullscreen.
+- [Ctl t + m] - Maximise focused window.
+- [Ctl t + .] - Center focused window.
+- [Ctl t + Tab] - Window switcher.
+- [Ctl t + Shift+Tab] - Reverse direction in the window switcher.
+- [Ctl t + k] - Close focused window.
+- [Ctl t + 0,1,2] - Switch to window by number 0|1|2|...
+- [Ctl t + Shift+r] - Reload calavera-wm configuration (need to (re)compile first).
+- [Ctl t + Shift+q] - Quit calavera-wm
+
+Mouse
+--------
+
+- [Ctl + Left button] - Move the window.
+- [Ctl + Right button] - Resize the window.
+- [Ctl + Middle button] - Close the window.
+- [Ctl + MouseScroll] - Window swtcher.
 
 Requirements
 ------------
