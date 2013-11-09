@@ -1,5 +1,11 @@
 #!/bin/bash
 # Startup programs
 
+# start emacs daemon
 emacs --daemon
+
+# set cool background via xsetroot
+xsetroot -mod 8 8 -bg gray50 -fg gray20
+
+# start gnu/screen session
 urxvt -e screen -RD
