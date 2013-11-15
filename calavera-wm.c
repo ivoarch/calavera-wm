@@ -84,7 +84,7 @@ struct Client {
     int oldx, oldy, oldw, oldh;
     int basew, baseh, incw, inch, maxw, maxh, minw, minh;
     int bw, oldbw;
-    Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+    Bool isfixed, isfloating, neverfocus, oldstate, isfullscreen;
     Client *next;
     Client *snext;
     Window win; /* The window */
