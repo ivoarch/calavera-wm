@@ -3,7 +3,6 @@
 /* headers */
 #include <limits.h>
 #include <errno.h>
-#include <locale.h>
 #include <stdarg.h>
 #include <signal.h>
 #include <stdio.h>
@@ -134,7 +133,6 @@ static void attachstack(Client *c);
 static void attachend(Client *c);
 static void attachstackend(Client *c);
 static void border_init(Client *c);
-static void clearurgent(Client *c);
 static void configure(Client *c);
 static void detach(Client *c);
 static void detachstack(Client *c);
@@ -149,7 +147,6 @@ static void showhide(Client *c);
 static void unfocus(Client *c, Bool setfocus);
 static void unmanage(Client *c, Bool destroyed);
 static void updatesizehints(Client *c);
-static void updatewmhints(Client *c);
 static Client *wintoclient(Window w);
 
 // events
@@ -437,17 +434,6 @@ void cleanup(void) {
     free(themon);
 }
 
-void clearurgent(Client *c) {
-    XWMHints *wmh;
-
-    c->isurgent = False;
-    if(!(wmh = XGetWMHints(display, c->win)))
-        return;
-    wmh->flags &= ~XUrgencyHint;
-    XSetWMHints(display, c->win, wmh);
-    XFree(wmh);
-}
-
 void clientmessage(XEvent *e) {
     XClientMessageEvent *cme = &e->xclient;
     Client *c = wintoclient(cme->window);
@@ -608,8 +594,6 @@ void focus(Client *c) {
     if(themon->thesel && themon->thesel != c);
         unfocus(themon->thesel, False);
     if(c) {
-        if(c->isurgent)
-            clearurgent(c);
         detachstack(c);
         attachstack(c);
         grabbuttons(c, True);
@@ -850,7 +834,6 @@ void manage(Window w, XWindowAttributes *wa) {
     border_init(c);
     configure(c); /* propagates border_width, if size doesn't change */
     updatesizehints(c);
-    updatewmhints(c);
     XSelectInput(display, w, EVENT_MASK);
     grabbuttons(c, False);
     if(!c->isfloating)
@@ -966,9 +949,6 @@ void propertynotify(XEvent *e) {
             break;
         case XA_WM_NORMAL_HINTS:
             updatesizehints(c);
-            break;
-        case XA_WM_HINTS:
-            updatewmhints(c);
             break;
         }
     }
@@ -1367,24 +1347,6 @@ void updatesizehints(Client *c) {
         c->maxa = c->mina = 0.0;
     c->isfixed = (c->maxw && c->minw && c->maxh && c->minh
                   && c->maxw == c->minw && c->maxh == c->minh);
-}
-
-void updatewmhints(Client *c) {
-    XWMHints *wmh;
-
-    if((wmh = XGetWMHints(display, c->win))) {
-        if(c == themon->thesel && wmh->flags & XUrgencyHint) {
-            wmh->flags &= ~XUrgencyHint;
-            XSetWMHints(display, c->win, wmh);
-        }
-        else
-            c->isurgent = (wmh->flags & XUrgencyHint) ? True : False;
-        if(wmh->flags & InputHint)
-            c->neverfocus = !wmh->input;
-        else
-            c->neverfocus = False;
-        XFree(wmh);
-    }
 }
 
 Client *wintoclient(Window w) {
