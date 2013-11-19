@@ -1,5 +1,5 @@
 /*
- * Calavera wm ☠ - minimalist stacking window manager for X.
+ * Calavera wm ☠ - window manager for X11/Linux.
  * See LICENSE file for copyright and license details.
  */
 

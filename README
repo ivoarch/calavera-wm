@@ -1,7 +1,6 @@
 # Calavera-wm ☠
 
-is a minimalist window manager for X11/Linux, using prefix key style, à la ratpoison and stumpwm.
-It is based on Dwm code and is written entirely in C.
+Window manager for X11/Linux, using prefix key style, à la ratpoison and stumpwm.
 
 Features
 -------------
