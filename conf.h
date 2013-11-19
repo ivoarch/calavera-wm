@@ -80,15 +80,17 @@ static Key keys[] = {
     { ShiftMask,    XK_r,      reload,         {0} },
     { ShiftMask,    XK_q,      quit,           {0} },
 
-    /* For Multimedia keys */
+    /* Mixer */
     {0, XF86XK_AudioLowerVolume,
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
     {0, XF86XK_AudioRaiseVolume,
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL}}},
     {0, XF86XK_AudioMute,
         spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
+
+    /* EMMS (The Emacs Multimedia System) */
     {0, XF86XK_AudioPlay,
-        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-pause)", NULL}}},
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-toggle)", NULL}}},
     {0, XF86XK_AudioPrev,
         spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-previous)", NULL}}},
     {0, XF86XK_AudioNext,
