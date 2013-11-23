@@ -45,9 +45,9 @@
 #define PREFIX_KEYSYM XK_t         /* prefix key */
 
 /* COMMANDS */
-static const char *CMD_TERM[]    = { "urxvt", NULL };
-static const char *CMD_BROWSER[] = { "conkeror", NULL, "Conkeror" };
-static const char *CMD_EDITOR[]  = { "emacsclient", "-c", "Emacs" };
+static const char *CMD_TERM[]    = { "urxvt", NULL, NULL, NULL, "URxvt" };
+static const char *CMD_BROWSER[] = { "conkeror", NULL, NULL, NULL, "Conkeror" };
+static const char *CMD_EDITOR[]  = { "emacsclient", "-c", NULL, NULL, "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
 static const char *CMD_SNAPSHOT[] = { "import", "screenshot.png", NULL };
 
@@ -55,7 +55,7 @@ static const char *CMD_SNAPSHOT[] = { "import", "screenshot.png", NULL };
 static Key keys[] = {
     /* modifier     key        function        argument */
     { None,         XK_a,      exec,           {0} },
-    { None,         XK_c,      spawn,          {.v = CMD_TERM } },
+    { None,         XK_c,      runorraise,     {.v = CMD_TERM } },
     { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
     { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },
@@ -95,6 +95,11 @@ static Key keys[] = {
         spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-previous)", NULL}}},
     {0, XF86XK_AudioNext,
         spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-next)", NULL}}},
+
+    /* Eject */
+    {0, XF86XK_Eject,
+        spawn, {.v = (const char*[]){"eject", NULL}}},
+
 };
 
 /* MOUSE BUTTONS */
