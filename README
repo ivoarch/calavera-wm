@@ -17,7 +17,7 @@ Features
 Keyboard controls
 ------------------
 
-- [Ctl t + c] - Start Urxvt
+- [Ctl t + c] - RunOrRaise Urxvt.
 - [Ctl t + a] - Start app launcher.
 - [Ctl t + e] - RunOrRaise Emacs.
 - [Ctl t + w] - RunOrRaise Conkeror.

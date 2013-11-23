@@ -1,4 +1,4 @@
-OB#!/bin/bash
+#!/bin/bash
 # Startup programs
 
 # start emacs daemon
