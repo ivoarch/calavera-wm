@@ -14,7 +14,7 @@ Features
 - Does not have Xinerama support.
 - Mouse support.
 
-Keyboard controls
+(DEFAULT) Keyboard controls
 ------------------
 
 - [Ctl t + c] - RunOrRaise Urxvt.
@@ -22,7 +22,6 @@ Keyboard controls
 - [Ctl t + e] - RunOrRaise Emacs.
 - [Ctl t + w] - RunOrRaise Conkeror.
 - [Ctl t + l] - Locks the screen with Xlock.
-- [Ctl t + Print] - Take a screenshot.
 - [Ctl t + b] - Banish the mouse cursor.
 - [Ctl t + f] - Toggles fullscreen.
 - [Ctl t + m] - Maximise focused window.

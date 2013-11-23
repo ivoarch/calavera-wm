@@ -22,7 +22,7 @@
 #define SNAP 16
 
 /* Reserved space Top/Bottom of the screen */
-#define TOP_SIZE 0
+#define TOP_SIZE 20
 #define BOTTOM_SIZE 0
 
 /* Initial indexing windows 0= 0123456789 1= 123456789 */
@@ -35,7 +35,7 @@
 #define CURSOR_WAITKEY XC_icon
 
 /* Pressing a key sends the cursor to the bottom right corner */
-#define HIDE_CURSOR 0
+#define HIDE_CURSOR 1
 
 /* Show the cursor when waiting for a key */
 #define WAITKEY 1
@@ -49,6 +49,8 @@ static const char *CMD_TERM[]    = { "urxvt", NULL, NULL, NULL, "URxvt" };
 static const char *CMD_BROWSER[] = { "conkeror", NULL, NULL, NULL, "Conkeror" };
 static const char *CMD_EDITOR[]  = { "emacsclient", "-c", NULL, NULL, "Emacs" };
 static const char *CMD_LOCK[]    = { "xlock", "-mode", "star", NULL };
+static const char *CMD_SNAPSHOT[] = { "import", "screenshot.png", NULL };
+static const char *CMD_TOGGLE_TOUCHPAD[] = { "sh", "-c", "synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')", NULL };
 
 /* KEY BINDINGS */
 static Key keys[] = {
@@ -58,6 +60,8 @@ static Key keys[] = {
     { None,         XK_e,      runorraise,     {.v = CMD_EDITOR } },
     { None,         XK_w,      runorraise,     {.v = CMD_BROWSER } },
     { None,         XK_l,      spawn,          {.v = CMD_LOCK } },
+    { None,         XK_Print,  spawn,          {.v = CMD_SNAPSHOT } },
+    { None,         XK_BackSpace, spawn,       {.v = CMD_TOGGLE_TOUCHPAD } },
     { None,         XK_b,      banish,         {0} },
     { None,         XK_f,      fullscreen,     {0} },
     { None,         XK_m,      maximize,       {0} },
@@ -78,6 +82,29 @@ static Key keys[] = {
     { ShiftMask,    XK_r,      reload,         {0} },
     { ShiftMask,    XK_q,      quit,           {0} },
 
+    /* Mixer */
+    {0, XF86XK_AudioLowerVolume,
+        spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5-", "unmute", NULL}}},
+    {0, XF86XK_AudioRaiseVolume,
+        spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "5+", "unmute", NULL}}},
+    {0, XF86XK_AudioMute,
+        spawn, {.v = (const char*[]){"amixer", "-q", "-c", "0", "set", "Master", "toggle", NULL}}},
+
+    /* EMMS (The Emacs Multimedia System) */
+    {0, XF86XK_AudioPlay,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-toggle)", NULL}}},
+    {0, XF86XK_AudioPrev,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-previous)", NULL}}},
+    {0, XF86XK_AudioNext,
+        spawn, {.v = (const char*[]){"emacsclient", "-e", "(emms-next)", NULL}}},
+
+    /* Eject */
+    {0, XF86XK_Eject,
+        spawn, {.v = (const char*[]){"eject", NULL}}},
+
+    /* HomePage */
+    {0, XF86XK_HomePage,
+     runorraise, {.v = (const char*[]){"conkeror", NULL, NULL, NULL, "Conkeror"}}},
 };
 
 /* MOUSE BUTTONS */
