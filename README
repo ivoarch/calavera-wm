@@ -1,6 +1,4 @@
-# Calavera-wm ☠
-
-Window manager for X11/Linux, using prefix key style, à la ratpoison and stumpwm.
+Calavera-wm ☠ - Window manager for X11/Linux, using prefix key style, à la ratpoison and stumpwm.
 
 Features
 -------------
@@ -14,10 +12,10 @@ Features
 - Does not have Xinerama support.
 - Mouse support.
 
-(DEFAULT) Keyboard controls
+Keyboard controls
 ------------------
 
-- [Ctl t + c] - RunOrRaise Urxvt.
+- [Ctl t + c] - Start Urxvt.
 - [Ctl t + a] - Start app launcher.
 - [Ctl t + e] - RunOrRaise Emacs.
 - [Ctl t + w] - RunOrRaise Conkeror.
