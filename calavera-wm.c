@@ -1041,14 +1041,14 @@ void restack() {
 }
 
 void runorraise(const Arg *arg) {
-    const char **app = (const char **)arg->v;
+    char *app = ((char **)arg->v)[4];
     Client *c;
     XClassHint hint = { NULL, NULL };
 
     /* Tries to find the client */
     for (c = themon->clients; c; c = c->next) {
         XGetClassHint(display, c->win, &hint);
-        if (hint.res_class && strcmp(app[4], hint.res_class) == 0) {
+        if (hint.res_class && strcmp(app, hint.res_class) == 0) {
             focus(c);
             XRaiseWindow(display, c->win);
             return;
