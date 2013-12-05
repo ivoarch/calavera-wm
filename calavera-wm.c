@@ -123,9 +123,6 @@ static Bool sendevent(Client *c, Atom proto);
 // bar
 static void set_padding(void);
 
-// colors
-static unsigned long getcolor(const char *colstr);
-
 // clients
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void attach(Client *c);
@@ -207,8 +204,6 @@ static void fullscreen(const Arg *arg);
 static void view(const Arg *arg);
 
 /* variables */
-static unsigned int win_focus;
-static unsigned int win_unfocus;
 static char **cargv;
 static int screen, screen_w, screen_h;  /* X display screen geometry width, height */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
@@ -386,7 +381,7 @@ void border_init(Client *c) {
 
     wc.border_width = c->bw;
     XConfigureWindow(display, c->win, CWBorderWidth, &wc);
-    XSetWindowBorder(display, c->win, win_focus);
+    XSetWindowBorder(display, c->win, FOCUS);
 }
 
 void center(const Arg *arg) {
@@ -597,7 +592,7 @@ void focus(Client *c) {
         detachstack(c);
         attachstack(c);
         grabbuttons(c, True);
-        XSetWindowBorder(display, c->win, win_focus);
+        XSetWindowBorder(display, c->win, FOCUS);
         setfocus(c);
     }
     else {
@@ -633,15 +628,6 @@ void switcher(const Arg *arg) {
         focus(c);
         restack();
     }
-}
-
-unsigned long getcolor(const char *colstr) {
-    Colormap cmap = DefaultColormap(display, screen);
-    XColor color;
-
-    if(!XAllocNamedColor(display, cmap, colstr, &color, &color))
-        eprint("error, cannot allocate color '%s'\n", colstr);
-    return color.pixel;
 }
 
 Bool getrootptr(int *x, int *y) {
@@ -1167,10 +1153,6 @@ void setup(void) {
     /* cursors */
     init_cursors();
 
-    /* border colors */
-    win_unfocus = getcolor(UNFOCUS);
-    win_focus = getcolor(FOCUS);
-
     /* select for events */
     wa.cursor = cursor[CurNormal];
     wa.event_mask = WA_EVENT_MASK;
@@ -1225,7 +1207,7 @@ void unfocus(Client *c, Bool setfocus) {
         return;
     grabbuttons(c, False);
     /* set new border unfocus colour. */
-    XSetWindowBorder(display, c->win, win_unfocus);
+    XSetWindowBorder(display, c->win, UNFOCUS);
     if(setfocus) {
         XSetInputFocus(display, root, RevertToPointerRoot, CurrentTime);
     }

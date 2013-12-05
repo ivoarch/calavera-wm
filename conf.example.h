@@ -12,8 +12,8 @@
 #define DISPLAY ":0"
 
 /* Focused/Unfocused border color */
-#define UNFOCUS "Gray60"
-#define FOCUS   "brown"
+#define UNFOCUS 0xdfdfdf
+#define FOCUS   0x94bff3
 
 /* Border pixel around windows */
 #define BORDER_SIZE 1
